@@ -1,0 +1,189 @@
+{
+  "generatedAt": "2026-08-13T08:56:27.669Z",
+  "viewports": {
+    "1920x1080": {
+      "Theme Toggle": {
+        "status": "PASS",
+        "detail": "dark → light → restored"
+      },
+      "Mode Switcher": {
+        "status": "PASS",
+        "detail": "Live clicked → Demo restored"
+      },
+      "Login Modal": {
+        "status": "PASS",
+        "detail": "Modal opened. Role after login: \"Role: Admin\""
+      },
+      "Navigation Tabs": {
+        "status": "PASS",
+        "detail": "approved:clicked | revised:clicked | rejected:clicked | pending:clicked"
+      },
+      "Format Filters": {
+        "status": "PASS",
+        "detail": "pdf:1 | docx:1 | image:2 | all:4"
+      },
+      "Search Input": {
+        "status": "PASS",
+        "detail": "\"Kemenkeu\" → 1 cards. After clear → 4 cards"
+      },
+      "Document Modal": {
+        "status": "WARN",
+        "detail": "Modal did not open"
+      },
+      "Settings Modal": {
+        "status": "PASS",
+        "detail": "Overlay elements visible: 3. Closed with Escape."
+      },
+      "Refresh Button": {
+        "status": "PASS",
+        "detail": "Clicked, data reload triggered"
+      },
+      "Auto-refresh Toggle": {
+        "status": "FAIL",
+        "detail": "locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('#auto-refresh-check')\n    - locator resolved to <input checked type=\"checkbox\" id=\"auto-refresh-check\" class=\"rounded border-white/10 bg-white/5 text-amber-500 focus:ring-0\"/>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    51 × waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n"
+      },
+      "Layout Assessment": {
+        "status": "PASS",
+        "detail": "Header=77px | Cols=\"580px 580px\" | Cards=3 | HorzOverflow=false"
+      }
+    },
+    "1440x900": {
+      "Theme Toggle": {
+        "status": "PASS",
+        "detail": "dark → light → restored"
+      },
+      "Mode Switcher": {
+        "status": "PASS",
+        "detail": "Live clicked → Demo restored"
+      },
+      "Login Modal": {
+        "status": "PASS",
+        "detail": "Modal opened. Role after login: \"Role: Admin\""
+      },
+      "Navigation Tabs": {
+        "status": "PASS",
+        "detail": "approved:clicked | revised:clicked | rejected:clicked | pending:clicked"
+      },
+      "Format Filters": {
+        "status": "PASS",
+        "detail": "pdf:1 | docx:1 | image:2 | all:4"
+      },
+      "Search Input": {
+        "status": "PASS",
+        "detail": "\"Kemenkeu\" → 1 cards. After clear → 4 cards"
+      },
+      "Document Modal": {
+        "status": "WARN",
+        "detail": "Modal did not open"
+      },
+      "Settings Modal": {
+        "status": "PASS",
+        "detail": "Overlay elements visible: 3. Closed with Escape."
+      },
+      "Refresh Button": {
+        "status": "PASS",
+        "detail": "Clicked, data reload triggered"
+      },
+      "Auto-refresh Toggle": {
+        "status": "FAIL",
+        "detail": "locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('#auto-refresh-check')\n    - locator resolved to <input checked type=\"checkbox\" id=\"auto-refresh-check\" class=\"rounded border-white/10 bg-white/5 text-amber-500 focus:ring-0\"/>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    50 × waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n"
+      },
+      "Layout Assessment": {
+        "status": "PASS",
+        "detail": "Header=77px | Cols=\"580px 580px\" | Cards=3 | HorzOverflow=false"
+      }
+    },
+    "768x1024": {
+      "Theme Toggle": {
+        "status": "PASS",
+        "detail": "dark → light → restored"
+      },
+      "Mode Switcher": {
+        "status": "PASS",
+        "detail": "Live clicked → Demo restored"
+      },
+      "Login Modal": {
+        "status": "PASS",
+        "detail": "Modal opened. Role after login: \"Role: Admin\""
+      },
+      "Navigation Tabs": {
+        "status": "PASS",
+        "detail": "approved:clicked | revised:clicked | rejected:clicked | pending:clicked"
+      },
+      "Format Filters": {
+        "status": "PASS",
+        "detail": "pdf:1 | docx:1 | image:2 | all:4"
+      },
+      "Search Input": {
+        "status": "PASS",
+        "detail": "\"Kemenkeu\" → 1 cards. After clear → 4 cards"
+      },
+      "Document Modal": {
+        "status": "WARN",
+        "detail": "Modal did not open"
+      },
+      "Settings Modal": {
+        "status": "PASS",
+        "detail": "Overlay elements visible: 3. Closed with Escape."
+      },
+      "Refresh Button": {
+        "status": "PASS",
+        "detail": "Clicked, data reload triggered"
+      },
+      "Auto-refresh Toggle": {
+        "status": "FAIL",
+        "detail": "locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('#auto-refresh-check')\n    - locator resolved to <input checked type=\"checkbox\" id=\"auto-refresh-check\" class=\"rounded border-white/10 bg-white/5 text-amber-500 focus:ring-0\"/>\n  - attempting click action\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> intercepts pointer events\n  - retrying click action\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - <div class=\"glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up\">…</div> from <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> subtree intercepts pointer events\n  - retrying click action\n    - waiting 20ms\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - <div class=\"glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up\">…</div> from <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> subtree intercepts pointer events\n  2 × retrying click action\n      - waiting 100ms\n      - waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> intercepts pointer events\n  13 × retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up\">…</div> from <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> subtree intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up\">…</div> from <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> subtree intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n"
+      },
+      "Layout Assessment": {
+        "status": "PASS",
+        "detail": "Header=141px | Cols=\"672px\" | Cards=3 | HorzOverflow=false"
+      }
+    },
+    "375x812": {
+      "Theme Toggle": {
+        "status": "PASS",
+        "detail": "dark → light → restored"
+      },
+      "Mode Switcher": {
+        "status": "PASS",
+        "detail": "Live clicked → Demo restored"
+      },
+      "Login Modal": {
+        "status": "PASS",
+        "detail": "Modal opened. Role after login: \"Role: Admin\""
+      },
+      "Navigation Tabs": {
+        "status": "PASS",
+        "detail": "approved:clicked | revised:clicked | rejected:clicked | pending:clicked"
+      },
+      "Format Filters": {
+        "status": "PASS",
+        "detail": "pdf:1 | docx:1 | image:2 | all:4"
+      },
+      "Search Input": {
+        "status": "PASS",
+        "detail": "\"Kemenkeu\" → 1 cards. After clear → 4 cards"
+      },
+      "Document Modal": {
+        "status": "WARN",
+        "detail": "Modal did not open"
+      },
+      "Settings Modal": {
+        "status": "PASS",
+        "detail": "Overlay elements visible: 3. Closed with Escape."
+      },
+      "Refresh Button": {
+        "status": "PASS",
+        "detail": "Clicked, data reload triggered"
+      },
+      "Auto-refresh Toggle": {
+        "status": "FAIL",
+        "detail": "locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('#auto-refresh-check')\n    - locator resolved to <input checked type=\"checkbox\" id=\"auto-refresh-check\" class=\"rounded border-white/10 bg-white/5 text-amber-500 focus:ring-0\"/>\n  - attempting click action\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> intercepts pointer events\n  - retrying click action\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - <div class=\"glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up\">…</div> from <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> subtree intercepts pointer events\n  - retrying click action\n    - waiting 20ms\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - <div class=\"glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up\">…</div> from <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> subtree intercepts pointer events\n  2 × retrying click action\n      - waiting 100ms\n      - waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> intercepts pointer events\n  13 × retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up\">…</div> from <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> subtree intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up\">…</div> from <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> subtree intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - <div class=\"glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up\">…</div> from <div id=\"settings-modal\" class=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300\">…</div> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n"
+      },
+      "Layout Assessment": {
+        "status": "PASS",
+        "detail": "Header=264px | Cols=\"343px\" | Cards=3 | HorzOverflow=false"
+      }
+    }
+  }
+}

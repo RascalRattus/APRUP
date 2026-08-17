@@ -1,0 +1,415 @@
+{
+  "name": "Dashboard API & Approval Handler",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "get-pending-docs",
+        "options": {}
+      },
+      "id": "a11a1111-df7b-4b2a-bd1c-c76b91123456",
+      "name": "GET Pending Docs",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": "YOUR_SPREADSHEET_ID_HERE",
+        "sheetName": "Documents",
+        "filters": {
+          "conditions": [
+            {
+              "key": "status",
+              "value": "Pending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a22a2222-df7b-4b2a-bd1c-c76b91123456",
+      "name": "Read Pending Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        460,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "id": "a33a3333-df7b-4b2a-bd1c-c76b91123456",
+      "name": "Return Pending Docs",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        680,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "update-doc-status",
+        "options": {}
+      },
+      "id": "b11b1111-df7b-4b2a-bd1c-c76b91123456",
+      "name": "POST Update Status",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "value1": "={{ $json.body.action }}",
+              "value2": "approve"
+            },
+            {
+              "value1": "={{ $json.body.action }}",
+              "value2": "revise"
+            }
+          ]
+        }
+      },
+      "id": "b22b2222-df7b-4b2a-bd1c-c76b91123456",
+      "name": "Action Switcher",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        460,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": "YOUR_SPREADSHEET_ID_HERE",
+        "sheetName": "Documents",
+        "columnToMatchOn": "id",
+        "valueToMatchOn": "={{ $node[\"POST Update Status\"].json.body.id }}",
+        "fields": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "Approved"
+          }
+        },
+        "options": {}
+      },
+      "id": "b33b3333-df7b-4b2a-bd1c-c76b91123456",
+      "name": "Update Status Approved",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        680,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"message\": \"Document approved successfully\"\n}",
+        "options": {}
+      },
+      "id": "b44b4444-df7b-4b2a-bd1c-c76b91123456",
+      "name": "Respond Approved",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        900,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": "YOUR_SPREADSHEET_ID_HERE",
+        "sheetName": "Documents",
+        "columnToMatchOn": "id",
+        "valueToMatchOn": "={{ $node[\"POST Update Status\"].json.body.id }}",
+        "fields": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "Needs Revision",
+            "revision_notes": "={{ $node[\"POST Update Status\"].json.body.notes }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "c11c1111-df7b-4b2a-bd1c-c76b91123456",
+      "name": "Update Status Revision",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        680,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"message\": \"Revision instruction received. Gemini reprocessing started.\"\n}",
+        "options": {}
+      },
+      "id": "c22c2222-df7b-4b2a-bd1c-c76b91123456",
+      "name": "Respond Revision",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        900,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": "={{ $node[\"POST Update Status\"].json.body.id }}",
+        "options": {}
+      },
+      "id": "d11d1111-df7b-4b2a-bd1c-c76b91123456",
+      "name": "Download File for Re-analysis",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        900,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "value1": "={{ $node[\"Download File for Re-analysis\"].json.mimeType }}",
+              "operation": "contains",
+              "value2": "pdf"
+            },
+            {
+              "value1": "={{ $node[\"Download File for Re-analysis\"].json.mimeType }}",
+              "operation": "contains",
+              "value2": "image"
+            }
+          ]
+        }
+      },
+      "id": "d22d2222-df7b-4b2a-bd1c-c76b91123456",
+      "name": "Re-analyse Switcher",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemini-1.5-flash",
+        "options": {
+          "responseFormat": "json_object"
+        },
+        "prompt": "=You are a professional assistant. Re-analyze this PDF document. The user has provided feedback for this revision: \"{{ $node[\"POST Update Status\"].json.body.notes }}\". Correct and refine the analysis based on these revision instructions. Return a JSON object with the following fields in Indonesian:\n1. ai_title: Refined title of the document.\n2. main_topic: Refined main topic (2-3 words).\n3. key_points: 3 to 4 major key points, EXACTLY separated by a semicolon (;). Make sure to address the revision feedback."
+      },
+      "id": "e11e1111-df7b-4b2a-bd1c-c76b91123456",
+      "name": "Gemini PDF Re-analyser",
+      "type": "n8n-nodes-base.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemini-1.5-flash",
+        "options": {
+          "responseFormat": "json_object"
+        },
+        "prompt": "=You are a professional assistant. Re-analyze this image. The user has provided feedback for this revision: \"{{ $node[\"POST Update Status\"].json.body.notes }}\". Correct and refine the OCR and analysis based on these revision instructions. Return a JSON object with the following fields in Indonesian:\n1. ai_title: Refined description of the image.\n2. main_topic: Refined main topic (2-3 words).\n3. key_points: 3 to 4 key takeaways, EXACTLY separated by a semicolon (;). Make sure to address the revision feedback."
+      },
+      "id": "e22e2222-df7b-4b2a-bd1c-c76b91123456",
+      "name": "Gemini Image Re-analyser",
+      "type": "n8n-nodes-base.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        840
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": "YOUR_SPREADSHEET_ID_HERE",
+        "sheetName": "Documents",
+        "columnToMatchOn": "id",
+        "valueToMatchOn": "={{ $node[\"POST Update Status\"].json.body.id }}",
+        "fields": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ai_title": "={{ JSON.parse($json.text).ai_title }}",
+            "main_topic": "={{ JSON.parse($json.text).main_topic }}",
+            "key_points": "={{ JSON.parse($json.text).key_points }}",
+            "status": "Pending"
+          }
+        },
+        "options": {}
+      },
+      "id": "f11f1111-df7b-4b2a-bd1c-c76b91123456",
+      "name": "Write Re-analysed Data",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        1560,
+        760
+      ]
+    }
+  ],
+  "connections": {
+    "GET Pending Docs": {
+      "main": [
+        [
+          {
+            "node": "Read Pending Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Pending Sheets": {
+      "main": [
+        [
+          {
+            "node": "Return Pending Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST Update Status": {
+      "main": [
+        [
+          {
+            "node": "Action Switcher",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Action Switcher": {
+      "main": [
+        [
+          {
+            "node": "Update Status Approved",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Status Revision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Status Approved": {
+      "main": [
+        [
+          {
+            "node": "Respond Approved",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Status Revision": {
+      "main": [
+        [
+          {
+            "node": "Respond Revision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond Revision": {
+      "main": [
+        [
+          {
+            "node": "Download File for Re-analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File for Re-analysis": {
+      "main": [
+        [
+          {
+            "node": "Re-analyse Switcher",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Re-analyse Switcher": {
+      "main": [
+        [
+          {
+            "node": "Gemini PDF Re-analyser",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gemini Image Re-analyser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini PDF Re-analyser": {
+      "main": [
+        [
+          {
+            "node": "Write Re-analysed Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Image Re-analyser": {
+      "main": [
+        [
+          {
+            "node": "Write Re-analysed Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>APRUP v2.0 — AI Document Monitor & Approval Dashboard</title>
+
+  <!-- Google Fonts: Cormorant Garamond, Space Mono, Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            darkbg: '#080810',
+            darkpanel: 'rgba(15, 15, 26, 0.65)',
+            gold: '#c8a96e',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Modular Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen pb-12 transition-colors duration-400">
+
+  <!-- Ambient Drifting Background Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Grid Overlay -->
+  <div class="grid-bg"></div>
+
+  <!-- Corner Decor Frame -->
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <!-- Top Navigation & Header -->
+  <header class="w-full border-b border-amber-500/10 py-3.5 px-4 md:px-12 backdrop-blur-xl sticky top-0 z-40 bg-[var(--header-bg)] transition-colors duration-400">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
+      <div class="w-full md:w-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl md:text-3xl">📊</span>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-lg md:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-100 to-indigo-300">
+                APRUP v2.0
+              </h1>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">v2.0 Prod</span>
+            </div>
+            <p class="text-[11px] md:text-xs text-[var(--text-muted)] font-mono">AI Document Monitor & Human-in-the-Loop Approval</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connection Status, Role Switcher, Theme Toggle, & Settings -->
+      <div class="flex flex-wrap items-center justify-between md:justify-end gap-2 md:gap-3 w-full md:w-auto">
+        <!-- Role-Based Access Badge (RBAC Login Trigger) -->
+        <div id="user-role-badge" class="flex items-center gap-1.5 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/15 text-amber-300 text-xs font-semibold select-none cursor-pointer" title="Klik untuk mengganti akun / login" onclick="openLoginModal()">
+          <i class="fa-solid fa-user-shield text-xs"></i>
+          <span id="user-role-text">Role: Admin</span>
+          <button id="btn-toggle-role" class="ml-1 text-[10px] underline hover:text-white">(Login)</button>
+        </div>
+
+        <!-- Live vs Demo Switcher -->
+        <div class="flex items-center bg-white/5 rounded-full p-1 border border-amber-500/20 text-xs shrink-0">
+          <button id="btn-live-mode" class="px-3 py-1 rounded-full transition-all duration-200 text-[var(--text-muted)] font-semibold">
+            Live Mode
+          </button>
+          <button id="btn-demo-mode" class="px-3 py-1 rounded-full bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-500/20 transition-all duration-200">
+            Demo Mode
+          </button>
+        </div>
+
+        <!-- Health Status Badge -->
+        <div id="health-badge" class="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-amber-500/20 bg-amber-500/10 text-amber-300 text-xs font-semibold select-none shrink-0">
+          <span class="w-2.5 h-2.5 rounded-full pulse-dot-amber"></span>
+          <span id="health-text" class="text-[11px] md:text-xs">Mengecek n8n...</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Light / Dark Mode Toggle Button (Siang vs Malam) -->
+          <button id="btn-theme-toggle" class="p-2.5 rounded-full bg-white/5 border border-white/10 text-amber-300 hover:text-white hover:bg-white/10 transition-all duration-200 flex items-center justify-center shrink-0" title="Ganti Mode Siang / Malam">
+            <i id="theme-toggle-icon" class="fa-solid fa-moon text-sm"></i>
+          </button>
+
+          <!-- Config Webhook Settings Button -->
+          <button id="btn-open-settings" class="p-2.5 rounded-full bg-white/5 border border-white/10 text-[var(--text-muted)] hover:text-white hover:bg-white/10 transition-all duration-200 flex items-center justify-center shrink-0" title="Webhook Settings (n8n)">
+            <i class="fa-solid fa-gear text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 md:px-12 mt-6 md:mt-8 relative z-10">
+    <!-- Status Navigation Tabs (Tab Navigasi Status) -->
+    <section class="mb-6">
+      <div class="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl glass-panel border border-amber-500/15">
+        <button id="tab-pending" onclick="switchStatusTab('pending')" class="nav-tab-item active flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold flex items-center justify-center gap-2 transition-all duration-200">
+          <i class="fa-regular fa-clock text-amber-400"></i>
+          <span>Menunggu Review</span>
+          <span id="badge-pending-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-amber-500/20 text-amber-300">0</span>
+        </button>
+
+        <button id="tab-approved" onclick="switchStatusTab('approved')" class="nav-tab-item flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text)] flex items-center justify-center gap-2 transition-all duration-200">
+          <i class="fa-regular fa-circle-check text-emerald-400"></i>
+          <span>Disetujui</span>
+          <span id="badge-approved-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/20 text-emerald-300">0</span>
+        </button>
+
+        <button id="tab-revised" onclick="switchStatusTab('needs revision')" class="nav-tab-item flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text)] flex items-center justify-center gap-2 transition-all duration-200">
+          <i class="fa-regular fa-pen-to-square text-amber-300"></i>
+          <span>Revisi</span>
+          <span id="badge-revised-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-amber-500/20 text-amber-300">0</span>
+        </button>
+
+        <button id="tab-rejected" onclick="switchStatusTab('rejected')" class="nav-tab-item flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text)] flex items-center justify-center gap-2 transition-all duration-200">
+          <i class="fa-solid fa-ban text-rose-400"></i>
+          <span>Ditolak</span>
+          <span id="badge-rejected-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-rose-500/20 text-rose-300">0</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Filters & Action Bar -->
+    <section class="glass-panel p-3.5 md:p-4 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4 mb-6 md:mb-8">
+      <div class="flex flex-wrap items-center gap-2 md:gap-3 w-full md:w-auto">
+        <!-- Search Bar -->
+        <div class="relative w-full sm:w-64">
+          <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-[var(--text-muted)] pointer-events-none">
+            <i class="fa-solid fa-magnifying-glass text-xs md:text-sm"></i>
+          </span>
+          <input type="text" id="search-input" placeholder="Cari Task ID / nama file..." class="w-full bg-white/5 border border-amber-500/20 rounded-xl py-2 pl-9 pr-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-amber-500/50 transition-all duration-200">
+        </div>
+
+        <!-- Filter File Type Buttons -->
+        <div class="flex bg-white/5 border border-amber-500/20 rounded-xl p-1 text-xs w-full sm:w-auto justify-stretch">
+          <button id="filter-all" class="flex-1 sm:flex-none px-3 py-1.5 rounded-lg bg-white/10 font-medium transition-all duration-200">Semua Format</button>
+          <button id="filter-pdf" class="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text)] transition-all duration-200">PDF</button>
+          <button id="filter-docx" class="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text)] transition-all duration-200">DOCX</button>
+          <button id="filter-image" class="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text)] transition-all duration-200">Gambar</button>
+        </div>
+      </div>
+
+      <!-- Auto-sync Controls -->
+      <div class="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto">
+        <label class="flex items-center gap-2 text-xs text-[var(--text-muted)] select-none cursor-pointer">
+          <input type="checkbox" id="auto-refresh-check" checked class="rounded border-white/10 bg-white/5 text-amber-500 focus:ring-0">
+          <span>Auto-sync (15s)</span>
+        </label>
+        
+        <button id="btn-refresh" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold rounded-xl flex items-center gap-2 shadow-lg shadow-amber-600/10 transition-all duration-200 active:scale-95">
+          <i id="refresh-icon" class="fa-solid fa-arrows-rotate"></i>
+          <span>Sinkronisasi Data</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Offline Banner Alert -->
+    <section id="offline-humor-alert" class="hidden mb-6 md:mb-8 p-5 md:p-6 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-300 animate-fade-in-up">
+      <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+        <div class="w-12 h-12 md:w-14 md:h-14 shrink-0 rounded-2xl bg-rose-500/20 flex items-center justify-center text-rose-400 text-2xl md:text-3xl">
+          ☕
+        </div>
+        <div>
+          <h4 class="text-base md:text-lg font-bold mb-1">Aduh! Server n8n Sedang Istirahat!</h4>
+          <p class="text-xs md:text-sm text-rose-300/80 leading-relaxed mb-3">
+            Server n8n di <code>https://n8n.almaudin.my.id/webhook</code> sedang offline atau tunnel terputus. Ngopi dulu gih Bos! Seluruh tombol persetujuan dinonaktifkan sementara demi keselamatan data.
+          </p>
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="text-[10px] md:text-xs bg-rose-500/20 border border-rose-500/30 px-3 py-1 rounded-full text-rose-300 font-mono" id="offline-error-details">
+              Endpoint: https://n8n.almaudin.my.id/webhook/get-pending-docs
+            </span>
+            <button id="btn-toggle-demo-fallback" class="text-xs text-indigo-400 underline font-semibold hover:text-indigo-300">
+              Pindahkan ke Demo Mode untuk Uji Coba UI →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Documents Grid / List -->
+    <section>
+      <!-- Loading State (Shimmer cards) -->
+      <div id="loading-state" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 hidden">
+        <div class="glass-panel p-5 md:p-6 rounded-2xl border border-white/5 space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl shimmer"></div>
+              <div class="space-y-2">
+                <div class="w-32 h-4 rounded shimmer"></div>
+                <div class="w-20 h-3 rounded shimmer"></div>
+              </div>
+            </div>
+            <div class="w-24 h-6 rounded-full shimmer"></div>
+          </div>
+          <div class="space-y-2 py-2">
+            <div class="w-full h-5 rounded shimmer"></div>
+            <div class="w-3/4 h-4 rounded shimmer"></div>
+          </div>
+          <div class="flex gap-3 pt-4">
+            <div class="w-1/3 h-10 rounded-xl shimmer"></div>
+            <div class="w-1/3 h-10 rounded-xl shimmer"></div>
+            <div class="w-1/3 h-10 rounded-xl shimmer"></div>
+          </div>
+        </div>
+        <div class="glass-panel p-5 md:p-6 rounded-2xl border border-white/5 space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl shimmer"></div>
+              <div class="space-y-2">
+                <div class="w-32 h-4 rounded shimmer"></div>
+                <div class="w-20 h-3 rounded shimmer"></div>
+              </div>
+            </div>
+            <div class="w-24 h-6 rounded-full shimmer"></div>
+          </div>
+          <div class="space-y-2 py-2">
+            <div class="w-full h-5 rounded shimmer"></div>
+            <div class="w-3/4 h-4 rounded shimmer"></div>
+          </div>
+          <div class="flex gap-3 pt-4">
+            <div class="w-1/3 h-10 rounded-xl shimmer"></div>
+            <div class="w-1/3 h-10 rounded-xl shimmer"></div>
+            <div class="w-1/3 h-10 rounded-xl shimmer"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="glass-panel p-8 md:p-12 rounded-3xl text-center hidden animate-fade-in-up">
+        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-5 text-2xl md:text-3xl">
+          🎉
+        </div>
+        <h3 class="text-lg md:text-xl font-bold mb-2">Kerjaan Beres, Bos!</h3>
+        <p id="empty-state-message" class="text-xs md:text-sm text-[var(--text-muted)] max-w-md mx-auto leading-relaxed">
+          Tidak ada dokumen pada tab status ini saat ini. Semua data tersimpan rapi di Google Sheets utama.
+        </p>
+      </div>
+
+      <!-- Document Cards Container -->
+      <div id="document-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+        <!-- Rendered dynamically via app.js -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md hidden transition-opacity duration-300">
+    <div class="glass-modal w-full max-w-md rounded-3xl p-6 md:p-8 animate-fade-in-up">
+      <div class="flex items-center justify-between mb-6 border-b border-amber-500/10 pb-4">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🔐</span>
+          <div>
+            <h3 class="text-base md:text-lg font-bold text-[var(--text)]">Autentikasi APRUP v2.0</h3>
+            <p class="text-[11px] text-[var(--text-muted)] font-mono">Server n8n .env Verification</p>
+          </div>
+        </div>
+        <button onclick="closeLoginModal()" class="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-200">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="login-form" onsubmit="handleLoginSubmit(event)" class="space-y-4">
+        <div>
+          <label for="login-username" class="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">Username</label>
+          <input type="text" id="login-username" placeholder="admin atau user" required class="w-full bg-white/5 border border-amber-500/20 rounded-xl px-4 py-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-amber-500/50 transition-all duration-200 font-mono">
+        </div>
+
+        <div>
+          <label for="login-password" class="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">Password</label>
+          <input type="password" id="login-password" placeholder="admin atau user" required class="w-full bg-white/5 border border-amber-500/20 rounded-xl px-4 py-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-amber-500/50 transition-all duration-200 font-mono">
+        </div>
+
+        <div class="p-3 rounded-xl bg-white/5 border border-amber-500/10 text-[11px] text-[var(--text-muted)] space-y-1">
+          <span class="font-bold text-amber-300 block">ℹ️ Kredensial Simulasi:</span>
+          <p>• <strong>Admin (Akses Penuh):</strong> Username: <code>admin</code> | Pass: <code>admin</code></p>
+          <p>• <strong>User (Read-Only):</strong> Username: <code>user</code> | Pass: <code>user</code></p>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-amber-500/10">
+          <button type="button" onclick="closeLoginModal()" class="px-4 py-2.5 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text)]">
+            Batal
+          </button>
+          <button type="submit" id="btn-login-submit" class="px-6 py-2.5 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-amber-600/20 transition-all duration-200 flex items-center gap-2">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span>Masuk System</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dynamic Action Modal (Alasan Revisi / Tolak with Conditional Refer Task ID) -->
+  <div id="action-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden transition-opacity duration-300">
+    <div class="glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3" id="modal-title-header">
+          <span class="text-2xl" id="modal-icon">✏️</span>
+          <h3 class="text-base md:text-lg font-bold" id="modal-title">Instruksi Revisi Dokumen</h3>
+        </div>
+        <button onclick="closeActionModal()" class="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-200">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div class="p-3 bg-white/5 border border-white/5 rounded-xl">
+          <span class="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider">Dokumen Target:</span>
+          <h4 id="action-modal-filename" class="text-xs md:text-sm font-semibold text-amber-300 mt-1 truncate">TASK-2026-0801 — Modul_Kemenkeu.pdf</h4>
+        </div>
+
+        <!-- Conditional Container: Only shows Refer_Task_ID if Is_Reapplication == true or explicitly needed -->
+        <div id="refer-task-container" class="hidden">
+          <label for="refer-task-id" class="block text-xs font-semibold text-amber-400 uppercase tracking-wider mb-1.5 font-mono">
+            <i class="fa-solid fa-link"></i> Referensi Task ID Acuan (Dokumen Revisi)
+          </label>
+          <input type="text" id="refer-task-id" placeholder="TASK-2026-0789" class="w-full bg-white/5 border border-amber-500/30 rounded-xl px-4 py-2.5 text-xs text-[var(--text)] font-mono focus:outline-none focus:border-amber-500">
+          <span class="text-[10px] text-[var(--text-muted)] mt-1 block">Dokumen ini terdeteksi sebagai pengajuan ulang dari Task ID sebelumnya.</span>
+        </div>
+
+        <div>
+          <label for="action-notes" class="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2" id="lbl-action-notes">Catatan Alasan / Instruksi untuk n8n AI</label>
+          <textarea id="action-notes" rows="4" placeholder="Tuliskan catatan alasan secara mendetail di sini..." class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-amber-500/50 transition-all duration-200 resize-none leading-relaxed"></textarea>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 mt-8">
+        <button onclick="closeActionModal()" class="px-4 py-2.5 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-200">
+          Batal
+        </button>
+        <button id="btn-submit-action" class="px-5 md:px-6 py-2.5 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-amber-600/20 transition-all duration-200 flex items-center gap-2">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span id="btn-submit-action-text">Kirim Instruksi</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Webhook Settings Modal -->
+  <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden transition-opacity duration-300">
+    <div class="glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">⚙️</span>
+          <h3 class="text-base md:text-lg font-bold">Pengaturan n8n Webhook</h3>
+        </div>
+        <button id="btn-close-settings-x" class="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-200">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label for="webhook-url" class="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">n8n Base Webhook URL</label>
+          <input type="url" id="webhook-url" placeholder="https://n8n.almaudin.my.id/webhook" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-amber-500/50 transition-all duration-200 font-mono">
+          <p class="text-[11px] text-[var(--text-muted)] mt-2 leading-relaxed">
+            Default Production URL: <code>https://n8n.almaudin.my.id/webhook</code>.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/5 text-xs text-[var(--text-muted)] space-y-2">
+          <h4 class="font-bold text-[var(--text)] flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-info text-amber-400"></i> Endpoint API Single POST Engine:
+          </h4>
+          <ul class="list-disc pl-4 space-y-1.5 font-mono text-[10px]">
+            <li>GET: <code id="lbl-get-endpoint">[URL]/get-pending-docs</code></li>
+            <li>POST (Single Engine): <code id="lbl-post-endpoint">[URL]/update-doc-status</code> (Switch: approve/revise/reject/login)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-3 mt-8">
+        <button id="btn-test-connection" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-white/5 text-slate-300 hover:text-white text-xs font-bold rounded-xl transition-all duration-200 flex items-center gap-2">
+          <i id="test-conn-icon" class="fa-solid fa-plug-circle-check"></i>
+          <span>Tes Koneksi</span>
+        </button>
+
+        <div class="flex items-center gap-2 md:gap-3">
+          <button id="btn-cancel-settings" class="px-3 py-2.5 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-200">
+            Batal
+          </button>
+          <button id="btn-save-settings" class="px-4 md:px-5 py-2.5 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-amber-600/20 transition-all duration-200">
+            Simpan Konfigurasi
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3.5 rounded-2xl border shadow-2xl transition-all duration-300 transform translate-y-12 opacity-0 select-none max-w-sm backdrop-blur-md">
+    <span id="toast-icon" class="text-lg"></span>
+    <span id="toast-message" class="text-xs font-semibold"></span>
+  </div>
+
+  <!-- Modular JavaScript File Link -->
+  <script src="app.js"></script>
+</body>
+</html>
