@@ -168,6 +168,13 @@ const elements = {
   lblGetEndpoint: document.getElementById('lbl-get-endpoint'),
   lblPostEndpoint: document.getElementById('lbl-post-endpoint'),
 
+  // Document Preview Modal
+  docPreviewModal: document.getElementById('doc-preview-modal'),
+  docPreviewIframe: document.getElementById('doc-preview-iframe'),
+  docPreviewFilename: document.getElementById('doc-preview-filename'),
+  docPreviewOpenLink: document.getElementById('doc-preview-open-link'),
+  docPreviewLoading: document.getElementById('doc-preview-loading'),
+
   // Toast
   toast: document.getElementById('toast'),
   toastIcon: document.getElementById('toast-icon'),
@@ -529,6 +536,87 @@ function showLoading(loading) {
   }
 }
 
+// Format Spesifikasi_Check: pipe-separated → list items with label coloring
+function formatSpesifikasi(raw) {
+  if (!raw) return '<li class="text-[var(--text-muted)] italic">Tidak ada data spesifikasi.</li>';
+  return raw.split('|').map(item => {
+    const trimmed = item.trim();
+    if (!trimmed) return '';
+    const colonIdx = trimmed.indexOf(':');
+    if (colonIdx !== -1) {
+      const label = trimmed.substring(0, colonIdx).trim();
+      const value = trimmed.substring(colonIdx + 1).trim();
+      return `<li class="flex items-start gap-1.5">
+        <span class="shrink-0 mt-0.5 w-1.5 h-1.5 rounded-full bg-amber-400/60 inline-block"></span>
+        <span><span class="font-extrabold text-amber-300">${label}:</span> ${value}</span>
+      </li>`;
+    }
+    return `<li class="flex items-start gap-1.5">
+      <span class="shrink-0 mt-0.5 w-1.5 h-1.5 rounded-full bg-amber-400/60 inline-block"></span>
+      <span>${trimmed}</span>
+    </li>`;
+  }).join('');
+}
+
+// Extract Google Drive File ID from a Drive link, or use raw ID
+function extractDriveFileId(link, rawFileId) {
+  if (link && link.includes('/d/')) {
+    const match = link.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match) return match[1];
+  }
+  if (rawFileId && rawFileId !== 'gdrive-file-001' && rawFileId !== 'gdrive-file-002'
+      && rawFileId !== 'gdrive-file-003' && rawFileId !== 'gdrive-file-004') {
+    return rawFileId;
+  }
+  return null;
+}
+
+// Open Document Preview Modal with Google Drive iframe
+function openDocPreview(taskId, fileName, gdriveLink, fileId) {
+  const fileIdResolved = extractDriveFileId(gdriveLink, fileId);
+
+  if (!elements.docPreviewModal) return;
+
+  // Reset loading state
+  if (elements.docPreviewLoading) elements.docPreviewLoading.style.display = '';
+
+  // Set filename label
+  if (elements.docPreviewFilename) elements.docPreviewFilename.innerText = `${taskId} — ${fileName}`;
+
+  // Set "Buka di Drive" link (original file link)
+  if (elements.docPreviewOpenLink) {
+    elements.docPreviewOpenLink.href = gdriveLink !== '#' ? gdriveLink : '#';
+  }
+
+  // Build iframe preview URL
+  if (elements.docPreviewIframe) {
+    if (fileIdResolved) {
+      elements.docPreviewIframe.src = `https://drive.google.com/file/d/${fileIdResolved}/preview`;
+    } else {
+      // Fallback: no valid ID → show message inside iframe area
+      elements.docPreviewIframe.src = '';
+      if (elements.docPreviewLoading) {
+        elements.docPreviewLoading.innerHTML = `
+          <i class="fa-solid fa-triangle-exclamation text-2xl text-amber-400"></i>
+          <p class="text-xs text-center px-4">Preview tidak tersedia.<br>File ID tidak valid atau belum dikonfigurasi.<br>
+          <a href="${gdriveLink}" target="_blank" class="text-amber-400 underline mt-1 inline-block">Buka dokumen di Google Drive</a></p>`;
+        elements.docPreviewLoading.style.display = '';
+      }
+    }
+  }
+
+  elements.docPreviewModal.classList.remove('hidden');
+  setTimeout(() => elements.docPreviewModal.classList.remove('opacity-0'), 50);
+}
+
+// Close Document Preview Modal
+function closeDocPreview() {
+  if (!elements.docPreviewModal) return;
+  elements.docPreviewModal.classList.add('hidden');
+  // Clear iframe src to stop loading / save bandwidth
+  if (elements.docPreviewIframe) elements.docPreviewIframe.src = '';
+}
+
 // Render Document Cards According to Active Status Tab
 function renderDocs() {
   if (!elements.documentGrid) return;
@@ -629,9 +717,9 @@ function renderDocs() {
         <div class="space-y-3.5 text-xs">
           <div>
             <span class="text-[10px] uppercase font-extrabold tracking-wider text-amber-400 font-mono block">1. Spesifikasi Check (Mutu, Teknis, Waktu, Layanan)</span>
-            <p class="text-xs text-[var(--text)] mt-1 font-medium bg-white/5 p-2.5 rounded-xl border border-white/5 leading-relaxed">
-              ${doc.Spesifikasi_Check || 'Mutu & Teknis Sesuai Standard'}
-            </p>
+            <ul class="text-xs text-[var(--text)] mt-1 font-medium bg-white/5 p-2.5 rounded-xl border border-white/5 leading-relaxed space-y-1 list-none">
+              ${formatSpesifikasi(doc.Spesifikasi_Check || 'Mutu & Teknis Sesuai Standard')}
+            </ul>
           </div>
 
           <div>
@@ -675,9 +763,9 @@ function renderDocs() {
           <span>Tolak</span>
         </button>
 
-        <a href="${gdriveLink}" target="_blank" class="min-h-[40px] w-[40px] rounded-xl bg-white/5 border border-amber-500/20 text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-white/10 transition-all duration-200 flex items-center justify-center shrink-0" title="Buka Dokumen Asli">
-          <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
-        </a>
+        <button onclick="openDocPreview('${taskId}', '${fileName}', '${gdriveLink}', '${doc.File_ID || ''}')" class="min-h-[40px] w-[40px] rounded-xl bg-white/5 border border-amber-500/20 text-[var(--text-muted)] hover:text-amber-300 hover:bg-amber-500/10 transition-all duration-200 flex items-center justify-center shrink-0" title="Preview Dokumen">
+          <i class="fa-solid fa-eye text-xs"></i>
+        </button>
       </div>
     `;
 
