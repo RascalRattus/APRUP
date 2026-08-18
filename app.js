@@ -7,12 +7,6 @@ let appState = {
   currentUser: JSON.parse(sessionStorage.getItem('aprup_user')) || { username: 'admin', role: 'admin', name: 'Administrator' },
   activeTab: 'pending', // 'pending' | 'approved' | 'needs revision' | 'rejected'
   documents: [],
-  sessionStats: {
-    pending: 0,
-    approved: parseInt(sessionStorage.getItem('stats_approved')) || 0,
-    revised: parseInt(sessionStorage.getItem('stats_revised')) || 0,
-    rejected: parseInt(sessionStorage.getItem('stats_rejected')) || 0
-  },
   filters: {
     search: '',
     type: 'all'
@@ -121,10 +115,12 @@ const elements = {
   tabApproved: document.getElementById('tab-approved'),
   tabRevised: document.getElementById('tab-revised'),
   tabRejected: document.getElementById('tab-rejected'),
+  tabArchived: document.getElementById('tab-archived'),
   badgePendingCount: document.getElementById('badge-pending-count'),
   badgeApprovedCount: document.getElementById('badge-approved-count'),
   badgeRevisedCount: document.getElementById('badge-revised-count'),
   badgeRejectedCount: document.getElementById('badge-rejected-count'),
+  badgeArchivedCount: document.getElementById('badge-archived-count'),
 
   // Filters
   searchInput: document.getElementById('search-input'),
@@ -152,6 +148,11 @@ const elements = {
   actionModalFilename: document.getElementById('action-modal-filename'),
   referTaskContainer: document.getElementById('refer-task-container'),
   referTaskIdInput: document.getElementById('refer-task-id'),
+  referTaskInfo: document.getElementById('refer-task-info'),
+  referTaskDocName: document.getElementById('refer-task-doc-name'),
+  referTaskDocMeta: document.getElementById('refer-task-doc-meta'),
+  referTaskDocLink: document.getElementById('refer-task-doc-link'),
+  referTaskAdminNotes: document.getElementById('refer-task-admin-notes'),
   lblActionNotes: document.getElementById('lbl-action-notes'),
   actionNotes: document.getElementById('action-notes'),
   btnSubmitAction: document.getElementById('btn-submit-action'),
@@ -180,6 +181,107 @@ const elements = {
   toastIcon: document.getElementById('toast-icon'),
   toastMessage: document.getElementById('toast-message')
 };
+
+function normalizeReferTaskValue(value) {
+  if (value === null || value === undefined) return '';
+
+  const normalized = String(value).trim();
+  if (!normalized || normalized === '-' || normalized.toLowerCase() === 'null' || normalized.toLowerCase() === 'undefined') {
+    return '';
+  }
+
+  return normalized;
+}
+
+function hasValidReferTaskReference(doc) {
+  const status = (doc.Status || doc.status || '').toLowerCase();
+  const value = normalizeReferTaskValue(doc.Refer_Task_ID ?? doc.refer_task_id);
+  return (status === 'needs revision' || status === 'rejected') && value !== '';
+}
+
+function getReferenceCandidateDocs() {
+  return appState.documents.filter(doc => {
+    const status = (doc.Status || doc.status || '').toLowerCase();
+    const taskId = normalizeReferTaskValue(doc.Task_ID ?? doc.task_id);
+    const referTaskId = normalizeReferTaskValue(doc.Refer_Task_ID ?? doc.refer_task_id);
+    return (status === 'needs revision' || status === 'rejected') && taskId !== '' && referTaskId === '';
+  });
+}
+
+function populateReferTaskDatalist() {
+  const datalist = document.getElementById('refer-task-datalist');
+  if (!datalist) return;
+
+  const visibleReferenceDocs = getReferenceCandidateDocs();
+
+  const seen = new Set();
+  const options = visibleReferenceDocs
+    .map(doc => {
+      const taskId = normalizeReferTaskValue(doc.Task_ID ?? doc.task_id);
+      const fileName = (doc.File_Name || doc.filename || 'Dokumen tanpa judul').trim();
+      if (!taskId || seen.has(taskId)) return null;
+      seen.add(taskId);
+      return `<option value="${taskId}" label="${taskId} — ${fileName}">${taskId} — ${fileName}</option>`;
+    })
+    .filter(Boolean)
+    .join('');
+
+  datalist.innerHTML = options;
+}
+
+function updateReferTaskInfo() {
+  const inputValue = normalizeReferTaskValue(elements.referTaskIdInput ? elements.referTaskIdInput.value : '');
+  const infoPanel = elements.referTaskInfo;
+
+  if (!inputValue) {
+    if (infoPanel) infoPanel.classList.add('hidden');
+    return;
+  }
+
+  const doc = appState.documents.find(d => normalizeReferTaskValue(d.Task_ID ?? d.task_id) === inputValue);
+  if (!doc) {
+    if (infoPanel) infoPanel.classList.add('hidden');
+    return;
+  }
+
+  const fileName = doc.File_Name || doc.filename || 'Dokumen tanpa judul';
+  const status = doc.Status || doc.status || 'Unknown';
+  const adminNotes = doc.Admin_Notes || doc.admin_notes || 'Tidak ada catatan.';
+  const fileLink = doc.File_Link || doc.file_link || '#';
+
+  if (elements.referTaskDocName) elements.referTaskDocName.innerText = `${doc.Task_ID || doc.task_id || inputValue} — ${fileName}`;
+  if (elements.referTaskDocMeta) elements.referTaskDocMeta.innerText = `Status: ${status} • ${doc.File_Type || doc.file_type || 'Unknown'}`;
+  if (elements.referTaskAdminNotes) elements.referTaskAdminNotes.innerText = adminNotes;
+  if (elements.referTaskDocLink) {
+    elements.referTaskDocLink.href = fileLink;
+    elements.referTaskDocLink.classList.remove('pointer-events-none', 'opacity-50');
+    if (!fileLink || fileLink === '#') {
+      elements.referTaskDocLink.href = '#';
+      elements.referTaskDocLink.classList.add('pointer-events-none', 'opacity-50');
+    }
+  }
+
+  if (infoPanel) infoPanel.classList.remove('hidden');
+}
+
+function getPengesahanValue(doc) {
+  const value = doc.Pengesahan || doc.pengesahan || doc['Pengesahan (TTD)'] || doc['pengesahan_ttd'] || 'Belum ada data';
+  return String(value).trim() || 'Belum ada data';
+}
+
+function getPengesahanStyle(value) {
+  const normalized = String(value).trim();
+  if (!normalized || normalized.toLowerCase().includes('belum')) {
+    return 'bg-rose-500/10 border border-rose-500/20 text-rose-300';
+  }
+  if (normalized.toLowerCase().includes('tte') || normalized.toLowerCase().includes('menggunakan')) {
+    return 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-300';
+  }
+  if (normalized.toLowerCase().includes('bukan')) {
+    return 'bg-amber-500/10 border border-amber-500/20 text-amber-300';
+  }
+  return 'bg-slate-500/10 border border-slate-500/20 text-slate-300';
+}
 
 // Initialize Application
 function init() {
@@ -231,7 +333,8 @@ function switchStatusTab(status) {
     { el: elements.tabPending, key: 'pending' },
     { el: elements.tabApproved, key: 'approved' },
     { el: elements.tabRevised, key: 'needs revision' },
-    { el: elements.tabRejected, key: 'rejected' }
+    { el: elements.tabRejected, key: 'rejected' },
+    { el: elements.tabArchived, key: 'archived' }
   ];
 
   tabs.forEach(t => {
@@ -621,36 +724,42 @@ function closeDocPreview() {
 function renderDocs() {
   if (!elements.documentGrid) return;
   elements.documentGrid.innerHTML = '';
-  
+
+  const archivedDocuments = appState.documents.filter(doc => hasValidReferTaskReference(doc));
+  const visibleDocuments = appState.documents.filter(doc => !hasValidReferTaskReference(doc));
   const searchVal = appState.filters.search.toLowerCase();
   const typeVal = appState.filters.type;
   const activeTabStatus = appState.activeTab.toLowerCase();
-  
-  // Calculate counts for all tabs
-  const pendingDocs = appState.documents.filter(d => (d.Status || d.status || 'Pending').toLowerCase() === 'pending');
-  const approvedDocs = appState.documents.filter(d => (d.Status || d.status || '').toLowerCase() === 'approved');
-  const revisedDocs = appState.documents.filter(d => (d.Status || d.status || '').toLowerCase() === 'needs revision');
-  const rejectedDocs = appState.documents.filter(d => (d.Status || d.status || '').toLowerCase() === 'rejected');
+
+  const pendingDocs = visibleDocuments.filter(d => (d.Status || d.status || 'Pending').toLowerCase() === 'pending');
+  const approvedDocs = visibleDocuments.filter(d => (d.Status || d.status || '').toLowerCase() === 'approved');
+  const revisedDocs = visibleDocuments.filter(d => (d.Status || d.status || '').toLowerCase() === 'needs revision');
+  const rejectedDocs = visibleDocuments.filter(d => (d.Status || d.status || '').toLowerCase() === 'rejected');
+  const archivedDocs = archivedDocuments;
 
   if (elements.badgePendingCount) elements.badgePendingCount.innerText = pendingDocs.length;
-  if (elements.badgeApprovedCount) elements.badgeApprovedCount.innerText = appState.sessionStats.approved + approvedDocs.length;
-  if (elements.badgeRevisedCount) elements.badgeRevisedCount.innerText = appState.sessionStats.revised + revisedDocs.length;
-  if (elements.badgeRejectedCount) elements.badgeRejectedCount.innerText = appState.sessionStats.rejected + rejectedDocs.length;
+  if (elements.badgeApprovedCount) elements.badgeApprovedCount.innerText = approvedDocs.length;
+  if (elements.badgeRevisedCount) elements.badgeRevisedCount.innerText = revisedDocs.length;
+  if (elements.badgeRejectedCount) elements.badgeRejectedCount.innerText = rejectedDocs.length;
+  if (elements.badgeArchivedCount) elements.badgeArchivedCount.innerText = archivedDocs.length;
 
-  const filteredDocs = appState.documents.filter(doc => {
+  populateReferTaskDatalist();
+
+  const currentTabDocs = activeTabStatus === 'archived' ? archivedDocuments : visibleDocuments;
+  const filteredDocs = currentTabDocs.filter(doc => {
     const fileName = doc.File_Name || doc.filename || '';
     const taskId = doc.Task_ID || doc.id || '';
     const aiNotes = doc.AI_Notes || doc.key_points || '';
-    
-    const nameMatch = fileName.toLowerCase().includes(searchVal) || 
-                      taskId.toLowerCase().includes(searchVal) ||
-                      aiNotes.toLowerCase().includes(searchVal);
-                      
+
+    const nameMatch = fileName.toLowerCase().includes(searchVal) ||
+      taskId.toLowerCase().includes(searchVal) ||
+      aiNotes.toLowerCase().includes(searchVal);
+
     const docType = (doc.File_Type || doc.file_type || '').toLowerCase();
     const typeMatch = typeVal === 'all' || docType === typeVal;
-    
+
     const docStatus = (doc.Status || doc.status || 'Pending').toLowerCase();
-    const statusMatch = docStatus === activeTabStatus;
+    const statusMatch = activeTabStatus === 'archived' ? true : docStatus === activeTabStatus;
 
     return nameMatch && typeMatch && statusMatch;
   });
@@ -680,6 +789,13 @@ function renderDocs() {
     const gdriveLink = doc.File_Link || doc.gdrive_link || '#';
     const isReapplication = doc.Is_Reapplication ? 'Ya (Revisi)' : 'Tidak (Pengajuan Baru)';
     const referTaskId = doc.Refer_Task_ID && doc.Refer_Task_ID !== '-' ? doc.Refer_Task_ID : null;
+    const docStatus = (doc.Status || doc.status || 'Pending').toLowerCase();
+    const adminNotes = doc.Admin_Notes || doc.admin_notes || (docStatus === 'rejected' ? 'Tidak ada alasan penolakan yang tercatat.' : docStatus === 'needs revision' ? 'Belum ada catatan revisi dari admin.' : 'Tidak ada catatan.');
+    const decisionNotesLabel = docStatus === 'rejected' ? 'Catatan Penolakan' : docStatus === 'needs revision' ? 'Catatan Revisi' : null;
+    const showDecisionNotes = docStatus === 'rejected' || docStatus === 'needs revision';
+    const pengesahanValue = getPengesahanValue(doc);
+    const pengesahanClass = getPengesahanStyle(pengesahanValue);
+    const showActionButtons = docStatus === 'pending';
 
     card.id = `card-${taskId}`;
     card.className = "glass-panel p-5 md:p-6 rounded-3xl border border-white/5 flex flex-col justify-between hover:border-amber-500/30 transition-all duration-300 animate-fade-in-up";
@@ -716,7 +832,7 @@ function renderDocs() {
 
         <div class="space-y-3.5 text-xs">
           <div>
-            <span class="text-[10px] uppercase font-extrabold tracking-wider text-amber-400 font-mono block">1. Spesifikasi Check (Mutu, Teknis, Waktu, Layanan)</span>
+            <span class="text-[10px] uppercase font-extrabold tracking-wider text-amber-400 font-mono block">1. Spesifikasi Check </span>
             <ul class="text-xs text-[var(--text)] mt-1 font-medium bg-white/5 p-2.5 rounded-xl border border-white/5 leading-relaxed space-y-1 list-none">
               ${formatSpesifikasi(doc.Spesifikasi_Check || 'Mutu & Teknis Sesuai Standard')}
             </ul>
@@ -738,6 +854,22 @@ function renderDocs() {
             </p>
           </div>
 
+          ${showDecisionNotes ? `
+            <div>
+              <span class="text-[10px] uppercase font-extrabold tracking-wider text-amber-400 font-mono block">4. ${decisionNotesLabel}</span>
+              <p class="text-xs text-[var(--text)] mt-1 leading-relaxed italic">
+                "${adminNotes}"
+              </p>
+            </div>
+          ` : ''}
+
+          <div class="pt-1 border-t border-white/5 mt-1">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[10px] uppercase font-extrabold tracking-wider text-amber-400 font-mono">${showDecisionNotes ? '5' : '4'}. Pengesahan</span>
+              <span class="px-2 py-1 rounded-full text-[10px] font-semibold ${pengesahanClass}">${pengesahanValue}</span>
+            </div>
+          </div>
+
           <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
             <span class="text-[10px] text-[var(--text-muted)]">
               Pengajuan Ulang: <strong class="${doc.Is_Reapplication ? 'text-rose-400' : 'text-slate-300'}">${isReapplication}</strong>
@@ -748,23 +880,26 @@ function renderDocs() {
       </div>
 
       <div class="flex flex-wrap sm:flex-nowrap gap-2 pt-5 border-t border-amber-500/10 mt-5">
-        <button onclick="approveDocument('${taskId}')" ${actionDisabled} class="btn-action-trigger ${btnClasses} flex-1 min-h-[40px] px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 glow-btn-emerald transition-all duration-300 active:scale-95" title="${isAdmin ? 'Approve Document' : 'Read-Only Mode'}">
-          <i class="fa-solid fa-check"></i>
-          <span>Approve</span>
-        </button>
+        ${showActionButtons ? `
+          <button onclick="openActionModal('${taskId}', 'approve')" ${actionDisabled} class="btn-action-trigger ${btnClasses} flex-1 min-h-[40px] px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 glow-btn-emerald transition-all duration-300 active:scale-95" title="${isAdmin ? 'Approve Document' : 'Read-Only Mode'}">
+            <i class="fa-solid fa-check"></i>
+            <span>Approve</span>
+          </button>
 
-        <button onclick="openActionModal('${taskId}', 'revise')" ${actionDisabled} class="btn-action-trigger ${btnClasses} flex-1 min-h-[40px] px-3 py-2 bg-amber-600/20 hover:bg-amber-600 border border-amber-500/30 hover:border-amber-500 text-amber-300 hover:text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 glow-btn-amber transition-all duration-300 active:scale-95" title="${isAdmin ? 'Minta Revisi' : 'Read-Only Mode'}">
-          <i class="fa-regular fa-pen-to-square"></i>
-          <span>Revisi</span>
-        </button>
+          <button onclick="openActionModal('${taskId}', 'revise')" ${actionDisabled} class="btn-action-trigger ${btnClasses} flex-1 min-h-[40px] px-3 py-2 bg-amber-600/20 hover:bg-amber-600 border border-amber-500/30 hover:border-amber-500 text-amber-300 hover:text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 glow-btn-amber transition-all duration-300 active:scale-95" title="${isAdmin ? 'Minta Revisi' : 'Read-Only Mode'}">
+            <i class="fa-regular fa-pen-to-square"></i>
+            <span>Revisi</span>
+          </button>
 
-        <button onclick="openActionModal('${taskId}', 'reject')" ${actionDisabled} class="btn-action-trigger ${btnClasses} flex-1 min-h-[40px] px-3 py-2 bg-rose-600/20 hover:bg-rose-600 border border-rose-500/30 hover:border-rose-500 text-rose-300 hover:text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 glow-btn-rose transition-all duration-300 active:scale-95" title="${isAdmin ? 'Tolak Dokumen' : 'Read-Only Mode'}">
-          <i class="fa-solid fa-xmark"></i>
-          <span>Tolak</span>
-        </button>
+          <button onclick="openActionModal('${taskId}', 'reject')" ${actionDisabled} class="btn-action-trigger ${btnClasses} flex-1 min-h-[40px] px-3 py-2 bg-rose-600/20 hover:bg-rose-600 border border-rose-500/30 hover:border-rose-500 text-rose-300 hover:text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 glow-btn-rose transition-all duration-300 active:scale-95" title="${isAdmin ? 'Tolak Dokumen' : 'Read-Only Mode'}">
+            <i class="fa-solid fa-xmark"></i>
+            <span>Tolak</span>
+          </button>
+        ` : ''}
 
-        <button onclick="openDocPreview('${taskId}', '${fileName}', '${gdriveLink}', '${doc.File_ID || ''}')" class="min-h-[40px] w-[40px] rounded-xl bg-white/5 border border-amber-500/20 text-[var(--text-muted)] hover:text-amber-300 hover:bg-amber-500/10 transition-all duration-200 flex items-center justify-center shrink-0" title="Preview Dokumen">
+        <button onclick="openDocPreview('${taskId}', '${fileName}', '${gdriveLink}', '${doc.File_ID || ''}')" class="${showActionButtons ? 'min-h-[40px] w-[40px]' : 'flex-1 min-h-[40px]'} rounded-xl bg-white/5 border border-amber-500/20 text-[var(--text-muted)] hover:text-amber-300 hover:bg-amber-500/10 transition-all duration-200 flex items-center justify-center shrink-0" title="Preview Dokumen">
           <i class="fa-solid fa-eye text-xs"></i>
+          ${showActionButtons ? '' : '<span class="ml-2 text-[10px] font-bold">Preview</span>'}
         </button>
       </div>
     `;
@@ -788,7 +923,9 @@ async function approveDocument(taskId) {
     return;
   }
 
-  // Single POST Webhook Endpoint
+  const doc = appState.documents.find(d => (d.Task_ID || d.id) === taskId);
+  const referTaskId = normalizeReferTaskValue(doc ? (doc.Refer_Task_ID ?? doc.refer_task_id) : '') || '-';
+
   const endpoint = `${appState.webhookUrl}/update-doc-status`;
   try {
     const response = await fetch(endpoint, {
@@ -797,18 +934,16 @@ async function approveDocument(taskId) {
       body: JSON.stringify({
         task_id: taskId,
         action: 'approve',
-        admin_notes: 'Disetujui oleh Admin'
+        admin_notes: 'Disetujui oleh Admin',
+        refer_task_id: referTaskId
       })
     });
 
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     
     animateCardOut(taskId, () => {
-      // Update doc status in local state
       const doc = appState.documents.find(d => (d.Task_ID || d.id) === taskId);
       if (doc) doc.Status = 'Approved';
-      appState.sessionStats.approved++;
-      sessionStorage.setItem('stats_approved', appState.sessionStats.approved);
       renderDocs();
       showToast(`Task ${taskId} berhasil disetujui!`, "success");
     });
@@ -819,7 +954,7 @@ async function approveDocument(taskId) {
   }
 }
 
-// Dynamic Action Modal Handling (Revisi vs Tolak with Conditional Refer Task ID)
+// Dynamic Action Modal Handling (Approve / Revisi / Tolak with searchable Refer Task ID)
 function openActionModal(taskId, actionType) {
   if (appState.currentUser.role !== 'admin') {
     showToast("Akses Ditolak: Hanya Admin yang dapat memproses aksi ini!", "error");
@@ -836,28 +971,33 @@ function openActionModal(taskId, actionType) {
     elements.actionModalFilename.innerText = `${taskId} — ${doc.File_Name || doc.filename}`;
   }
 
-  if (actionType === 'revise') {
+  if (actionType === 'approve') {
+    if (elements.modalIcon) elements.modalIcon.innerText = "✅";
+    if (elements.modalTitle) elements.modalTitle.innerText = "Persetujuan Dokumen";
+    if (elements.lblActionNotes) elements.lblActionNotes.innerText = "Catatan Persetujuan atau keterangan tambahan";
+    if (elements.btnSubmitActionText) elements.btnSubmitActionText.innerText = "Konfirmasi Approve";
+  } else if (actionType === 'revise') {
     if (elements.modalIcon) elements.modalIcon.innerText = "✏️";
     if (elements.modalTitle) elements.modalTitle.innerText = "Instruksi Revisi Dokumen";
     if (elements.lblActionNotes) elements.lblActionNotes.innerText = "Catatan Instruksi Revisi untuk Gemini AI";
     if (elements.btnSubmitActionText) elements.btnSubmitActionText.innerText = "Kirim Instruksi Revisi";
-    
-    // Conditionally show Refer Task ID ONLY IF Is_Reapplication == true or present
-    if (doc.Is_Reapplication || (doc.Refer_Task_ID && doc.Refer_Task_ID !== '-')) {
-      if (elements.referTaskContainer) elements.referTaskContainer.classList.remove('hidden');
-      if (elements.referTaskIdInput) elements.referTaskIdInput.value = doc.Refer_Task_ID || taskId;
-    } else {
-      if (elements.referTaskContainer) elements.referTaskContainer.classList.add('hidden');
-      if (elements.referTaskIdInput) elements.referTaskIdInput.value = taskId;
-    }
   } else {
-    // 'reject'
     if (elements.modalIcon) elements.modalIcon.innerText = "❌";
     if (elements.modalTitle) elements.modalTitle.innerText = "Alasan Penolakan Dokumen";
     if (elements.lblActionNotes) elements.lblActionNotes.innerText = "Alasan Penolakan Dokumen (Wajib Diisi)";
     if (elements.btnSubmitActionText) elements.btnSubmitActionText.innerText = "Konfirmasi Tolak";
-    if (elements.referTaskContainer) elements.referTaskContainer.classList.add('hidden');
   }
+
+  if (elements.referTaskContainer) elements.referTaskContainer.classList.remove('hidden');
+  if (elements.referTaskIdInput) {
+    const existingReferTask = normalizeReferTaskValue(doc.Refer_Task_ID ?? doc.refer_task_id);
+    elements.referTaskIdInput.value = existingReferTask || '';
+    elements.referTaskIdInput.setAttribute('list', 'refer-task-datalist');
+    elements.referTaskIdInput.addEventListener('input', updateReferTaskInfo, { once: false });
+  }
+
+  populateReferTaskDatalist();
+  updateReferTaskInfo();
 
   if (elements.actionNotes) elements.actionNotes.value = '';
 
@@ -882,10 +1022,15 @@ async function submitActionModal() {
   const notes = elements.actionNotes ? elements.actionNotes.value.trim() : '';
   const taskId = appState.pendingActionDocId;
   const actionType = appState.pendingActionType;
-  const referTaskId = elements.referTaskIdInput ? elements.referTaskIdInput.value.trim() : taskId;
+  const referTaskId = elements.referTaskIdInput ? elements.referTaskIdInput.value.trim() : '';
+
+  if (!taskId || !actionType) {
+    showToast("Tidak ada dokumen yang diproses. Silakan pilih aksi lagi.", "error");
+    return;
+  }
 
   if (!notes) {
-    showToast(`Harap isi catatan ${actionType === 'revise' ? 'instruksi revisi' : 'alasan penolakan'}!`, "error");
+    showToast(`Harap isi catatan ${actionType === 'revise' ? 'instruksi revisi' : actionType === 'approve' ? 'persetujuan' : 'alasan penolakan'}!`, "error");
     return;
   }
 
@@ -893,6 +1038,8 @@ async function submitActionModal() {
     elements.btnSubmitAction.setAttribute('disabled', 'true');
     elements.btnSubmitAction.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Mengirim...</span>`;
   }
+
+  const normalizedReferTaskId = normalizeReferTaskValue(referTaskId) || '-';
 
   if (appState.mode === 'demo') {
     setTimeout(() => {
@@ -906,7 +1053,6 @@ async function submitActionModal() {
     return;
   }
 
-  // Single POST Webhook Engine Endpoint
   const endpoint = `${appState.webhookUrl}/update-doc-status`;
   try {
     const response = await fetch(endpoint, {
@@ -914,9 +1060,9 @@ async function submitActionModal() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         task_id: taskId,
-        action: actionType, // 'revise' or 'reject'
+        action: actionType,
         admin_notes: notes,
-        refer_task_id: referTaskId
+        refer_task_id: normalizedReferTaskId
       })
     });
 
@@ -926,15 +1072,13 @@ async function submitActionModal() {
     animateCardOut(taskId, () => {
       const doc = appState.documents.find(d => (d.Task_ID || d.id) === taskId);
       if (doc) {
-        doc.Status = actionType === 'revise' ? 'Needs Revision' : 'Rejected';
+        doc.Status = actionType === 'approve' ? 'Approved' : actionType === 'revise' ? 'Needs Revision' : 'Rejected';
       }
-      if (actionType === 'revise') {
-        appState.sessionStats.revised++;
-        sessionStorage.setItem('stats_revised', appState.sessionStats.revised);
+      if (actionType === 'approve') {
+        showToast(`Dokumen ${taskId} berhasil disetujui!`, "success");
+      } else if (actionType === 'revise') {
         showToast(`Instruksi revisi ${taskId} berhasil dikirim ke n8n!`, "success");
       } else {
-        appState.sessionStats.rejected++;
-        sessionStorage.setItem('stats_rejected', appState.sessionStats.rejected);
         showToast(`Dokumen ${taskId} telah ditolak.`, "warning");
       }
       renderDocs();
@@ -957,18 +1101,12 @@ function simulateSuccessAction(taskId, action) {
     
     if (action === 'approve') {
       if (doc) doc.Status = 'Approved';
-      appState.sessionStats.approved++;
-      sessionStorage.setItem('stats_approved', appState.sessionStats.approved);
       showToast(`Simulasi: ${taskId} disetujui & status diubah ke 'Approved'!`, "success");
     } else if (action === 'reject') {
       if (doc) doc.Status = 'Rejected';
-      appState.sessionStats.rejected++;
-      sessionStorage.setItem('stats_rejected', appState.sessionStats.rejected);
       showToast(`Simulasi: ${taskId} ditolak & status diubah ke 'Rejected'!`, "warning");
     } else {
       if (doc) doc.Status = 'Needs Revision';
-      appState.sessionStats.revised++;
-      sessionStorage.setItem('stats_revised', appState.sessionStats.revised);
       showToast(`Simulasi: Instruksi revisi dikirim. Status diubah ke 'Needs Revision'!`, "success");
     }
     renderDocs();

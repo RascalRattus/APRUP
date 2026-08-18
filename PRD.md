@@ -68,7 +68,30 @@ AI (Google Gemini 1.5 Flash) memproses berkas dan mengekstrak 4 bidang kualifika
 3. **Catatan Tambahan (AI Notes):** Ringkasan temuan penting, risiko, atau kejanggalan dokumen.
 4. **Cek Pengajuan Ulang (Is_Reapplication & Refer_Task_ID):** Deteksi otomatis apakah dokumen adalah pengajuan baru atau revisi dari pengajuan terdahulu berdasarkan referensi `Task_ID` sebelumnya.
 
-### B. Single-File HTML Engine & Security (Frontend)
+### B. Referensi Dokumen Lama (Business Rule)
+Kebijakan referensi dokumen lama harus konsisten dan tidak membingungkan admin:
+
+1. Saat admin membuka aksi `Approve`, `Revisi`, atau `Tolak`, field `Refer Task ID / Dokumen Acuan (Opsional)` akan menampilkan saran dokumen referensi.
+2. Hanya dokumen yang statusnya `Needs Revision` atau `Rejected` yang memenuhi syarat muncul sebagai kandidat referensi.
+3. Dari kandidat tersebut, hanya dokumen yang `Refer_Task_ID` masih kosong yang dianggap valid sebagai dokumen lama yang perlu dibaca konteksnya.
+4. Dokumen yang sudah memiliki `Refer_Task_ID` tidak ditampilkan karena itu berarti referensi sudah terhubung sebelumnya.
+5. Dokumen `Archived` tidak dipakai sebagai daftar referensi karena itu bukan dokumen review aktif yang sedang dibuka.
+6. Tujuan dari aturan ini adalah memastikan admin dapat melihat riwayat dokumen sebelum keputusan final, tanpa terlalu banyak noise dari data lama atau data yang sudah terekam dengan referensi sebelumnya.
+
+Contoh:
+
+```text
+Dokumen aktif: TASK-2026-0810 (status Pending)
+Candidate referensi yang muncul:
+- TASK-2026-0807 | Status = Needs Revision | Refer_Task_ID = ""
+- TASK-2026-0805 | Status = Rejected | Refer_Task_ID = ""
+
+Tidak muncul:
+- TASK-2026-0799 | Status = Rejected | Refer_Task_ID = "TASK-2026-0701" (sudah punya referensi)
+- TASK-2026-0782 | Status = Archived (bukan dokumen review aktif)
+```
+
+### C. Single-File HTML Engine & Security (Frontend)
 1. **Single File Architecture:** Seluruh antarmuka, struktur HTML, gaya Tailwind CSS & KEPO-IH design, serta logika interaktif JavaScript dikemas dan diakses secara terpadu di `index.html`.
 2. **Server-Validated Login Security:**
    - Form Login terintegrasi di frontend.
@@ -79,7 +102,7 @@ AI (Google Gemini 1.5 Flash) memproses berkas dan mengekstrak 4 bidang kualifika
    - **Admin Role:** Akses penuh untuk **Approve**, **Revisi** (dengan catatan instruksi), **Tolak**, dan mengaitkan referensi `Task_ID`.
    - **User Role (Read-Only):** Hanya dapat memantau status dokumen, membaca poin analisis AI, dan memfilter data tanpa tombol aksi persetujuan.
 
-### C. UI/UX Design System & Interactivity (KEPO-IH Standards)
+### D. UI/UX Design System & Interactivity (KEPO-IH Standards)
 1. **Glassmorphism Aesthetic:** Latar belakang *ambient drifting orbs*, *grid noise texture*, dan batas emas/indigo transparan.
 2. **Day / Night Mode Toggle (Siang vs Malam):** Dukungan sakelar tema ☀️ **Siang (Light)** & 🌙 **Malam (Dark)** dengan simpanan preferensi otomatis di `localStorage`.
 3. **Mobile-First Responsiveness:** Tampilan ramah ponsel dengan target area sentuh minimum 42px.
@@ -99,11 +122,13 @@ AI (Google Gemini 1.5 Flash) memproses berkas dan mengekstrak 4 bidang kualifika
 | **`TOR_Completeness`** | Text | Ya | Status & Kelengkapan TOR |
 | **`AI_Notes`** | Text | Ya | Ringkasan temuan analisis AI Gemini |
 | **`Is_Reapplication`** | Boolean | Ya | `TRUE` jika revisi / `FALSE` jika baru |
-| **`Refer_Task_ID`** | String | Opsional | `Task_ID` acuan jika pengajuan ulang |
+| **`Refer_Task_ID`** | String | Opsional | `Task_ID` acuan jika pengajuan ulang. Nilai kosong `""` menandakan tidak ada referensi lama yang sudah terkait. |
 | **`Admin_Notes`** | Text | Opsional | Catatan instruksi perbaikan dari Admin |
 | **`Status`** | Enum | Ya | `Pending` \| `Approved` \| `Needs Revision` \| `Rejected` |
 | **`File_Link`** | String | Ya | URL Web View file langsung di Google Drive |
 | **`Timestamp`** | DateTime | Ya | Waktu pembuatan data (`2026-08-13 10:15:00`) |
+
+> Catatan bisnis: saat admin melakukan `Approve`, `Revisi`, atau `Tolak`, sistem hanya menampilkan dokumen referensi lama dari status `Needs Revision` atau `Rejected` yang masih kosong `Refer_Task_ID`. Ini mencegah referensi tertukar dengan dokumen archived maupun dokumen yang sudah punya hubungan referensi sebelumnya.
 
 ---
 
@@ -160,7 +185,8 @@ AI (Google Gemini 1.5 Flash) memproses berkas dan mengekstrak 4 bidang kualifika
 {
   "task_id": "TASK-2026-0801",
   "action": "approve",
-  "admin_notes": "Dokumen telah diverifikasi dan disetujui."
+  "admin_notes": "Dokumen telah diverifikasi dan disetujui.",
+  "refer_task_id": "-"
 }
 ```
 * **Request Payload (Revision):**
@@ -168,7 +194,8 @@ AI (Google Gemini 1.5 Flash) memproses berkas dan mengekstrak 4 bidang kualifika
 {
   "task_id": "TASK-2026-0801",
   "action": "revise",
-  "admin_notes": "Tabel kriteria biaya pada bab 3 perlu diperjelas rinciannya."
+  "admin_notes": "Tabel kriteria biaya pada bab 3 perlu diperjelas rinciannya.",
+  "refer_task_id": "TASK-2026-0805"
 }
 ```
 * **Request Payload (Reject):**
@@ -176,9 +203,12 @@ AI (Google Gemini 1.5 Flash) memproses berkas dan mengekstrak 4 bidang kualifika
 {
   "task_id": "TASK-2026-0801",
   "action": "reject",
-  "admin_notes": "Format TOR tidak sesuai spesifikasi dasar."
+  "admin_notes": "Format TOR tidak sesuai spesifikasi dasar.",
+  "refer_task_id": "-"
 }
 ```
+
+> Aturan khusus referensi: `refer_task_id` bersifat opsional. Ketika admin memilih dokumen lama sebagai konteks, maka nilai yang dikirim adalah `Task_ID` dokumen lama. Jika tidak ada referensi, sistem mengirim `"-"` untuk menandakan kosong. Data referensi yang dipilih berasal dari dokumen lama dengan status `Needs Revision` atau `Rejected` dan `Refer_Task_ID` masih kosong.
 
 ---
 
