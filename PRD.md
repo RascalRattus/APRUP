@@ -8,7 +8,7 @@
 * **Version:** 2.0.0 (Production-Ready)
 * **Status:** Approved / Production Ready
 * **Core Philosophy:** Simplicity in UI, Power in Automation
-* **Production Webhook Base:** `https://n8n.almaudin.my.id/webhook`
+* **Webhook Base:** diisi manual oleh user sesuai environment deployment yang sedang dipakai.
 * **Target Audience:** Document Reviewers, Compliance Officers, System Administrators, Executive Approvers
 * **Tech Stack:** Single-File HTML Engine (HTML5, Tailwind CSS, Vanilla JS ES6+), KEPO-IH Glassmorphism Style System, n8n Automation Engine, Google Gemini AI 1.5 Flash, Google Sheets Database API, Google Drive Ingestion.
 
@@ -16,7 +16,7 @@
 
 ## 1. Executive Summary & Core Philosophy
 
-**APRUP** adalah platform pemantauan dan verifikasi dokumen berbasis AI dengan pendekatan **Human-in-the-Loop (HITL)**. Sistem ini mengintegrasikan otomasi n8n (hosted at `n8n.almaudin.my.id`), analisis multimodal Google Gemini 1.5 Flash, dan database terpusat Google Sheets. 
+**APRUP** adalah platform pemantauan dan verifikasi dokumen berbasis AI dengan pendekatan **Human-in-the-Loop (HITL)**. Sistem ini mengintegrasikan otomasi n8n, analisis multimodal Google Gemini 1.5 Flash, dan database terpusat Google Sheets.
 
 Platform ini menghadirkan dasbor interaktif dalam **satu berkas HTML utuh (`index.html`)** yang sangat ringan, responsif seluler (*mobile-friendly*), aman, dan memiliki gaya visual modern dengan tema **KEPO-IH (Glassmorphism, Light/Dark mode)**.
 
@@ -132,7 +132,7 @@ Tidak muncul:
 
 ---
 
-## 5. Webhook API Contracts (n8n Server at `n8n.almaudin.my.id`)
+## 5. Webhook API Contracts (n8n Server / Environment Deployment User)
 
 ### A. POST `/webhook/auth/login` (Authentication)
 * **Request Payload:**
@@ -235,7 +235,7 @@ Tidak muncul:
 
 ## 7. Development Roadmap & Deployment Steps
 
-1. **Backend & n8n Server Setup (`n8n.almaudin.my.id`):**
+1. **Backend & n8n Server Setup (Environment User):**
    - Impor workflow `workflow_gemini_analyser.json` & `workflow_dashboard_api.json`.
    - Pasang variabel `.env` di server n8n untuk kredensial Admin & User.
 2. **Database Preparation:**

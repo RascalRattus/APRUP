@@ -178,11 +178,11 @@
         <div>
           <h4 class="text-base md:text-lg font-bold mb-1">Aduh! Server n8n Sedang Istirahat!</h4>
           <p class="text-xs md:text-sm text-rose-300/80 leading-relaxed mb-3">
-            Server n8n di <code>https://n8n.almaudin.my.id/webhook</code> sedang offline atau tunnel terputus. Ngopi dulu gih Bos! Seluruh tombol persetujuan dinonaktifkan sementara demi keselamatan data.
+            Server webhook sedang offline atau tunnel terputus. Cek koneksi endpoint n8n yang sudah diatur manual di pengaturan. Seluruh tombol persetujuan dinonaktifkan sementara demi keselamatan data.
           </p>
           <div class="flex flex-wrap items-center gap-3">
             <span class="text-[10px] md:text-xs bg-rose-500/20 border border-rose-500/30 px-3 py-1 rounded-full text-rose-300 font-mono" id="offline-error-details">
-              Endpoint: https://n8n.almaudin.my.id/webhook/get-pending-docs
+              Endpoint: [URL webhook yang diinput user]/get-pending-docs
             </span>
             <button id="btn-toggle-demo-fallback" class="text-xs text-indigo-400 underline font-semibold hover:text-indigo-300">
               Pindahkan ke Demo Mode untuk Uji Coba UI →
@@ -420,9 +420,9 @@
       <div class="space-y-4">
         <div>
           <label for="webhook-url" class="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">n8n Base Webhook URL</label>
-          <input type="url" id="webhook-url" placeholder="https://n8n.almaudin.my.id/webhook" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-amber-500/50 transition-all duration-200 font-mono">
+          <input type="url" id="webhook-url" placeholder="https://your-n8n-domain/webhook" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-amber-500/50 transition-all duration-200 font-mono">
           <p class="text-[11px] text-[var(--text-muted)] mt-2 leading-relaxed">
-            Default Production URL: <code>https://n8n.almaudin.my.id/webhook</code>.
+            Masukkan URL webhook n8n milik Anda sendiri. Contoh format: <code>https://your-n8n-domain/webhook</code>.
           </p>
         </div>
 

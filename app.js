@@ -2,7 +2,7 @@
 let appState = {
   theme: localStorage.getItem('dashboard_theme') || 'dark', // 'dark' (Malam) or 'light' (Siang)
   mode: localStorage.getItem('dashboard_mode') || 'demo', // 'live' or 'demo'
-  webhookUrl: localStorage.getItem('n8n_webhook_url') || 'https://n8n.almaudin.my.id/webhook',
+  webhookUrl: localStorage.getItem('n8n_webhook_url') || 'https://your-n8n-domain/webhook',
   isOnline: false,
   currentUser: JSON.parse(sessionStorage.getItem('aprup_user')) || { username: 'admin', role: 'admin', name: 'Administrator' },
   activeTab: 'pending', // 'pending' | 'approved' | 'needs revision' | 'rejected'
@@ -19,7 +19,7 @@ let appState = {
 
 // Indonesian Humorous Messages for Offline State
 const offlineHumors = [
-  "n8n (n8n.almaudin.my.id) Sedang Istirahat / Server lagi direstart, ngopi dulu Bos! ☕🔌",
+  "n8n sedang istirahat / server lagi direstart. Ambil kopi dulu Bos! ☕🔌",
   "Waduh! n8n sepertinya lagi pingsan. Ambil kopi dulu gih, entar kalau server dinyalain dia bangun sendiri! 🛌",
   "Wah, n8n sedang bobo siang. Hubungkan kembali koneksi internet atau cek status server n8n! 🛠️",
   "Koneksi putus! n8n sedang mogok kerja. Coba cek Docker Desktop atau VPS terminal Anda! 🐳",
@@ -500,7 +500,7 @@ function showToast(message, type = 'info') {
 // Health Check Logic
 async function checkHealth() {
   if (appState.mode === 'demo') {
-    updateHealthUI(true, "🟢 n8n.almaudin.my.id (Demo Mode)");
+    updateHealthUI(true, "🟢 n8n aktif (Demo Mode)");
     return;
   }
 
@@ -518,7 +518,7 @@ async function checkHealth() {
     clearTimeout(timeoutId);
 
     if (response.status === 200 || response.ok) {
-      updateHealthUI(true, "🟢 n8n Aktif (n8n.almaudin.my.id)");
+      updateHealthUI(true, "🟢 n8n Aktif");
     } else {
       updateHealthUI(false, `🔴 n8n Gagal (${response.status})`);
     }
@@ -1197,7 +1197,7 @@ async function testSettingsConnection() {
       showToast(`Koneksi Gagal: Server merespon status ${response.status}`, "error");
     }
   } catch (error) {
-    showToast("Tes Koneksi Gagal! Periksa URL n8n.almaudin.my.id Anda.", "error");
+    showToast("Tes Koneksi Gagal! Periksa URL webhook n8n Anda.", "error");
   } finally {
     if (elements.btnTestConnection && elements.testConnIcon) {
       elements.btnTestConnection.removeAttribute('disabled');

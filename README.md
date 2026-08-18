@@ -2,7 +2,7 @@
 
 > **Product Version:** 2.0 (Production-Ready)  
 > **Architecture:** Clean Separated Multi-File (`index.html`, `style.css`, `app.js`)  
-> **Production Webhook:** `https://n8n.almaudin.my.id/webhook`
+> **Webhook Setup:** user mengisi URL webhook secara manual sesuai lingkungan deploy.
 
 ---
 
