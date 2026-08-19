@@ -31,8 +31,7 @@ const mockDocuments = [
   {
     Task_ID: "TASK-2026-0801",
     File_ID: "gdrive-file-001",
-    File_Name: "Modul_Kemenkeu.pdf",
-    File_Type: "pdf",
+    File_Name: "Modul_Kemenkeu",
     File_Size: "1.2 MB",
     Timestamp: "2026-08-13 10:15:30",
     Spesifikasi_Check: "Mutu: Lengkap | Teknis: Sesuai | Waktu: 30 Hari | Layanan: SLA 99%",
@@ -47,8 +46,7 @@ const mockDocuments = [
   {
     Task_ID: "TASK-2026-0802",
     File_ID: "gdrive-file-002",
-    File_Name: "Laporan_Pengadaan_TI.docx",
-    File_Type: "docx",
+    File_Name: "Laporan_Pengadaan_TI",
     File_Size: "3.4 MB",
     Timestamp: "2026-08-13 11:20:00",
     Spesifikasi_Check: "Mutu: Standar | Teknis: Perlu Penyesuaian | Waktu: 45 Hari | Layanan: SLA 95%",
@@ -63,8 +61,7 @@ const mockDocuments = [
   {
     Task_ID: "TASK-2026-0803",
     File_ID: "gdrive-file-003",
-    File_Name: "Kuitansi_AWS_Server.jpg",
-    File_Type: "image",
+    File_Name: "Kuitansi_AWS_Server",
     File_Size: "820 KB",
     Timestamp: "2026-08-13 14:02:11",
     Spesifikasi_Check: "Mutu: Baik | Teknis: Valid Invoice | Waktu: Jatuh Tempo 25 Ags | Layanan: AWS Direct",
@@ -79,8 +76,7 @@ const mockDocuments = [
   {
     Task_ID: "TASK-2026-0804",
     File_ID: "gdrive-file-004",
-    File_Name: "Foto_Kondisi_Gudang_B.png",
-    File_Type: "image",
+    File_Name: "Foto_Kondisi_Gudang_B",
     File_Size: "2.1 MB",
     Timestamp: "2026-08-13 15:45:00",
     Spesifikasi_Check: "Mutu: Kritis | Teknis: Miring 15 Derajat | Waktu: Penanganan Segera | Layanan: Pemeliharaan Gudang",
@@ -124,10 +120,6 @@ const elements = {
 
   // Filters
   searchInput: document.getElementById('search-input'),
-  filterAll: document.getElementById('filter-all'),
-  filterPdf: document.getElementById('filter-pdf'),
-  filterDocx: document.getElementById('filter-docx'),
-  filterImage: document.getElementById('filter-image'),
   autoRefreshCheck: document.getElementById('auto-refresh-check'),
   btnRefresh: document.getElementById('btn-refresh'),
   refreshIcon: document.getElementById('refresh-icon'),
@@ -250,7 +242,7 @@ function updateReferTaskInfo() {
   const fileLink = doc.File_Link || doc.file_link || '#';
 
   if (elements.referTaskDocName) elements.referTaskDocName.innerText = `${doc.Task_ID || doc.task_id || inputValue} — ${fileName}`;
-  if (elements.referTaskDocMeta) elements.referTaskDocMeta.innerText = `Status: ${status} • ${doc.File_Type || doc.file_type || 'Unknown'}`;
+  if (elements.referTaskDocMeta) elements.referTaskDocMeta.innerText = `Status: ${status}`;
   if (elements.referTaskAdminNotes) elements.referTaskAdminNotes.innerText = adminNotes;
   if (elements.referTaskDocLink) {
     elements.referTaskDocLink.href = fileLink;
@@ -311,10 +303,6 @@ function init() {
 
   if (elements.searchInput) elements.searchInput.addEventListener('input', handleSearch);
   if (elements.filterAll) elements.filterAll.addEventListener('click', () => setTypeFilter('all'));
-  if (elements.filterPdf) elements.filterPdf.addEventListener('click', () => setTypeFilter('pdf'));
-  if (elements.filterDocx) elements.filterDocx.addEventListener('click', () => setTypeFilter('docx'));
-  if (elements.filterImage) elements.filterImage.addEventListener('click', () => setTypeFilter('image'));
-
   if (elements.btnRefresh) elements.btnRefresh.addEventListener('click', () => syncData(true));
   if (elements.btnToggleDemoFallback) elements.btnToggleDemoFallback.addEventListener('click', () => changeMode('demo'));
 
@@ -728,7 +716,6 @@ function renderDocs() {
   const archivedDocuments = appState.documents.filter(doc => hasValidReferTaskReference(doc));
   const visibleDocuments = appState.documents.filter(doc => !hasValidReferTaskReference(doc));
   const searchVal = appState.filters.search.toLowerCase();
-  const typeVal = appState.filters.type;
   const activeTabStatus = appState.activeTab.toLowerCase();
 
   const pendingDocs = visibleDocuments.filter(d => (d.Status || d.status || 'Pending').toLowerCase() === 'pending');
@@ -755,13 +742,10 @@ function renderDocs() {
       taskId.toLowerCase().includes(searchVal) ||
       aiNotes.toLowerCase().includes(searchVal);
 
-    const docType = (doc.File_Type || doc.file_type || '').toLowerCase();
-    const typeMatch = typeVal === 'all' || docType === typeVal;
-
     const docStatus = (doc.Status || doc.status || 'Pending').toLowerCase();
     const statusMatch = activeTabStatus === 'archived' ? true : docStatus === activeTabStatus;
 
-    return nameMatch && typeMatch && statusMatch;
+    return nameMatch && statusMatch;
   });
 
   if (filteredDocs.length === 0) {
@@ -783,8 +767,7 @@ function renderDocs() {
   filteredDocs.forEach((doc, index) => {
     const card = document.createElement('div');
     const taskId = doc.Task_ID || doc.id || `TASK-${index+100}`;
-    const fileName = doc.File_Name || doc.filename || 'Dokumen.pdf';
-    const fileType = doc.File_Type || doc.file_type || 'pdf';
+    const fileName = doc.File_Name || doc.filename || 'Dokumen';
     const fileSize = doc.File_Size || doc.file_size || 'N/A';
     const gdriveLink = doc.File_Link || doc.gdrive_link || '#';
     const isReapplication = doc.Is_Reapplication ? 'Ya (Revisi)' : 'Tidak (Pengajuan Baru)';
@@ -801,11 +784,7 @@ function renderDocs() {
     card.className = "glass-panel p-5 md:p-6 rounded-3xl border border-white/5 flex flex-col justify-between hover:border-brandgold-500/30 transition-all duration-300 animate-fade-in-up";
     card.style.animationDelay = `${index * 50}ms`;
 
-    const isPdf = fileType === 'pdf';
-    const isDocx = fileType === 'docx';
-    let iconClass = 'fa-file-pdf text-brandwine-400 bg-brandwine-500/10 border-brandwine-500/20';
-    if (isDocx) iconClass = 'fa-file-word text-brandpurple-400 bg-brandpurple-500/10 border-brandpurple-500/20';
-    else if (!isPdf) iconClass = 'fa-image text-brandgold-400 bg-brandgold-500/10 border-brandgold-500/20';
+    const iconClass = 'fa-file-lines text-brandgold-400 bg-brandgold-500/10 border-brandgold-500/20';
 
     const actionDisabled = (!appState.isOnline && appState.mode === 'live') || !isAdmin ? 'disabled' : '';
     const btnClasses = (!appState.isOnline && appState.mode === 'live') || !isAdmin ? 'opacity-50 cursor-not-allowed' : '';
@@ -822,7 +801,7 @@ function renderDocs() {
                 <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-brandgold-500/20 text-brandgold-300 border border-brandgold-500/30">${taskId}</span>
                 <h4 class="text-xs md:text-sm font-bold text-[var(--text)] truncate max-w-[150px] sm:max-w-[220px]" title="${fileName}">${fileName}</h4>
               </div>
-              <span class="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-wider mt-0.5 block">${fileSize} • ${fileType.toUpperCase()}</span>
+              <span class="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-wider mt-0.5 block">${fileSize}</span>
             </div>
           </div>
           <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-brandgold-500/15 border border-brandgold-500/30 text-brandgold-300">
@@ -1217,25 +1196,9 @@ function handleSearch(e) {
   renderDocs();
 }
 
-function setTypeFilter(type) {
-  appState.filters.type = type;
-  
-  const btns = [elements.filterAll, elements.filterPdf, elements.filterDocx, elements.filterImage].filter(Boolean);
-  btns.forEach(btn => {
-    btn.className = "flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text)] transition-all duration-200";
-  });
-
-  if (type === 'all' && elements.filterAll) elements.filterAll.className = "flex-1 sm:flex-none px-3 py-1.5 rounded-lg bg-white/10 font-medium transition-all duration-200";
-  else if (type === 'pdf' && elements.filterPdf) elements.filterPdf.className = "flex-1 sm:flex-none px-3 py-1.5 rounded-lg bg-white/10 font-medium transition-all duration-200";
-  else if (type === 'docx' && elements.filterDocx) elements.filterDocx.className = "flex-1 sm:flex-none px-3 py-1.5 rounded-lg bg-white/10 font-medium transition-all duration-200";
-  else if (type === 'image' && elements.filterImage) elements.filterImage.className = "flex-1 sm:flex-none px-3 py-1.5 rounded-lg bg-white/10 font-medium transition-all duration-200";
-
-  renderDocs();
-}
-
 // Auto Refresh Loops
 function toggleAutoRefresh() {
-  const isChecked = elements.autoRefreshCheck ? elements.autoRefreshCheck.checked : true;
+  const isChecked = elements.autoRefreshCheck ? elements.autoRefreshCheck.checked : false;
   
   if (appState.autoRefreshTimer) {
     clearInterval(appState.autoRefreshTimer);

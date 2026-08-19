@@ -123,20 +123,12 @@ async function testViewport(browser, vp) {
     log(vpLabel, 'Navigation Tabs', 'PASS', results.join(' | '));
   } catch(e) { log(vpLabel, 'Navigation Tabs', 'FAIL', e.message); }
 
-  // Step 5: Format Filters
+  // Step 5: Format Filters Removed and Auto-sync Opt-in
   try {
-    const filters = ['#filter-pdf','#filter-docx','#filter-image','#filter-all'];
-    let results = [];
-    for (const f of filters) {
-      const v = await isVisible(page, f);
-      if (v) {
-        await safeClick(page, f);
-        const count = await page.locator('#document-grid > *').count();
-        results.push(f.replace('#filter-','') + ':' + count);
-      } else results.push(f.replace('#filter-','') + ':hidden');
-    }
+    const formatFilters = await page.locator('#filter-pdf, #filter-docx, #filter-image, #filter-all').count();
+    const autoSyncEnabled = await page.locator('#auto-refresh-check').isChecked();
     await screenshot(page, `${vpLabel}_05_filters`);
-    log(vpLabel, 'Format Filters', 'PASS', results.join(' | '));
+    log(vpLabel, 'Format Filters Removed', formatFilters === 0 && !autoSyncEnabled ? 'PASS' : 'FAIL', `format_filters:${formatFilters} | auto_sync:${autoSyncEnabled}`);
   } catch(e) { log(vpLabel, 'Format Filters', 'FAIL', e.message); }
 
   // Step 6: Search
@@ -203,6 +195,10 @@ async function testViewport(browser, vp) {
 
   // Step 10: Auto-refresh
   try {
+    if (await isVisible(page, '#action-modal')) {
+      await page.evaluate(() => window.closeActionModal());
+      await page.waitForTimeout(200);
+    }
     const visible = await isVisible(page, '#auto-refresh-check');
     if (visible) {
       const before = await page.locator('#auto-refresh-check').isChecked();

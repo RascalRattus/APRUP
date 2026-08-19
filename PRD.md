@@ -26,7 +26,7 @@ Platform ini menghadirkan dasbor interaktif dalam **satu berkas HTML utuh (`inde
 
 ```
 ┌────────────────────────────────┐
-│   Ingestion Layer (GDrive)     │  Upload PDF/DOCX ke folder Google Drive spesifik.
+│   Ingestion Layer (GDrive)     │  Mengambil berkas dari folder Google Drive spesifik.
 └───────────────┬────────────────┘
                 │
                 ▼
@@ -50,7 +50,7 @@ Platform ini menghadirkan dasbor interaktif dalam **satu berkas HTML utuh (`inde
 └────────────────────────────────┘  pengguna terhadap variabel .env server (Admin/User).
 ```
 
-1. **Ingestion Layer:** Pengunggahan berkas (PDF / DOCX) ke folder terdeteksi di Google Drive.
+1. **Ingestion Layer:** Pengunggahan berkas ke folder terdeteksi di Google Drive tanpa pembatasan format di dashboard.
 2. **Analysis Layer:** Workflow n8n membaca berkas, menjalankan *anti-double check* (deduplikasi ID/Hash), lalu mengekstrak 4 kriteria krusial menggunakan Google Gemini 1.5 Flash.
 3. **Data Layer:** Hasil ekstraksi dan riwayat persetujuan disimpan di Google Sheets dengan `Task_ID` unik (contoh: `TASK-2026-0801`).
 4. **Presentation Layer:** Antarmuka web statis ringan (`index.html`) yang melakukan sinkronisasi dua arah via REST API Webhooks.
@@ -106,7 +106,7 @@ Tidak muncul:
 1. **Glassmorphism Aesthetic:** Latar belakang *ambient drifting orbs*, *grid noise texture*, dan batas emas/indigo transparan.
 2. **Day / Night Mode Toggle (Siang vs Malam):** Dukungan sakelar tema ☀️ **Siang (Light)** & 🌙 **Malam (Dark)** dengan simpanan preferensi otomatis di `localStorage`.
 3. **Mobile-First Responsiveness:** Tampilan ramah ponsel dengan target area sentuh minimum 42px.
-4. **Flicker-Free Silent Auto-Sync:** Sinkronisasi background 15 detik berjalan secara halus tanpa animasi shimmer skeleton yang mengganggu penglihatan.
+4. **Manual Sync dengan Auto-Sync Opt-in:** Sinkronisasi otomatis 15 detik nonaktif secara default. Pengguna dapat mengaktifkannya sendiri; tombol sinkronisasi manual tetap tersedia.
 
 ---
 
@@ -116,8 +116,7 @@ Tidak muncul:
 | :--- | :--- | :--- | :--- |
 | **`Task_ID`** | String | Ya | ID Unik Tugas (contoh: `TASK-2026-0801`) |
 | **`File_ID`** | String | Ya | Google Drive File ID (`1a2b3c4d...`) |
-| **`File_Name`** | String | Ya | Nama asli berkas (`Modul_Kemenkeu.pdf`) |
-| **`File_Type`** | String | Ya | Format berkas (`pdf` / `docx` / `image`) |
+| **`File_Name`** | String | Ya | Nama asli berkas |
 | **`Spesifikasi_Check`** | Text | Ya | Ketersediaan Mutu, Teknis, Waktu, & Layanan |
 | **`TOR_Completeness`** | Text | Ya | Status & Kelengkapan TOR |
 | **`AI_Notes`** | Text | Ya | Ringkasan temuan analisis AI Gemini |
@@ -163,8 +162,7 @@ Tidak muncul:
   {
     "Task_ID": "TASK-2026-0801",
     "File_ID": "gdrive-file-001",
-    "File_Name": "Modul_Kemenkeu.pdf",
-    "File_Type": "pdf",
+    "File_Name": "Modul_Kemenkeu",
     "Spesifikasi_Check": "Mutu: Lengkap | Teknis: Sesuai | Waktu: 30 Hari | Layanan: SLA 99%",
     "TOR_Completeness": "Lengkap (10/10 Bab Terpenuhi)",
     "AI_Notes": "Integrasi regulasi internal dengan Core Values ASN BerAKHLAK berjalan baik.",
@@ -220,7 +218,7 @@ Tidak muncul:
 +--------------------------------------------------------------------------+
 | Filter Status: [ All Status ▼ ]  Filter Tipe: [ Semua ▼ ]  [ ☀️/🌙 Theme ]|
 +--------------------------------------------------------------------------+
-| 📁 TASK-2026-0801 | Modul_Kemenkeu.pdf              [ PENDING REVIEW ]  |
+| 📁 TASK-2026-0801 | Modul_Kemenkeu              [ PENDING REVIEW ]  |
 | ------------------------------------------------------------------------ |
 | • Spesifikasi Check : Mutu: Sesuai | Teknis: Lengkap | Waktu: 30 Hari    |
 | • Kelengkapan TOR   : Lengkap (10/10 Bab Terpenuhi)                      |

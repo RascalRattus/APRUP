@@ -13,8 +13,7 @@ Header baris pertama wajib memuat 13 kolom berikut:
 | :--- | :--- | :--- | :--- |
 | **`Task_ID`** | Text | ID Unik Tugas dari n8n | `TASK-2026-0801` |
 | **`File_ID`** | Text | ID Unik file dari Google Drive | `1a2b3c4d5e...` |
-| **`File_Name`** | Text | Nama asli berkas dokumen | `Modul_Kemenkeu.pdf` |
-| **`File_Type`** | Text | Format berkas (`pdf`, `docx`, `image`) | `pdf` |
+| **`File_Name`** | Text | Nama asli berkas dokumen | `Modul_Kemenkeu` |
 | **`Spesifikasi_Check`** | Text | Penilaian ketersediaan Mutu, Teknis, Waktu, & Layanan | `Mutu: Lengkap \| Teknis: Sesuai` |
 | **`TOR_Completeness`** | Text | Status kelengkapan TOR | `Lengkap (10/10 Bab Terpenuhi)` |
 | **`AI_Notes`** | Text | Ringkasan temuan analisis AI Gemini | `Integrasi regulasi internal berjalan baik.` |
@@ -61,6 +60,10 @@ Frontend APRUP v2.0 menggunakan **1 Single POST Webhook Endpoint** (`/update-doc
 
 ### GET Endpoint: `/get-pending-docs`
 Memuat seluruh dokumen yang berstatus `Pending` dari Google Sheets.
+
+Dashboard tidak memfilter berdasarkan format berkas. Kolom `File_Type` tidak diperlukan oleh frontend dan boleh dihapus dari sheet maupun payload API.
+
+Auto-sync frontend nonaktif secara default. Sinkronisasi berjalan ketika pengguna menekan tombol manual atau mengaktifkan checkbox auto-sync.
 
 ### POST Endpoint: `/update-doc-status`
 Memproses perubahan status berdasarkan aksi Admin.

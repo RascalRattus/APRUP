@@ -51,6 +51,13 @@ APRUP/
 └── test_screenshots/            # Hasil tangkapan layar eksplorasi UI
 ```
 
+## ⚙️ Kebijakan Format dan Sinkronisasi
+
+- Dashboard tidak menyediakan filter atau perlakuan khusus untuk PDF, DOCX, maupun gambar.
+- Data hanya menggunakan nama berkas dan metadata analisis yang diperlukan; `File_Type` tidak lagi menjadi bagian kontrak dashboard.
+- Auto-sync 15 detik **nonaktif secara default**. Centang `Auto-sync` jika ingin mengaktifkannya.
+- Tombol `Sinkronisasi Data` tetap dapat digunakan kapan saja untuk mengambil data secara manual.
+
 ## 🔗 Aturan Referensi Dokumen Lama (Versi Final)
 
 Saat admin membuka modal `Approve`, `Revisi`, atau `Tolak`, field `Refer Task ID / Dokumen Acuan (Opsional)` harus mengikuti aturan berikut:
