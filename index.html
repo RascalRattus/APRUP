@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>APRUP v2.0 — AI Document Monitor & Approval Dashboard</title>
+  <title>APRUP — Document Review &amp; Approval</title>
 
-  <!-- Google Fonts: Cormorant Garamond, Space Mono, Plus Jakarta Sans -->
+  <!-- Google Fonts: Fraunces, Manrope, IBM Plex Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -21,9 +21,17 @@
       theme: {
         extend: {
           colors: {
-            darkbg: '#080810',
-            darkpanel: 'rgba(15, 15, 26, 0.65)',
-            gold: '#c8a96e',
+            darkbg: '#0a090c',
+            darkpanel: 'rgba(19, 17, 23, 0.9)',
+            gold: '#c5a059',
+            brandgold: { 200: '#ecd7ac', 300: '#e0c088', 400: '#d4ad6e', 500: '#c5a059', 600: '#a98544', 700: '#8a6a35' },
+            brandpurple: { 200: '#dccdf0', 300: '#c3aee8', 400: '#a688d9', 500: '#7d5bb8', 600: '#664a9a', 700: '#503a79' },
+            brandwine: { 200: '#e8bdc9', 300: '#d98fa0', 400: '#c15d75', 500: '#a6415a', 600: '#8a3349', 700: '#6e2839' },
+          },
+          fontFamily: {
+            display: ['Fraunces', 'serif'],
+            mono: ['"IBM Plex Mono"', 'monospace'],
+            sans: ['Manrope', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
           }
         }
       }
@@ -35,34 +43,26 @@
 </head>
 <body class="min-h-screen pb-12 transition-colors duration-400">
 
-  <!-- Ambient Drifting Background Orbs -->
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-
-  <!-- Grid Overlay -->
+  <!-- Background: subtle grid + restrained brand wash (no neon, no motion) -->
   <div class="grid-bg"></div>
-
-  <!-- Corner Decor Frame -->
-  <div class="corner corner-tl"></div>
-  <div class="corner corner-tr"></div>
-  <div class="corner corner-bl"></div>
-  <div class="corner corner-br"></div>
+  <div class="brand-wash"></div>
 
   <!-- Top Navigation & Header -->
-  <header class="w-full border-b border-amber-500/10 py-3.5 px-4 md:px-12 backdrop-blur-xl sticky top-0 z-40 bg-[var(--header-bg)] transition-colors duration-400">
+  <header class="w-full border-b border-[var(--border)] py-3.5 px-4 md:px-12 backdrop-blur-xl sticky top-0 z-40 bg-[var(--header-bg)] transition-colors duration-400">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
       <div class="w-full md:w-auto flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <span class="text-2xl md:text-3xl">📊</span>
+          <div class="w-9 h-9 md:w-10 md:h-10 rounded-lg border border-brandgold-500/30 bg-brandgold-500/10 flex items-center justify-center text-brandgold-400 shrink-0">
+            <i class="fa-regular fa-clipboard-check text-sm md:text-base"></i>
+          </div>
           <div>
             <div class="flex items-center gap-2">
-              <h1 class="text-lg md:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-100 to-indigo-300">
-                APRUP v2.0
+              <h1 class="text-lg md:text-2xl font-display font-semibold text-[var(--text)] tracking-tight">
+                APRUP
               </h1>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">v2.0 Prod</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-brandpurple-500/15 text-brandpurple-300 border border-brandpurple-500/30">v2.0</span>
             </div>
-            <p class="text-[11px] md:text-xs text-[var(--text-muted)] font-mono">AI Document Monitor & Human-in-the-Loop Approval</p>
+            <p class="text-[11px] md:text-xs text-[var(--text-muted)]">Monitor &amp; Persetujuan Dokumen</p>
           </div>
         </div>
       </div>
@@ -70,31 +70,31 @@
       <!-- Connection Status, Role Switcher, Theme Toggle, & Settings -->
       <div class="flex flex-wrap items-center justify-between md:justify-end gap-2 md:gap-3 w-full md:w-auto">
         <!-- Role-Based Access Badge (RBAC Login Trigger) -->
-        <div id="user-role-badge" class="flex items-center gap-1.5 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/15 text-amber-300 text-xs font-semibold select-none cursor-pointer" title="Klik untuk mengganti akun / login" onclick="openLoginModal()">
+        <div id="user-role-badge" class="flex items-center gap-1.5 px-3 py-1 rounded-full border border-brandgold-500/30 bg-brandgold-500/15 text-brandgold-300 text-xs font-semibold select-none cursor-pointer" title="Klik untuk mengganti akun / login" onclick="openLoginModal()">
           <i class="fa-solid fa-user-shield text-xs"></i>
           <span id="user-role-text">Role: Admin</span>
           <button id="btn-toggle-role" class="ml-1 text-[10px] underline hover:text-white">(Login)</button>
         </div>
 
         <!-- Live vs Demo Switcher -->
-        <div class="flex items-center bg-white/5 rounded-full p-1 border border-amber-500/20 text-xs shrink-0">
+        <div class="flex items-center bg-white/5 rounded-full p-1 border border-brandgold-500/20 text-xs shrink-0">
           <button id="btn-live-mode" class="px-3 py-1 rounded-full transition-all duration-200 text-[var(--text-muted)] font-semibold">
             Live Mode
           </button>
-          <button id="btn-demo-mode" class="px-3 py-1 rounded-full bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-500/20 transition-all duration-200">
+          <button id="btn-demo-mode" class="px-3 py-1 rounded-full bg-brandpurple-600 text-white font-semibold shadow-md shadow-brandpurple-500/20 transition-all duration-200">
             Demo Mode
           </button>
         </div>
 
         <!-- Health Status Badge -->
-        <div id="health-badge" class="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-amber-500/20 bg-amber-500/10 text-amber-300 text-xs font-semibold select-none shrink-0">
+        <div id="health-badge" class="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-brandgold-500/20 bg-brandgold-500/10 text-brandgold-300 text-xs font-semibold select-none shrink-0">
           <span class="w-2.5 h-2.5 rounded-full pulse-dot-amber"></span>
           <span id="health-text" class="text-[11px] md:text-xs">Mengecek n8n...</span>
         </div>
 
         <div class="flex items-center gap-2">
           <!-- Light / Dark Mode Toggle Button (Siang vs Malam) -->
-          <button id="btn-theme-toggle" class="p-2.5 rounded-full bg-white/5 border border-white/10 text-amber-300 hover:text-white hover:bg-white/10 transition-all duration-200 flex items-center justify-center shrink-0" title="Ganti Mode Siang / Malam">
+          <button id="btn-theme-toggle" class="p-2.5 rounded-full bg-white/5 border border-white/10 text-brandgold-300 hover:text-white hover:bg-white/10 transition-all duration-200 flex items-center justify-center shrink-0" title="Ganti Mode Siang / Malam">
             <i id="theme-toggle-icon" class="fa-solid fa-moon text-sm"></i>
           </button>
 
@@ -110,35 +110,35 @@
   <main class="max-w-7xl mx-auto px-4 md:px-12 mt-6 md:mt-8 relative z-10">
     <!-- Status Navigation Tabs (Tab Navigasi Status) -->
     <section class="mb-6">
-      <div class="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl glass-panel border border-amber-500/15">
+      <div class="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl glass-panel border border-brandgold-500/15">
         <button id="tab-pending" onclick="switchStatusTab('pending')" class="nav-tab-item active flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold flex items-center justify-center gap-2 transition-all duration-200">
-          <i class="fa-regular fa-clock text-amber-400"></i>
+          <i class="fa-regular fa-clock text-brandgold-400"></i>
           <span>Menunggu Review</span>
-          <span id="badge-pending-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-amber-500/20 text-amber-300">0</span>
+          <span id="badge-pending-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-brandgold-500/20 text-brandgold-300">0</span>
         </button>
 
         <button id="tab-approved" onclick="switchStatusTab('approved')" class="nav-tab-item flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text)] flex items-center justify-center gap-2 transition-all duration-200">
-          <i class="fa-regular fa-circle-check text-emerald-400"></i>
+          <i class="fa-regular fa-circle-check text-brandpurple-400"></i>
           <span>Disetujui</span>
-          <span id="badge-approved-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/20 text-emerald-300">0</span>
+          <span id="badge-approved-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-brandpurple-500/20 text-brandpurple-300">0</span>
         </button>
 
         <button id="tab-revised" onclick="switchStatusTab('needs revision')" class="nav-tab-item flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text)] flex items-center justify-center gap-2 transition-all duration-200">
-          <i class="fa-regular fa-pen-to-square text-amber-300"></i>
+          <i class="fa-regular fa-pen-to-square text-brandgold-300"></i>
           <span>Revisi</span>
-          <span id="badge-revised-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-amber-500/20 text-amber-300">0</span>
+          <span id="badge-revised-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-brandgold-500/20 text-brandgold-300">0</span>
         </button>
 
         <button id="tab-rejected" onclick="switchStatusTab('rejected')" class="nav-tab-item flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text)] flex items-center justify-center gap-2 transition-all duration-200">
-          <i class="fa-solid fa-ban text-rose-400"></i>
+          <i class="fa-solid fa-ban text-brandwine-400"></i>
           <span>Ditolak</span>
-          <span id="badge-rejected-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-rose-500/20 text-rose-300">0</span>
+          <span id="badge-rejected-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-brandwine-500/20 text-brandwine-300">0</span>
         </button>
 
         <button id="tab-archived" onclick="switchStatusTab('archived')" class="nav-tab-item flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text)] flex items-center justify-center gap-2 transition-all duration-200">
-          <i class="fa-solid fa-box-archive text-indigo-400"></i>
+          <i class="fa-solid fa-box-archive text-brandpurple-400"></i>
           <span>Archived</span>
-          <span id="badge-archived-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-indigo-500/20 text-indigo-300">0</span>
+          <span id="badge-archived-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-brandpurple-500/20 text-brandpurple-300">0</span>
         </button>
       </div>
     </section>
@@ -151,18 +151,26 @@
           <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-[var(--text-muted)] pointer-events-none">
             <i class="fa-solid fa-magnifying-glass text-xs md:text-sm"></i>
           </span>
-          <input type="text" id="search-input" placeholder="Cari Task ID / nama file..." class="w-full bg-white/5 border border-amber-500/20 rounded-xl py-2 pl-9 pr-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-amber-500/50 transition-all duration-200">
+          <input type="text" id="search-input" placeholder="Cari Task ID / nama file..." class="w-full bg-white/5 border border-brandgold-500/20 rounded-xl py-2 pl-9 pr-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-brandgold-500/50 transition-all duration-200">
+        </div>
+
+        <!-- Format Filter -->
+        <div class="flex items-center gap-1 bg-white/5 border border-white/5 rounded-lg p-1 text-xs">
+          <button id="filter-all" class="flex-1 sm:flex-none px-3 py-1.5 rounded-lg bg-white/10 font-medium transition-all duration-200">Semua Format</button>
+          <button id="filter-pdf" class="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text)] transition-all duration-200">PDF</button>
+          <button id="filter-docx" class="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text)] transition-all duration-200">DOCX</button>
+          <button id="filter-image" class="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text)] transition-all duration-200">Gambar</button>
         </div>
       </div>
 
       <!-- Auto-sync Controls -->
       <div class="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto">
         <label class="flex items-center gap-2 text-xs text-[var(--text-muted)] select-none cursor-pointer">
-          <input type="checkbox" id="auto-refresh-check" checked class="rounded border-white/10 bg-white/5 text-amber-500 focus:ring-0">
+          <input type="checkbox" id="auto-refresh-check" checked class="rounded border-white/10 bg-white/5 text-brandgold-500 focus:ring-0">
           <span>Auto-sync (15s)</span>
         </label>
         
-        <button id="btn-refresh" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold rounded-xl flex items-center gap-2 shadow-lg shadow-amber-600/10 transition-all duration-200 active:scale-95">
+        <button id="btn-refresh" class="px-4 py-2 bg-brandgold-600 hover:bg-brandgold-500 text-white text-xs font-semibold rounded-xl flex items-center gap-2 shadow-lg shadow-brandgold-600/10 transition-all duration-200 active:scale-95">
           <i id="refresh-icon" class="fa-solid fa-arrows-rotate"></i>
           <span>Sinkronisasi Data</span>
         </button>
@@ -170,21 +178,21 @@
     </section>
 
     <!-- Offline Banner Alert -->
-    <section id="offline-humor-alert" class="hidden mb-6 md:mb-8 p-5 md:p-6 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-300 animate-fade-in-up">
+    <section id="offline-humor-alert" class="hidden mb-6 md:mb-8 p-5 md:p-6 rounded-2xl bg-brandwine-500/10 border border-brandwine-500/20 text-brandwine-300 animate-fade-in-up">
       <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-        <div class="w-12 h-12 md:w-14 md:h-14 shrink-0 rounded-2xl bg-rose-500/20 flex items-center justify-center text-rose-400 text-2xl md:text-3xl">
-          ☕
+        <div class="w-12 h-12 md:w-14 md:h-14 shrink-0 rounded-2xl bg-brandwine-500/20 flex items-center justify-center text-brandwine-400 text-xl md:text-2xl">
+          <i class="fa-solid fa-plug-circle-xmark"></i>
         </div>
         <div>
-          <h4 class="text-base md:text-lg font-bold mb-1">Aduh! Server n8n Sedang Istirahat!</h4>
-          <p class="text-xs md:text-sm text-rose-300/80 leading-relaxed mb-3">
-            Server webhook sedang offline atau tunnel terputus. Cek koneksi endpoint n8n yang sudah diatur manual di pengaturan. Seluruh tombol persetujuan dinonaktifkan sementara demi keselamatan data.
+          <h4 class="text-base md:text-lg font-bold mb-1">Server n8n Tidak Terhubung</h4>
+          <p class="text-xs md:text-sm text-brandwine-300/80 leading-relaxed mb-3">
+            Server webhook sedang offline atau tunnel terputus. Periksa endpoint n8n yang dikonfigurasi di pengaturan. Seluruh tombol persetujuan dinonaktifkan sementara untuk menjaga integritas data.
           </p>
           <div class="flex flex-wrap items-center gap-3">
-            <span class="text-[10px] md:text-xs bg-rose-500/20 border border-rose-500/30 px-3 py-1 rounded-full text-rose-300 font-mono" id="offline-error-details">
+            <span class="text-[10px] md:text-xs bg-brandwine-500/20 border border-brandwine-500/30 px-3 py-1 rounded-full text-brandwine-300 font-mono" id="offline-error-details">
               Endpoint: [URL webhook yang diinput user]/get-pending-docs
             </span>
-            <button id="btn-toggle-demo-fallback" class="text-xs text-indigo-400 underline font-semibold hover:text-indigo-300">
+            <button id="btn-toggle-demo-fallback" class="text-xs text-brandpurple-400 underline font-semibold hover:text-brandpurple-300">
               Pindahkan ke Demo Mode untuk Uji Coba UI →
             </button>
           </div>
@@ -242,12 +250,12 @@
 
       <!-- Empty State -->
       <div id="empty-state" class="glass-panel p-8 md:p-12 rounded-3xl text-center hidden animate-fade-in-up">
-        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-5 text-2xl md:text-3xl">
-          🎉
+        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-brandpurple-500/10 border border-brandpurple-500/20 flex items-center justify-center mx-auto mb-5 text-xl md:text-2xl text-brandpurple-400">
+          <i class="fa-regular fa-circle-check"></i>
         </div>
-        <h3 class="text-lg md:text-xl font-bold mb-2">Kerjaan Beres, Bos!</h3>
+        <h3 class="text-lg md:text-xl font-bold mb-2">Tidak Ada Dokumen Tertunda</h3>
         <p id="empty-state-message" class="text-xs md:text-sm text-[var(--text-muted)] max-w-md mx-auto leading-relaxed">
-          Tidak ada dokumen pada tab status ini saat ini. Semua data tersimpan rapi di Google Sheets utama.
+          Tidak ada dokumen pada status ini saat ini. Seluruh data tersimpan di Google Sheets utama.
         </p>
       </div>
 
@@ -261,12 +269,14 @@
   <!-- Login Modal -->
   <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md hidden transition-opacity duration-300">
     <div class="glass-modal w-full max-w-md rounded-3xl p-6 md:p-8 animate-fade-in-up">
-      <div class="flex items-center justify-between mb-6 border-b border-amber-500/10 pb-4">
+      <div class="flex items-center justify-between mb-6 border-b border-brandgold-500/10 pb-4">
         <div class="flex items-center gap-3">
-          <span class="text-2xl">🔐</span>
+          <div class="w-9 h-9 rounded-lg bg-brandgold-500/10 border border-brandgold-500/30 flex items-center justify-center text-brandgold-400">
+            <i class="fa-solid fa-lock text-sm"></i>
+          </div>
           <div>
-            <h3 class="text-base md:text-lg font-bold text-[var(--text)]">Autentikasi APRUP v2.0</h3>
-            <p class="text-[11px] text-[var(--text-muted)] font-mono">Server n8n .env Verification</p>
+            <h3 class="text-base md:text-lg font-bold text-[var(--text)]">Masuk ke APRUP</h3>
+            <p class="text-[11px] text-[var(--text-muted)] font-mono">Verifikasi server n8n</p>
           </div>
         </div>
         <button onclick="closeLoginModal()" class="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-200">
@@ -277,27 +287,27 @@
       <form id="login-form" onsubmit="handleLoginSubmit(event)" class="space-y-4">
         <div>
           <label for="login-username" class="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">Username</label>
-          <input type="text" id="login-username" placeholder="admin atau user" required class="w-full bg-white/5 border border-amber-500/20 rounded-xl px-4 py-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-amber-500/50 transition-all duration-200 font-mono">
+          <input type="text" id="login-username" placeholder="admin atau user" required class="w-full bg-white/5 border border-brandgold-500/20 rounded-xl px-4 py-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-brandgold-500/50 transition-all duration-200 font-mono">
         </div>
 
         <div>
           <label for="login-password" class="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">Password</label>
-          <input type="password" id="login-password" placeholder="admin atau user" required class="w-full bg-white/5 border border-amber-500/20 rounded-xl px-4 py-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-amber-500/50 transition-all duration-200 font-mono">
+          <input type="password" id="login-password" placeholder="admin atau user" required class="w-full bg-white/5 border border-brandgold-500/20 rounded-xl px-4 py-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-brandgold-500/50 transition-all duration-200 font-mono">
         </div>
 
-        <div class="p-3 rounded-xl bg-white/5 border border-amber-500/10 text-[11px] text-[var(--text-muted)] space-y-1">
-          <span class="font-bold text-amber-300 block">ℹ️ Kredensial Simulasi:</span>
+        <div class="p-3 rounded-xl bg-white/5 border border-brandgold-500/10 text-[11px] text-[var(--text-muted)] space-y-1">
+          <span class="font-bold text-brandgold-300 flex items-center gap-1.5"><i class="fa-regular fa-circle-question text-[10px]"></i> Kredensial Simulasi:</span>
           <p>• <strong>Admin (Akses Penuh):</strong> Username: <code>admin</code> | Pass: <code>admin</code></p>
           <p>• <strong>User (Read-Only):</strong> Username: <code>user</code> | Pass: <code>user</code></p>
         </div>
 
-        <div class="flex items-center justify-end gap-3 pt-4 border-t border-amber-500/10">
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-brandgold-500/10">
           <button type="button" onclick="closeLoginModal()" class="px-4 py-2.5 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text)]">
             Batal
           </button>
-          <button type="submit" id="btn-login-submit" class="px-6 py-2.5 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-amber-600/20 transition-all duration-200 flex items-center gap-2">
+          <button type="submit" id="btn-login-submit" class="px-6 py-2.5 bg-brandgold-600 hover:bg-brandgold-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brandgold-600/20 transition-all duration-200 flex items-center gap-2">
             <i class="fa-solid fa-right-to-bracket"></i>
-            <span>Masuk System</span>
+            <span>Masuk</span>
           </button>
         </div>
       </form>
@@ -309,7 +319,9 @@
     <div class="glass-modal w-full max-w-4xl rounded-3xl p-6 flex flex-col" style="max-height: 90vh;" onclick="event.stopPropagation()">
       <div class="flex items-center justify-between mb-4 shrink-0">
         <div class="flex items-center gap-3">
-          <span class="text-2xl">📄</span>
+          <div class="w-9 h-9 rounded-lg bg-brandgold-500/10 border border-brandgold-500/30 flex items-center justify-center text-brandgold-400">
+            <i class="fa-regular fa-file-lines text-sm"></i>
+          </div>
           <div>
             <h3 class="text-base md:text-lg font-bold">Preview Dokumen</h3>
             <p id="doc-preview-filename" class="text-xs text-[var(--text-muted)] truncate max-w-[260px] sm:max-w-xs"></p>
@@ -317,7 +329,7 @@
         </div>
         <div class="flex items-center gap-2">
           <a id="doc-preview-open-link" href="#" target="_blank"
-            class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-500/20 border border-amber-500/30 text-amber-300 hover:bg-amber-500/30 transition-all duration-200 flex items-center gap-1.5">
+            class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-brandgold-500/20 border border-brandgold-500/30 text-brandgold-300 hover:bg-brandgold-500/30 transition-all duration-200 flex items-center gap-1.5">
             <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> Buka di Drive
           </a>
           <button onclick="closeDocPreview()" class="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-200 ml-1">
@@ -327,7 +339,7 @@
       </div>
       <div class="relative flex-1 rounded-2xl overflow-hidden border border-white/10" style="min-height: 400px;">
         <div id="doc-preview-loading" class="absolute inset-0 flex flex-col items-center justify-center gap-3 text-[var(--text-muted)] bg-black/30">
-          <i class="fa-solid fa-circle-notch fa-spin text-2xl text-amber-400"></i>
+          <i class="fa-solid fa-circle-notch fa-spin text-2xl text-brandgold-400"></i>
           <span class="text-xs">Memuat dokumen...</span>
         </div>
         <iframe id="doc-preview-iframe"
@@ -347,7 +359,9 @@
     <div class="glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up">
       <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-3" id="modal-title-header">
-          <span class="text-2xl" id="modal-icon">✏️</span>
+          <div class="w-9 h-9 rounded-lg bg-brandgold-500/10 border border-brandgold-500/30 flex items-center justify-center text-brandgold-400 shrink-0">
+            <i class="fa-regular fa-pen-to-square text-sm" id="modal-icon"></i>
+          </div>
           <h3 class="text-base md:text-lg font-bold" id="modal-title">Instruksi Revisi Dokumen</h3>
         </div>
         <button onclick="closeActionModal()" class="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-200">
@@ -358,26 +372,26 @@
       <div class="space-y-4">
         <div class="p-3 bg-white/5 border border-white/5 rounded-xl">
           <span class="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider">Dokumen Target:</span>
-          <h4 id="action-modal-filename" class="text-xs md:text-sm font-semibold text-amber-300 mt-1 truncate">TASK-2026-0801 — Modul_Kemenkeu.pdf</h4>
+          <h4 id="action-modal-filename" class="text-xs md:text-sm font-semibold text-brandgold-300 mt-1 truncate">TASK-2026-0801 — Modul_Kemenkeu.pdf</h4>
         </div>
 
         <!-- Searchable Refer Task ID for all action types -->
         <div id="refer-task-container" class="hidden">
-          <label for="refer-task-id" class="block text-xs font-semibold text-amber-400 uppercase tracking-wider mb-1.5 font-mono">
+          <label for="refer-task-id" class="block text-xs font-semibold text-brandgold-400 uppercase tracking-wider mb-1.5 font-mono">
             <i class="fa-solid fa-link"></i> Refer Task ID / Dokumen Acuan (Opsional)
           </label>
-          <input type="text" id="refer-task-id" list="refer-task-datalist" placeholder="Contoh: TASK-2026-0789" class="w-full bg-white/5 border border-amber-500/30 rounded-xl px-4 py-2.5 text-xs text-[var(--text)] font-mono focus:outline-none focus:border-amber-500">
+          <input type="text" id="refer-task-id" list="refer-task-datalist" placeholder="Contoh: TASK-2026-0789" class="w-full bg-white/5 border border-brandgold-500/30 rounded-xl px-4 py-2.5 text-xs text-[var(--text)] font-mono focus:outline-none focus:border-brandgold-500">
           <datalist id="refer-task-datalist"></datalist>
 
-          <div id="refer-task-info" class="hidden mt-3 rounded-xl border border-amber-500/20 bg-amber-500/5 p-3">
-            <div class="text-[10px] uppercase tracking-wider font-bold text-amber-300 mb-1">Dokumen acuan sebelumnya</div>
+          <div id="refer-task-info" class="hidden mt-3 rounded-xl border border-brandgold-500/20 bg-brandgold-500/5 p-3">
+            <div class="text-[10px] uppercase tracking-wider font-bold text-brandgold-300 mb-1">Dokumen acuan sebelumnya</div>
             <div id="refer-task-doc-name" class="text-xs font-semibold text-[var(--text)]"></div>
             <div id="refer-task-doc-meta" class="text-[10px] text-[var(--text-muted)] mt-1"></div>
             <div class="mt-2 text-[10px] text-[var(--text-muted)]">
-              <span class="font-semibold text-amber-300">Alasan sebelumnya:</span>
+              <span class="font-semibold text-brandgold-300">Alasan sebelumnya:</span>
               <span id="refer-task-admin-notes" class="ml-1"></span>
             </div>
-            <a id="refer-task-doc-link" href="#" target="_blank" class="mt-2 inline-flex items-center gap-1 text-[10px] text-amber-300 underline hover:text-amber-200">
+            <a id="refer-task-doc-link" href="#" target="_blank" class="mt-2 inline-flex items-center gap-1 text-[10px] text-brandgold-300 underline hover:text-brandgold-200">
               <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
               Buka dokumen acuan
             </a>
@@ -388,7 +402,7 @@
 
         <div>
           <label for="action-notes" class="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2" id="lbl-action-notes">Catatan Alasan / Instruksi untuk n8n AI</label>
-          <textarea id="action-notes" rows="4" placeholder="Tuliskan catatan alasan secara mendetail di sini..." class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-amber-500/50 transition-all duration-200 resize-none leading-relaxed"></textarea>
+          <textarea id="action-notes" rows="4" placeholder="Tuliskan catatan alasan secara mendetail di sini..." class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-brandgold-500/50 transition-all duration-200 resize-none leading-relaxed"></textarea>
         </div>
       </div>
 
@@ -396,7 +410,7 @@
         <button onclick="closeActionModal()" class="px-4 py-2.5 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-200">
           Batal
         </button>
-        <button id="btn-submit-action" class="px-5 md:px-6 py-2.5 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-amber-600/20 transition-all duration-200 flex items-center gap-2">
+        <button id="btn-submit-action" class="px-5 md:px-6 py-2.5 bg-brandgold-600 hover:bg-brandgold-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brandgold-600/20 transition-all duration-200 flex items-center gap-2">
           <i class="fa-solid fa-paper-plane"></i>
           <span id="btn-submit-action-text">Kirim Instruksi</span>
         </button>
@@ -409,7 +423,9 @@
     <div class="glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up">
       <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-3">
-          <span class="text-2xl">⚙️</span>
+          <div class="w-9 h-9 rounded-lg bg-brandgold-500/10 border border-brandgold-500/30 flex items-center justify-center text-brandgold-400">
+            <i class="fa-solid fa-gear text-sm"></i>
+          </div>
           <h3 class="text-base md:text-lg font-bold">Pengaturan n8n Webhook</h3>
         </div>
         <button id="btn-close-settings-x" class="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-200">
@@ -420,7 +436,7 @@
       <div class="space-y-4">
         <div>
           <label for="webhook-url" class="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">n8n Base Webhook URL</label>
-          <input type="url" id="webhook-url" placeholder="https://your-n8n-domain/webhook" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-amber-500/50 transition-all duration-200 font-mono">
+          <input type="url" id="webhook-url" placeholder="https://your-n8n-domain/webhook" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs md:text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-brandgold-500/50 transition-all duration-200 font-mono">
           <p class="text-[11px] text-[var(--text-muted)] mt-2 leading-relaxed">
             Masukkan URL webhook n8n milik Anda sendiri. Contoh format: <code>https://your-n8n-domain/webhook</code>.
           </p>
@@ -428,7 +444,7 @@
 
         <div class="p-4 rounded-2xl bg-white/5 border border-white/5 text-xs text-[var(--text-muted)] space-y-2">
           <h4 class="font-bold text-[var(--text)] flex items-center gap-1.5">
-            <i class="fa-solid fa-circle-info text-amber-400"></i> Endpoint API Single POST Engine:
+            <i class="fa-solid fa-circle-info text-brandgold-400"></i> Endpoint API Single POST Engine:
           </h4>
           <ul class="list-disc pl-4 space-y-1.5 font-mono text-[10px]">
             <li>GET: <code id="lbl-get-endpoint">[URL]/get-pending-docs</code></li>
@@ -438,7 +454,7 @@
       </div>
 
       <div class="flex items-center justify-between gap-3 mt-8">
-        <button id="btn-test-connection" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-white/5 text-slate-300 hover:text-white text-xs font-bold rounded-xl transition-all duration-200 flex items-center gap-2">
+        <button id="btn-test-connection" class="px-4 py-2.5 bg-stone-800 hover:bg-stone-700 border border-white/5 text-stone-300 hover:text-white text-xs font-bold rounded-xl transition-all duration-200 flex items-center gap-2">
           <i id="test-conn-icon" class="fa-solid fa-plug-circle-check"></i>
           <span>Tes Koneksi</span>
         </button>
@@ -447,7 +463,7 @@
           <button id="btn-cancel-settings" class="px-3 py-2.5 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-200">
             Batal
           </button>
-          <button id="btn-save-settings" class="px-4 md:px-5 py-2.5 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-amber-600/20 transition-all duration-200">
+          <button id="btn-save-settings" class="px-4 md:px-5 py-2.5 bg-brandgold-600 hover:bg-brandgold-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brandgold-600/20 transition-all duration-200">
             Simpan Konfigurasi
           </button>
         </div>

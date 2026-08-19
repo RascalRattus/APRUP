@@ -17,13 +17,13 @@ let appState = {
   autoRefreshTimer: null
 };
 
-// Indonesian Humorous Messages for Offline State
+// Pesan status untuk kondisi server n8n offline
 const offlineHumors = [
-  "n8n sedang istirahat / server lagi direstart. Ambil kopi dulu Bos! ☕🔌",
-  "Waduh! n8n sepertinya lagi pingsan. Ambil kopi dulu gih, entar kalau server dinyalain dia bangun sendiri! 🛌",
-  "Wah, n8n sedang bobo siang. Hubungkan kembali koneksi internet atau cek status server n8n! 🛠️",
-  "Koneksi putus! n8n sedang mogok kerja. Coba cek Docker Desktop atau VPS terminal Anda! 🐳",
-  "Mimin n8n lagi healing ke luar kota. Tolong dicolok dulu chargernya biar dia balik kerja! 🏖️"
+  "Server n8n sedang restart atau dalam maintenance singkat. Coba sinkronisasi kembali dalam beberapa saat.",
+  "Koneksi ke n8n belum merespons. Periksa apakah service n8n aktif dan dapat diakses.",
+  "Tidak dapat terhubung ke server n8n. Pastikan koneksi internet dan status server dalam kondisi baik.",
+  "Koneksi terputus. Periksa status container Docker atau VPS tempat n8n berjalan.",
+  "Server n8n tidak dapat dijangkau saat ini. Silakan verifikasi konfigurasi endpoint di pengaturan."
 ];
 
 // Mock Data for Demo Mode
@@ -272,15 +272,15 @@ function getPengesahanValue(doc) {
 function getPengesahanStyle(value) {
   const normalized = String(value).trim();
   if (!normalized || normalized.toLowerCase().includes('belum')) {
-    return 'bg-rose-500/10 border border-rose-500/20 text-rose-300';
+    return 'bg-brandwine-500/10 border border-brandwine-500/20 text-brandwine-300';
   }
   if (normalized.toLowerCase().includes('tte') || normalized.toLowerCase().includes('menggunakan')) {
-    return 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-300';
+    return 'bg-brandpurple-500/10 border border-brandpurple-500/20 text-brandpurple-300';
   }
   if (normalized.toLowerCase().includes('bukan')) {
-    return 'bg-amber-500/10 border border-amber-500/20 text-amber-300';
+    return 'bg-brandgold-500/10 border border-brandgold-500/20 text-brandgold-300';
   }
-  return 'bg-slate-500/10 border border-slate-500/20 text-slate-300';
+  return 'bg-stone-500/10 border border-stone-500/20 text-stone-300';
 }
 
 // Initialize Application
@@ -408,9 +408,9 @@ function updateRoleUI() {
   if (elements.userRoleText) elements.userRoleText.innerText = isAdmin ? "Role: Admin" : "Role: User (Read-Only)";
   if (elements.userRoleBadge) {
     if (isAdmin) {
-      elements.userRoleBadge.className = "flex items-center gap-1.5 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/15 text-amber-300 text-xs font-semibold select-none cursor-pointer";
+      elements.userRoleBadge.className = "flex items-center gap-1.5 px-3 py-1 rounded-full border border-brandgold-500/30 bg-brandgold-500/15 text-brandgold-300 text-xs font-semibold select-none cursor-pointer";
     } else {
-      elements.userRoleBadge.className = "flex items-center gap-1.5 px-3 py-1 rounded-full border border-slate-500/30 bg-slate-500/15 text-slate-300 text-xs font-semibold select-none cursor-pointer";
+      elements.userRoleBadge.className = "flex items-center gap-1.5 px-3 py-1 rounded-full border border-stone-500/30 bg-stone-500/15 text-stone-300 text-xs font-semibold select-none cursor-pointer";
     }
   }
 }
@@ -422,7 +422,7 @@ function toggleTheme() {
   localStorage.setItem('dashboard_theme', newTheme);
   applyTheme(newTheme);
 
-  const themeLabel = newTheme === 'light' ? 'Mode Siang ☀️' : 'Mode Malam 🌙';
+  const themeLabel = newTheme === 'light' ? 'Mode Siang' : 'Mode Malam';
   showToast(`Berhasil berpindah ke ${themeLabel}`, 'info');
 }
 
@@ -430,10 +430,10 @@ function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   if (elements.themeToggleIcon) {
     if (theme === 'light') {
-      elements.themeToggleIcon.className = "fa-solid fa-sun text-amber-500 text-sm";
+      elements.themeToggleIcon.className = "fa-solid fa-sun text-brandgold-500 text-sm";
       if (elements.btnThemeToggle) elements.btnThemeToggle.title = "Mode Siang Aktif (Klik untuk Mode Malam)";
     } else {
-      elements.themeToggleIcon.className = "fa-solid fa-moon text-amber-300 text-sm";
+      elements.themeToggleIcon.className = "fa-solid fa-moon text-brandgold-300 text-sm";
       if (elements.btnThemeToggle) elements.btnThemeToggle.title = "Mode Malam Aktif (Klik untuk Mode Siang)";
     }
   }
@@ -461,10 +461,10 @@ function changeMode(newMode) {
 function setModeUI(mode) {
   if (elements.btnLiveMode && elements.btnDemoMode && elements.statMode) {
     if (mode === 'live') {
-      elements.btnLiveMode.className = "px-3 py-1 rounded-full bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-500/20 transition-all duration-200";
+      elements.btnLiveMode.className = "px-3 py-1 rounded-full bg-brandpurple-600 text-white font-semibold shadow-md shadow-brandpurple-500/20 transition-all duration-200";
       elements.btnDemoMode.className = "px-3 py-1 rounded-full text-[var(--text-muted)] font-semibold hover:text-[var(--text)] transition-all duration-200";
     } else {
-      elements.btnDemoMode.className = "px-3 py-1 rounded-full bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-500/20 transition-all duration-200";
+      elements.btnDemoMode.className = "px-3 py-1 rounded-full bg-brandpurple-600 text-white font-semibold shadow-md shadow-brandpurple-500/20 transition-all duration-200";
       elements.btnLiveMode.className = "px-3 py-1 rounded-full text-[var(--text-muted)] font-semibold hover:text-[var(--text)] transition-all duration-200";
     }
   }
@@ -478,17 +478,17 @@ function showToast(message, type = 'info') {
   elements.toast.className = "fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl border shadow-2xl transition-all duration-300 transform translate-y-0 opacity-100 max-w-sm backdrop-blur-md";
   
   if (type === 'success') {
-    elements.toastIcon.innerHTML = "🏆";
-    elements.toast.classList.add('bg-emerald-500/10', 'border-emerald-500/20', 'text-emerald-300');
+    elements.toastIcon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+    elements.toast.classList.add('bg-brandpurple-500/10', 'border-brandpurple-500/20', 'text-brandpurple-300');
   } else if (type === 'error') {
-    elements.toastIcon.innerHTML = "⚠️";
-    elements.toast.classList.add('bg-rose-500/10', 'border-rose-500/20', 'text-rose-300');
+    elements.toastIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+    elements.toast.classList.add('bg-brandwine-500/10', 'border-brandwine-500/20', 'text-brandwine-300');
   } else if (type === 'warning') {
-    elements.toastIcon.innerHTML = "☕";
-    elements.toast.classList.add('bg-amber-500/10', 'border-amber-500/20', 'text-amber-300');
+    elements.toastIcon.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
+    elements.toast.classList.add('bg-brandgold-500/10', 'border-brandgold-500/20', 'text-brandgold-300');
   } else {
-    elements.toastIcon.innerHTML = "ℹ️";
-    elements.toast.classList.add('bg-blue-500/10', 'border-blue-500/20', 'text-blue-300');
+    elements.toastIcon.innerHTML = '<i class="fa-solid fa-circle-info"></i>';
+    elements.toast.classList.add('bg-brandpurple-500/10', 'border-brandpurple-500/20', 'text-brandpurple-300');
   }
 
   setTimeout(() => {
@@ -500,7 +500,7 @@ function showToast(message, type = 'info') {
 // Health Check Logic
 async function checkHealth() {
   if (appState.mode === 'demo') {
-    updateHealthUI(true, "🟢 n8n aktif (Demo Mode)");
+    updateHealthUI(true, "n8n aktif (Demo Mode)");
     return;
   }
 
@@ -518,14 +518,14 @@ async function checkHealth() {
     clearTimeout(timeoutId);
 
     if (response.status === 200 || response.ok) {
-      updateHealthUI(true, "🟢 n8n Aktif");
+      updateHealthUI(true, "n8n Aktif");
     } else {
-      updateHealthUI(false, `🔴 n8n Gagal (${response.status})`);
+      updateHealthUI(false, `n8n Gagal (${response.status})`);
     }
   } catch (error) {
     let reason = "Koneksi Gagal / Timeout";
     if (error.name === 'AbortError') reason = "Koneksi Timeout";
-    updateHealthUI(false, `🔴 n8n Offline: ${reason}`);
+    updateHealthUI(false, `n8n Offline: ${reason}`);
   }
 }
 
@@ -536,7 +536,7 @@ function updateHealthUI(online, text) {
   if (elements.healthBadge) {
     const dot = elements.healthBadge.querySelector('span:first-child');
     if (online) {
-      elements.healthBadge.className = "flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-300 text-xs font-semibold select-none shrink-0";
+      elements.healthBadge.className = "flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-brandpurple-500/20 bg-brandpurple-500/10 text-brandpurple-300 text-xs font-semibold select-none shrink-0";
       if (dot) dot.className = "w-2.5 h-2.5 rounded-full pulse-dot-green";
       if (elements.offlineAlert) elements.offlineAlert.classList.add('hidden');
       document.querySelectorAll('.btn-action-trigger').forEach(btn => {
@@ -546,12 +546,12 @@ function updateHealthUI(online, text) {
         }
       });
     } else {
-      elements.healthBadge.className = "flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-rose-500/20 bg-rose-500/10 text-rose-300 text-xs font-semibold select-none shrink-0 animate-bounce";
+      elements.healthBadge.className = "flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-brandwine-500/20 bg-brandwine-500/10 text-brandwine-300 text-xs font-semibold select-none shrink-0 animate-bounce";
       if (dot) dot.className = "w-2.5 h-2.5 rounded-full pulse-dot-red";
       
       const humorMsg = offlineHumors[Math.floor(Math.random() * offlineHumors.length)];
       if (elements.offlineAlert) {
-        elements.offlineAlert.querySelector('h4').innerText = "Aduh! Server n8n Sedang Istirahat!";
+        elements.offlineAlert.querySelector('h4').innerText = "Server n8n Tidak Terhubung";
         elements.offlineAlert.querySelector('p').innerText = humorMsg;
         if (elements.offlineErrorDetails) elements.offlineErrorDetails.innerText = `Endpoint: ${appState.webhookUrl}/get-pending-docs`;
         elements.offlineAlert.classList.remove('hidden');
@@ -650,12 +650,12 @@ function formatSpesifikasi(raw) {
       const label = trimmed.substring(0, colonIdx).trim();
       const value = trimmed.substring(colonIdx + 1).trim();
       return `<li class="flex items-start gap-1.5">
-        <span class="shrink-0 mt-0.5 w-1.5 h-1.5 rounded-full bg-amber-400/60 inline-block"></span>
-        <span><span class="font-extrabold text-amber-300">${label}:</span> ${value}</span>
+        <span class="shrink-0 mt-0.5 w-1.5 h-1.5 rounded-full bg-brandgold-400/60 inline-block"></span>
+        <span><span class="font-extrabold text-brandgold-300">${label}:</span> ${value}</span>
       </li>`;
     }
     return `<li class="flex items-start gap-1.5">
-      <span class="shrink-0 mt-0.5 w-1.5 h-1.5 rounded-full bg-amber-400/60 inline-block"></span>
+      <span class="shrink-0 mt-0.5 w-1.5 h-1.5 rounded-full bg-brandgold-400/60 inline-block"></span>
       <span>${trimmed}</span>
     </li>`;
   }).join('');
@@ -700,9 +700,9 @@ function openDocPreview(taskId, fileName, gdriveLink, fileId) {
       elements.docPreviewIframe.src = '';
       if (elements.docPreviewLoading) {
         elements.docPreviewLoading.innerHTML = `
-          <i class="fa-solid fa-triangle-exclamation text-2xl text-amber-400"></i>
+          <i class="fa-solid fa-triangle-exclamation text-2xl text-brandgold-400"></i>
           <p class="text-xs text-center px-4">Preview tidak tersedia.<br>File ID tidak valid atau belum dikonfigurasi.<br>
-          <a href="${gdriveLink}" target="_blank" class="text-amber-400 underline mt-1 inline-block">Buka dokumen di Google Drive</a></p>`;
+          <a href="${gdriveLink}" target="_blank" class="text-brandgold-400 underline mt-1 inline-block">Buka dokumen di Google Drive</a></p>`;
         elements.docPreviewLoading.style.display = '';
       }
     }
@@ -798,57 +798,57 @@ function renderDocs() {
     const showActionButtons = docStatus === 'pending';
 
     card.id = `card-${taskId}`;
-    card.className = "glass-panel p-5 md:p-6 rounded-3xl border border-white/5 flex flex-col justify-between hover:border-amber-500/30 transition-all duration-300 animate-fade-in-up";
+    card.className = "glass-panel p-5 md:p-6 rounded-3xl border border-white/5 flex flex-col justify-between hover:border-brandgold-500/30 transition-all duration-300 animate-fade-in-up";
     card.style.animationDelay = `${index * 50}ms`;
 
     const isPdf = fileType === 'pdf';
     const isDocx = fileType === 'docx';
-    let iconClass = 'fa-file-pdf text-rose-400 bg-rose-500/10 border-rose-500/20';
-    if (isDocx) iconClass = 'fa-file-word text-blue-400 bg-blue-500/10 border-blue-500/20';
-    else if (!isPdf) iconClass = 'fa-image text-emerald-400 bg-emerald-500/10 border-emerald-500/20';
+    let iconClass = 'fa-file-pdf text-brandwine-400 bg-brandwine-500/10 border-brandwine-500/20';
+    if (isDocx) iconClass = 'fa-file-word text-brandpurple-400 bg-brandpurple-500/10 border-brandpurple-500/20';
+    else if (!isPdf) iconClass = 'fa-image text-brandgold-400 bg-brandgold-500/10 border-brandgold-500/20';
 
     const actionDisabled = (!appState.isOnline && appState.mode === 'live') || !isAdmin ? 'disabled' : '';
     const btnClasses = (!appState.isOnline && appState.mode === 'live') || !isAdmin ? 'opacity-50 cursor-not-allowed' : '';
 
     card.innerHTML = `
       <div>
-        <div class="flex items-center justify-between border-b border-amber-500/10 pb-4 mb-4">
+        <div class="flex items-center justify-between border-b border-brandgold-500/10 pb-4 mb-4">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl border flex items-center justify-center text-lg ${iconClass}">
               <i class="fa-solid"></i>
             </div>
             <div>
               <div class="flex items-center gap-2">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">${taskId}</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-brandgold-500/20 text-brandgold-300 border border-brandgold-500/30">${taskId}</span>
                 <h4 class="text-xs md:text-sm font-bold text-[var(--text)] truncate max-w-[150px] sm:max-w-[220px]" title="${fileName}">${fileName}</h4>
               </div>
               <span class="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-wider mt-0.5 block">${fileSize} • ${fileType.toUpperCase()}</span>
             </div>
           </div>
-          <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500/15 border border-amber-500/30 text-amber-300">
+          <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-brandgold-500/15 border border-brandgold-500/30 text-brandgold-300">
             ${doc.Status || 'Pending'}
           </span>
         </div>
 
         <div class="space-y-3.5 text-xs">
           <div>
-            <span class="text-[10px] uppercase font-extrabold tracking-wider text-amber-400 font-mono block">1. Spesifikasi Check </span>
+            <span class="text-[10px] uppercase font-extrabold tracking-wider text-brandgold-400 font-mono block">1. Spesifikasi Check </span>
             <ul class="text-xs text-[var(--text)] mt-1 font-medium bg-white/5 p-2.5 rounded-xl border border-white/5 leading-relaxed space-y-1 list-none">
               ${formatSpesifikasi(doc.Spesifikasi_Check || 'Mutu & Teknis Sesuai Standard')}
             </ul>
           </div>
 
           <div>
-            <span class="text-[10px] uppercase font-extrabold tracking-wider text-amber-400 font-mono block">2. Kelengkapan TOR</span>
+            <span class="text-[10px] uppercase font-extrabold tracking-wider text-brandgold-400 font-mono block">2. Kelengkapan TOR</span>
             <div class="mt-1">
-              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-brandpurple-500/10 border border-brandpurple-500/20 text-brandpurple-300">
                 ${doc.TOR_Completeness || 'Lengkap (10/10 Bab Terpenuhi)'}
               </span>
             </div>
           </div>
 
           <div>
-            <span class="text-[10px] uppercase font-extrabold tracking-wider text-amber-400 font-mono block">3. Catatan Tambahan AI</span>
+            <span class="text-[10px] uppercase font-extrabold tracking-wider text-brandgold-400 font-mono block">3. Catatan Tambahan AI</span>
             <p class="text-xs text-[var(--text)] mt-1 leading-relaxed italic">
               "${doc.AI_Notes || doc.key_points || 'Tidak ada catatan khusus.'}"
             </p>
@@ -856,7 +856,7 @@ function renderDocs() {
 
           ${showDecisionNotes ? `
             <div>
-              <span class="text-[10px] uppercase font-extrabold tracking-wider text-amber-400 font-mono block">4. ${decisionNotesLabel}</span>
+              <span class="text-[10px] uppercase font-extrabold tracking-wider text-brandgold-400 font-mono block">4. ${decisionNotesLabel}</span>
               <p class="text-xs text-[var(--text)] mt-1 leading-relaxed italic">
                 "${adminNotes}"
               </p>
@@ -865,39 +865,39 @@ function renderDocs() {
 
           <div class="pt-1 border-t border-white/5 mt-1">
             <div class="flex items-center justify-between gap-2">
-              <span class="text-[10px] uppercase font-extrabold tracking-wider text-amber-400 font-mono">${showDecisionNotes ? '5' : '4'}. Pengesahan</span>
+              <span class="text-[10px] uppercase font-extrabold tracking-wider text-brandgold-400 font-mono">${showDecisionNotes ? '5' : '4'}. Pengesahan</span>
               <span class="px-2 py-1 rounded-full text-[10px] font-semibold ${pengesahanClass}">${pengesahanValue}</span>
             </div>
           </div>
 
           <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
             <span class="text-[10px] text-[var(--text-muted)]">
-              Pengajuan Ulang: <strong class="${doc.Is_Reapplication ? 'text-rose-400' : 'text-slate-300'}">${isReapplication}</strong>
+              Pengajuan Ulang: <strong class="${doc.Is_Reapplication ? 'text-brandwine-400' : 'text-stone-300'}">${isReapplication}</strong>
             </span>
-            ${referTaskId ? `<span class="text-[10px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded font-mono">Ref: ${referTaskId}</span>` : ''}
+            ${referTaskId ? `<span class="text-[10px] bg-brandpurple-500/20 text-brandpurple-300 border border-brandpurple-500/30 px-2 py-0.5 rounded font-mono">Ref: ${referTaskId}</span>` : ''}
           </div>
         </div>
       </div>
 
-      <div class="flex flex-wrap sm:flex-nowrap gap-2 pt-5 border-t border-amber-500/10 mt-5">
+      <div class="flex flex-wrap sm:flex-nowrap gap-2 pt-5 border-t border-brandgold-500/10 mt-5">
         ${showActionButtons ? `
-          <button onclick="openActionModal('${taskId}', 'approve')" ${actionDisabled} class="btn-action-trigger ${btnClasses} flex-1 min-h-[40px] px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 glow-btn-emerald transition-all duration-300 active:scale-95" title="${isAdmin ? 'Approve Document' : 'Read-Only Mode'}">
+          <button onclick="openActionModal('${taskId}', 'approve')" ${actionDisabled} class="btn-action-trigger ${btnClasses} flex-1 min-h-[40px] px-3 py-2 bg-brandpurple-600 hover:bg-brandpurple-500 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95" title="${isAdmin ? 'Approve Document' : 'Read-Only Mode'}">
             <i class="fa-solid fa-check"></i>
             <span>Approve</span>
           </button>
 
-          <button onclick="openActionModal('${taskId}', 'revise')" ${actionDisabled} class="btn-action-trigger ${btnClasses} flex-1 min-h-[40px] px-3 py-2 bg-amber-600/20 hover:bg-amber-600 border border-amber-500/30 hover:border-amber-500 text-amber-300 hover:text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 glow-btn-amber transition-all duration-300 active:scale-95" title="${isAdmin ? 'Minta Revisi' : 'Read-Only Mode'}">
+          <button onclick="openActionModal('${taskId}', 'revise')" ${actionDisabled} class="btn-action-trigger ${btnClasses} flex-1 min-h-[40px] px-3 py-2 bg-brandgold-600/20 hover:bg-brandgold-600 border border-brandgold-500/30 hover:border-brandgold-500 text-brandgold-300 hover:text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95" title="${isAdmin ? 'Minta Revisi' : 'Read-Only Mode'}">
             <i class="fa-regular fa-pen-to-square"></i>
             <span>Revisi</span>
           </button>
 
-          <button onclick="openActionModal('${taskId}', 'reject')" ${actionDisabled} class="btn-action-trigger ${btnClasses} flex-1 min-h-[40px] px-3 py-2 bg-rose-600/20 hover:bg-rose-600 border border-rose-500/30 hover:border-rose-500 text-rose-300 hover:text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 glow-btn-rose transition-all duration-300 active:scale-95" title="${isAdmin ? 'Tolak Dokumen' : 'Read-Only Mode'}">
+          <button onclick="openActionModal('${taskId}', 'reject')" ${actionDisabled} class="btn-action-trigger ${btnClasses} flex-1 min-h-[40px] px-3 py-2 bg-brandwine-600/20 hover:bg-brandwine-600 border border-brandwine-500/30 hover:border-brandwine-500 text-brandwine-300 hover:text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95" title="${isAdmin ? 'Tolak Dokumen' : 'Read-Only Mode'}">
             <i class="fa-solid fa-xmark"></i>
             <span>Tolak</span>
           </button>
         ` : ''}
 
-        <button onclick="openDocPreview('${taskId}', '${fileName}', '${gdriveLink}', '${doc.File_ID || ''}')" class="${showActionButtons ? 'min-h-[40px] w-[40px]' : 'flex-1 min-h-[40px]'} rounded-xl bg-white/5 border border-amber-500/20 text-[var(--text-muted)] hover:text-amber-300 hover:bg-amber-500/10 transition-all duration-200 flex items-center justify-center shrink-0" title="Preview Dokumen">
+        <button onclick="openDocPreview('${taskId}', '${fileName}', '${gdriveLink}', '${doc.File_ID || ''}')" class="${showActionButtons ? 'min-h-[40px] w-[40px]' : 'flex-1 min-h-[40px]'} rounded-xl bg-white/5 border border-brandgold-500/20 text-[var(--text-muted)] hover:text-brandgold-300 hover:bg-brandgold-500/10 transition-all duration-200 flex items-center justify-center shrink-0" title="Preview Dokumen">
           <i class="fa-solid fa-eye text-xs"></i>
           ${showActionButtons ? '' : '<span class="ml-2 text-[10px] font-bold">Preview</span>'}
         </button>
@@ -971,20 +971,25 @@ function openActionModal(taskId, actionType) {
     elements.actionModalFilename.innerText = `${taskId} — ${doc.File_Name || doc.filename}`;
   }
 
+  const modalIconWrap = elements.modalIcon ? elements.modalIcon.closest('div') : null;
+
   if (actionType === 'approve') {
-    if (elements.modalIcon) elements.modalIcon.innerText = "✅";
+    if (elements.modalIcon) elements.modalIcon.className = "fa-solid fa-check text-sm";
+    if (modalIconWrap) modalIconWrap.className = "w-9 h-9 rounded-lg bg-brandpurple-500/10 border border-brandpurple-500/30 flex items-center justify-center text-brandpurple-400 shrink-0";
     if (elements.modalTitle) elements.modalTitle.innerText = "Persetujuan Dokumen";
-    if (elements.lblActionNotes) elements.lblActionNotes.innerText = "Catatan Persetujuan atau keterangan tambahan";
+    if (elements.lblActionNotes) elements.lblActionNotes.innerText = "Catatan persetujuan atau keterangan tambahan";
     if (elements.btnSubmitActionText) elements.btnSubmitActionText.innerText = "Konfirmasi Approve";
   } else if (actionType === 'revise') {
-    if (elements.modalIcon) elements.modalIcon.innerText = "✏️";
+    if (elements.modalIcon) elements.modalIcon.className = "fa-regular fa-pen-to-square text-sm";
+    if (modalIconWrap) modalIconWrap.className = "w-9 h-9 rounded-lg bg-brandgold-500/10 border border-brandgold-500/30 flex items-center justify-center text-brandgold-400 shrink-0";
     if (elements.modalTitle) elements.modalTitle.innerText = "Instruksi Revisi Dokumen";
-    if (elements.lblActionNotes) elements.lblActionNotes.innerText = "Catatan Instruksi Revisi untuk Gemini AI";
+    if (elements.lblActionNotes) elements.lblActionNotes.innerText = "Catatan instruksi revisi untuk n8n / AI";
     if (elements.btnSubmitActionText) elements.btnSubmitActionText.innerText = "Kirim Instruksi Revisi";
   } else {
-    if (elements.modalIcon) elements.modalIcon.innerText = "❌";
+    if (elements.modalIcon) elements.modalIcon.className = "fa-solid fa-xmark text-sm";
+    if (modalIconWrap) modalIconWrap.className = "w-9 h-9 rounded-lg bg-brandwine-500/10 border border-brandwine-500/30 flex items-center justify-center text-brandwine-400 shrink-0";
     if (elements.modalTitle) elements.modalTitle.innerText = "Alasan Penolakan Dokumen";
-    if (elements.lblActionNotes) elements.lblActionNotes.innerText = "Alasan Penolakan Dokumen (Wajib Diisi)";
+    if (elements.lblActionNotes) elements.lblActionNotes.innerText = "Alasan penolakan dokumen (wajib diisi)";
     if (elements.btnSubmitActionText) elements.btnSubmitActionText.innerText = "Konfirmasi Tolak";
   }
 
@@ -1176,7 +1181,7 @@ async function testSettingsConnection() {
 
   if (elements.btnTestConnection && elements.testConnIcon) {
     elements.btnTestConnection.setAttribute('disabled', 'true');
-    elements.testConnIcon.className = "fa-solid fa-circle-notch fa-spin text-amber-400";
+    elements.testConnIcon.className = "fa-solid fa-circle-notch fa-spin text-brandgold-400";
   }
   showToast("Mencoba melakukan ping ke webhook...", "info");
 
