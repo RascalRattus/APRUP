@@ -58,6 +58,14 @@ APRUP/
 - Auto-sync 15 detik **nonaktif secara default**. Centang `Auto-sync` jika ingin mengaktifkannya.
 - Tombol `Sinkronisasi Data` tetap dapat digunakan kapan saja untuk mengambil data secara manual.
 
+## 📊 Stats, Upload, dan Komparasi AI
+
+- Dashboard hanya menggunakan satu grouped ribbon dengan bagian `Antrean Aktif`, `Keputusan Terproses`, `Arsip`, dan `Dokumen Baru`. Navigasi ribbon status lama sudah dihapus.
+- Kartu `Dokumen Baru` menjadi lokasi utama tombol `Upload KAK / TOR`.
+- Angka pada ribbon dihitung dari data yang diterima API.
+- `Upload KAK` menerima hanya `.pdf`, `.doc`, dan `.docx` dengan batas client-side 5 MB. Payload dikirim sebagai multipart ke `/upload-dokumen` dengan `data` dan `action=TOR`.
+- `Bandingkan Catatan Revisi (AI)` hanya muncul untuk dokumen yang memiliki `Refer_Task_ID`, atau setelah admin mengisi referensi pada modal aksi. Request dikirim ke `/update-doc-status` dengan `action=compare-revision`.
+
 ## 🔗 Aturan Referensi Dokumen Lama (Versi Final)
 
 Saat admin membuka modal `Approve`, `Revisi`, atau `Tolak`, field `Refer Task ID / Dokumen Acuan (Opsional)` harus mengikuti aturan berikut:

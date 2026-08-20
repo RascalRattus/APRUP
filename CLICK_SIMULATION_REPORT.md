@@ -1,20 +1,32 @@
 # 📊 APRUP v2.0 — UI Click Simulation Report
 
-**Generated:** 19/8/2026, 22.14.18
-**URL:** http://localhost:8888/index.html
-**Engine:** Chromium via Playwright v1.62
+**Generated:** 20/8/2026, 13.19.21
+**Target URL:** http://localhost:8888/index.html
+**Engine:** Chromium via Playwright
+**Health Score:** 56/56 PASS
 
 ---
 
+## Performance
+
+| Viewport | DOM Loaded | DOM Interactive | Load Event | JS Heap |
+|---|---:|---:|---:|---:|
+| 1920x1080 | 1384ms | 1222ms | 1700ms | 9.54 MB |
+| 1440x900 | 12408ms | 12394ms | 12747ms | 9.54 MB |
+| 768x1024 | 6338ms | 6126ms | 6462ms | 9.54 MB |
+| 375x812 | 805ms | 691ms | 1003ms | 9.54 MB |
 ## 📋 Summary Table
 
 | Component | 1920x1080 | 1440x900 | 768x1024 | 375x812 |
 |---|---|---|---|---|
+| **Page Load** | ✅ | ✅ | ✅ | ✅ |
 | **Theme Toggle** | ✅ | ✅ | ✅ | ✅ |
 | **Mode Switcher** | ✅ | ✅ | ✅ | ✅ |
 | **Login Modal** | ✅ | ✅ | ✅ | ✅ |
-| **Navigation Tabs** | ✅ | ✅ | ✅ | ✅ |
-| **Format Filters** | — | — | — | — |
+| **Single Grouped Ribbon** | ✅ | ✅ | ✅ | ✅ |
+| **Grouped Stats Ribbon** | ✅ | ✅ | ✅ | ✅ |
+| **Format Filters Removed** | ✅ | ✅ | ✅ | ✅ |
+| **Upload & AI Compare** | ✅ | ✅ | ✅ | ✅ |
 | **Search Input** | ✅ | ✅ | ✅ | ✅ |
 | **Document Modal** | ✅ | ✅ | ✅ | ✅ |
 | **Settings Modal** | ✅ | ✅ | ✅ | ✅ |
@@ -26,23 +38,30 @@
 
 ## 📐 1920x1080
 
-**Overall: ✅ PASS** (11 pass, 0 warn, 0 fail)
+**Overall: ✅ PASS** (14 pass, 0 warn, 0 fail)
 
+- ✅ **Page Load** `PASS`  
+  Loaded http://localhost:8888/index.html
 - ✅ **Theme Toggle** `PASS`  
   dark → light → restored
 - ✅ **Mode Switcher** `PASS`  
   Live clicked → Demo restored
 - ✅ **Login Modal** `PASS`  
   Modal opened. Role after login: "Role: Admin"
-- ✅ **Navigation Tabs** `PASS`  
-  approved:clicked | revised:clicked | rejected:clicked | pending:clicked
-- **Format Filters**: *(not tested)*
+- ✅ **Single Grouped Ribbon** `PASS`  
+  legacy_ribbon:0 | grouped_sections:4
+- ✅ **Grouped Stats Ribbon** `PASS`  
+  groups:4 | pending:4 | approved:0 | revised:0 | rejected:0 | archived:0 | upload_card:true
+- ✅ **Format Filters Removed** `PASS`  
+  format_filters:0 | auto_sync:false
+- ✅ **Upload & AI Compare** `PASS`  
+  oversize_error:Ukuran file terlalu besar! Maksimal 5 MB. | compare_button:true | compare_modal:true | status:REVISI_DITERIMA
 - ✅ **Search Input** `PASS`  
   "Kemenkeu" → 1 cards. After clear → 4 cards
 - ✅ **Document Modal** `PASS`  
   Opened: YES. Notes filled: true. Closed: ESC
 - ✅ **Settings Modal** `PASS`  
-  Overlay elements visible: 4. Closed with Escape.
+  Overlay elements visible: 6. Closed with Escape.
 - ✅ **Refresh Button** `PASS`  
   Clicked, data reload triggered
 - ✅ **Auto-refresh Toggle** `PASS`  
@@ -52,23 +71,30 @@
 
 ## 📐 1440x900
 
-**Overall: ✅ PASS** (11 pass, 0 warn, 0 fail)
+**Overall: ✅ PASS** (14 pass, 0 warn, 0 fail)
 
+- ✅ **Page Load** `PASS`  
+  Loaded http://localhost:8888/index.html
 - ✅ **Theme Toggle** `PASS`  
   dark → light → restored
 - ✅ **Mode Switcher** `PASS`  
   Live clicked → Demo restored
 - ✅ **Login Modal** `PASS`  
   Modal opened. Role after login: "Role: Admin"
-- ✅ **Navigation Tabs** `PASS`  
-  approved:clicked | revised:clicked | rejected:clicked | pending:clicked
-- **Format Filters**: *(not tested)*
+- ✅ **Single Grouped Ribbon** `PASS`  
+  legacy_ribbon:0 | grouped_sections:4
+- ✅ **Grouped Stats Ribbon** `PASS`  
+  groups:4 | pending:4 | approved:0 | revised:0 | rejected:0 | archived:0 | upload_card:true
+- ✅ **Format Filters Removed** `PASS`  
+  format_filters:0 | auto_sync:false
+- ✅ **Upload & AI Compare** `PASS`  
+  oversize_error:Ukuran file terlalu besar! Maksimal 5 MB. | compare_button:true | compare_modal:true | status:REVISI_DITERIMA
 - ✅ **Search Input** `PASS`  
   "Kemenkeu" → 1 cards. After clear → 4 cards
 - ✅ **Document Modal** `PASS`  
   Opened: YES. Notes filled: true. Closed: ESC
 - ✅ **Settings Modal** `PASS`  
-  Overlay elements visible: 4. Closed with Escape.
+  Overlay elements visible: 6. Closed with Escape.
 - ✅ **Refresh Button** `PASS`  
   Clicked, data reload triggered
 - ✅ **Auto-refresh Toggle** `PASS`  
@@ -78,23 +104,30 @@
 
 ## 📐 768x1024
 
-**Overall: ✅ PASS** (11 pass, 0 warn, 0 fail)
+**Overall: ✅ PASS** (14 pass, 0 warn, 0 fail)
 
+- ✅ **Page Load** `PASS`  
+  Loaded http://localhost:8888/index.html
 - ✅ **Theme Toggle** `PASS`  
   dark → light → restored
 - ✅ **Mode Switcher** `PASS`  
   Live clicked → Demo restored
 - ✅ **Login Modal** `PASS`  
   Modal opened. Role after login: "Role: Admin"
-- ✅ **Navigation Tabs** `PASS`  
-  approved:clicked | revised:clicked | rejected:clicked | pending:clicked
-- **Format Filters**: *(not tested)*
+- ✅ **Single Grouped Ribbon** `PASS`  
+  legacy_ribbon:0 | grouped_sections:4
+- ✅ **Grouped Stats Ribbon** `PASS`  
+  groups:4 | pending:4 | approved:0 | revised:0 | rejected:0 | archived:0 | upload_card:true
+- ✅ **Format Filters Removed** `PASS`  
+  format_filters:0 | auto_sync:false
+- ✅ **Upload & AI Compare** `PASS`  
+  oversize_error:Ukuran file terlalu besar! Maksimal 5 MB. | compare_button:true | compare_modal:true | status:REVISI_DITERIMA
 - ✅ **Search Input** `PASS`  
   "Kemenkeu" → 1 cards. After clear → 4 cards
 - ✅ **Document Modal** `PASS`  
   Opened: YES. Notes filled: true. Closed: ESC
 - ✅ **Settings Modal** `PASS`  
-  Overlay elements visible: 4. Closed with Escape.
+  Overlay elements visible: 6. Closed with Escape.
 - ✅ **Refresh Button** `PASS`  
   Clicked, data reload triggered
 - ✅ **Auto-refresh Toggle** `PASS`  
@@ -104,23 +137,30 @@
 
 ## 📐 375x812
 
-**Overall: ✅ PASS** (11 pass, 0 warn, 0 fail)
+**Overall: ✅ PASS** (14 pass, 0 warn, 0 fail)
 
+- ✅ **Page Load** `PASS`  
+  Loaded http://localhost:8888/index.html
 - ✅ **Theme Toggle** `PASS`  
   dark → light → restored
 - ✅ **Mode Switcher** `PASS`  
   Live clicked → Demo restored
 - ✅ **Login Modal** `PASS`  
   Modal opened. Role after login: "Role: Admin"
-- ✅ **Navigation Tabs** `PASS`  
-  approved:clicked | revised:clicked | rejected:clicked | pending:clicked
-- **Format Filters**: *(not tested)*
+- ✅ **Single Grouped Ribbon** `PASS`  
+  legacy_ribbon:0 | grouped_sections:4
+- ✅ **Grouped Stats Ribbon** `PASS`  
+  groups:4 | pending:4 | approved:0 | revised:0 | rejected:0 | archived:0 | upload_card:true
+- ✅ **Format Filters Removed** `PASS`  
+  format_filters:0 | auto_sync:false
+- ✅ **Upload & AI Compare** `PASS`  
+  oversize_error:Ukuran file terlalu besar! Maksimal 5 MB. | compare_button:true | compare_modal:true | status:REVISI_DITERIMA
 - ✅ **Search Input** `PASS`  
   "Kemenkeu" → 1 cards. After clear → 4 cards
 - ✅ **Document Modal** `PASS`  
   Opened: YES. Notes filled: true. Closed: ESC
 - ✅ **Settings Modal** `PASS`  
-  Overlay elements visible: 4. Closed with Escape.
+  Overlay elements visible: 6. Closed with Escape.
 - ✅ **Refresh Button** `PASS`  
   Clicked, data reload triggered
 - ✅ **Auto-refresh Toggle** `PASS`  
@@ -133,6 +173,15 @@
 ## 🐛 Issues & Warnings
 
 _No issues found._
+
+---
+
+## Browser Diagnostics
+
+- **1920x1080**: console errors 0, network failures 0
+- **1440x900**: console errors 0, network failures 0
+- **768x1024**: console errors 0, network failures 0
+- **375x812**: console errors 0, network failures 0
 
 ---
 

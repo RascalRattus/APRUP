@@ -14,6 +14,10 @@
 - Kartu dokumen menggunakan ikon generik dan tidak menampilkan label tipe format.
 - Data demo tidak lagi menyimpan `File_Type` atau ekstensi format.
 - PRD, README, dan panduan n8n sudah mengikuti schema baru.
+- Stats ribbon dikelompokkan menjadi antrean aktif, keputusan, dan arsip.
+- Ribbon tab lama dihapus; upload KAK ditempatkan di grup `Dokumen Baru`.
+- Upload KAK/TOR memakai validasi `.pdf/.doc/.docx` dan batas 5 MB sebelum request multipart.
+- Komparasi catatan revisi AI hanya muncul ketika referensi dokumen tersedia.
 
 ## Cara Verifikasi
 

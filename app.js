@@ -117,6 +117,11 @@ const elements = {
   badgeRevisedCount: document.getElementById('badge-revised-count'),
   badgeRejectedCount: document.getElementById('badge-rejected-count'),
   badgeArchivedCount: document.getElementById('badge-archived-count'),
+  statPendingCount: document.getElementById('stat-pending-count'),
+  statApprovedCount: document.getElementById('stat-approved-count'),
+  statRevisedCount: document.getElementById('stat-revised-count'),
+  statRejectedCount: document.getElementById('stat-rejected-count'),
+  statArchivedCount: document.getElementById('stat-archived-count'),
 
   // Filters
   searchInput: document.getElementById('search-input'),
@@ -149,6 +154,30 @@ const elements = {
   actionNotes: document.getElementById('action-notes'),
   btnSubmitAction: document.getElementById('btn-submit-action'),
   btnSubmitActionText: document.getElementById('btn-submit-action-text'),
+  btnCompareRevision: document.getElementById('btn-compare-revision'),
+
+  // Upload KAK/TOR Modal
+  btnOpenUpload: document.getElementById('btn-open-upload'),
+  uploadModal: document.getElementById('upload-modal'),
+  uploadForm: document.getElementById('upload-form'),
+  uploadFile: document.getElementById('upload-file'),
+  uploadFileLabel: document.getElementById('upload-file-label'),
+  uploadFileError: document.getElementById('upload-file-error'),
+  btnSubmitUpload: document.getElementById('btn-submit-upload'),
+  btnCloseUpload: document.getElementById('btn-close-upload'),
+  btnCancelUpload: document.getElementById('btn-cancel-upload'),
+
+  // AI Revision Comparison Modal
+  compareModal: document.getElementById('compare-modal'),
+  compareLoading: document.getElementById('compare-loading'),
+  compareResult: document.getElementById('compare-result'),
+  compareTaskLabel: document.getElementById('compare-task-label'),
+  compareStatus: document.getElementById('compare-status'),
+  compareVerified: document.getElementById('compare-verified'),
+  compareRemaining: document.getElementById('compare-remaining'),
+  compareSummary: document.getElementById('compare-summary'),
+  btnCloseCompare: document.getElementById('btn-close-compare'),
+  btnDismissCompare: document.getElementById('btn-dismiss-compare'),
 
   // Settings Modal
   settingsModal: document.getElementById('settings-modal'),
@@ -256,6 +285,13 @@ function updateReferTaskInfo() {
   if (infoPanel) infoPanel.classList.remove('hidden');
 }
 
+function updateCompareActionVisibility() {
+  if (!elements.btnCompareRevision) return;
+  const referTaskId = normalizeReferTaskValue(elements.referTaskIdInput ? elements.referTaskIdInput.value : '');
+  elements.btnCompareRevision.classList.toggle('hidden', !referTaskId);
+  elements.btnCompareRevision.classList.toggle('flex', Boolean(referTaskId));
+}
+
 function getPengesahanValue(doc) {
   const value = doc.Pengesahan || doc.pengesahan || doc['Pengesahan (TTD)'] || doc['pengesahan_ttd'] || 'Belum ada data';
   return String(value).trim() || 'Belum ada data';
@@ -300,6 +336,13 @@ function init() {
   if (elements.webhookUrlInput) elements.webhookUrlInput.addEventListener('input', (e) => updateEndpointLabels(e.target.value));
 
   if (elements.btnSubmitAction) elements.btnSubmitAction.addEventListener('click', submitActionModal);
+  if (elements.btnOpenUpload) elements.btnOpenUpload.addEventListener('click', openUploadModal);
+  if (elements.btnCloseUpload) elements.btnCloseUpload.addEventListener('click', closeUploadModal);
+  if (elements.btnCancelUpload) elements.btnCancelUpload.addEventListener('click', closeUploadModal);
+  if (elements.uploadForm) elements.uploadForm.addEventListener('submit', submitUpload);
+  if (elements.uploadFile) elements.uploadFile.addEventListener('change', handleUploadFileChange);
+  if (elements.btnCloseCompare) elements.btnCloseCompare.addEventListener('click', closeCompareModal);
+  if (elements.btnDismissCompare) elements.btnDismissCompare.addEventListener('click', closeCompareModal);
 
   if (elements.searchInput) elements.searchInput.addEventListener('input', handleSearch);
   if (elements.filterAll) elements.filterAll.addEventListener('click', () => setTypeFilter('all'));
@@ -709,6 +752,21 @@ function closeDocPreview() {
 }
 
 // Render Document Cards According to Active Status Tab
+function updateStatusCounters(counts) {
+  const counterMap = [
+    ['badgePendingCount', 'statPendingCount', counts.pending],
+    ['badgeApprovedCount', 'statApprovedCount', counts.approved],
+    ['badgeRevisedCount', 'statRevisedCount', counts.revised],
+    ['badgeRejectedCount', 'statRejectedCount', counts.rejected],
+    ['badgeArchivedCount', 'statArchivedCount', counts.archived]
+  ];
+
+  counterMap.forEach(([tabKey, statKey, value]) => {
+    if (elements[tabKey]) elements[tabKey].innerText = value;
+    if (elements[statKey]) elements[statKey].innerText = value;
+  });
+}
+
 function renderDocs() {
   if (!elements.documentGrid) return;
   elements.documentGrid.innerHTML = '';
@@ -724,11 +782,13 @@ function renderDocs() {
   const rejectedDocs = visibleDocuments.filter(d => (d.Status || d.status || '').toLowerCase() === 'rejected');
   const archivedDocs = archivedDocuments;
 
-  if (elements.badgePendingCount) elements.badgePendingCount.innerText = pendingDocs.length;
-  if (elements.badgeApprovedCount) elements.badgeApprovedCount.innerText = approvedDocs.length;
-  if (elements.badgeRevisedCount) elements.badgeRevisedCount.innerText = revisedDocs.length;
-  if (elements.badgeRejectedCount) elements.badgeRejectedCount.innerText = rejectedDocs.length;
-  if (elements.badgeArchivedCount) elements.badgeArchivedCount.innerText = archivedDocs.length;
+  updateStatusCounters({
+    pending: pendingDocs.length,
+    approved: approvedDocs.length,
+    revised: revisedDocs.length,
+    rejected: rejectedDocs.length,
+    archived: archivedDocs.length
+  });
 
   populateReferTaskDatalist();
 
@@ -876,6 +936,13 @@ function renderDocs() {
           </button>
         ` : ''}
 
+        ${referTaskId ? `
+          <button onclick="compareRevision('${taskId}', '${referTaskId}')" class="min-h-[40px] ${showActionButtons ? 'w-[40px]' : 'flex-1'} rounded-xl bg-brandpurple-500/10 border border-brandpurple-500/25 text-brandpurple-300 hover:bg-brandpurple-500/20 transition-all duration-200 flex items-center justify-center shrink-0" title="Bandingkan Catatan Revisi (AI)">
+            <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+            ${showActionButtons ? '' : '<span class="ml-2 text-[10px] font-bold">Bandingkan AI</span>'}
+          </button>
+        ` : ''}
+
         <button onclick="openDocPreview('${taskId}', '${fileName}', '${gdriveLink}', '${doc.File_ID || ''}')" class="${showActionButtons ? 'min-h-[40px] w-[40px]' : 'flex-1 min-h-[40px]'} rounded-xl bg-white/5 border border-brandgold-500/20 text-[var(--text-muted)] hover:text-brandgold-300 hover:bg-brandgold-500/10 transition-all duration-200 flex items-center justify-center shrink-0" title="Preview Dokumen">
           <i class="fa-solid fa-eye text-xs"></i>
           ${showActionButtons ? '' : '<span class="ml-2 text-[10px] font-bold">Preview</span>'}
@@ -977,11 +1044,15 @@ function openActionModal(taskId, actionType) {
     const existingReferTask = normalizeReferTaskValue(doc.Refer_Task_ID ?? doc.refer_task_id);
     elements.referTaskIdInput.value = existingReferTask || '';
     elements.referTaskIdInput.setAttribute('list', 'refer-task-datalist');
-    elements.referTaskIdInput.addEventListener('input', updateReferTaskInfo, { once: false });
+    elements.referTaskIdInput.oninput = () => {
+      updateReferTaskInfo();
+      updateCompareActionVisibility();
+    };
   }
 
   populateReferTaskDatalist();
   updateReferTaskInfo();
+  updateCompareActionVisibility();
 
   if (elements.actionNotes) elements.actionNotes.value = '';
 
@@ -1076,6 +1147,178 @@ async function submitActionModal() {
       elements.btnSubmitAction.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span id="btn-submit-action-text">Kirim Instruksi</span>`;
     }
   }
+}
+
+function openUploadModal() {
+  if (!elements.uploadModal) return;
+  if (elements.uploadFileError) elements.uploadFileError.classList.add('hidden');
+  elements.uploadModal.classList.remove('hidden');
+  setTimeout(() => elements.uploadModal.classList.remove('opacity-0'), 50);
+}
+
+function closeUploadModal() {
+  if (!elements.uploadModal) return;
+  elements.uploadModal.classList.add('opacity-0');
+  setTimeout(() => elements.uploadModal.classList.add('hidden'), 300);
+}
+
+function setUploadError(message) {
+  if (!elements.uploadFileError) return;
+  elements.uploadFileError.innerText = message;
+  elements.uploadFileError.classList.toggle('hidden', !message);
+}
+
+function validateUploadFile(file) {
+  if (!file) return 'Pilih file KAK/TOR terlebih dahulu.';
+  if (file.size > 5 * 1024 * 1024) return 'Ukuran file terlalu besar! Maksimal 5 MB.';
+
+  const allowedExtensions = ['pdf', 'doc', 'docx'];
+  const extension = file.name.split('.').pop().toLowerCase();
+  if (!allowedExtensions.includes(extension)) return 'Format file tidak didukung. Gunakan PDF, DOC, atau DOCX.';
+  return '';
+}
+
+function handleUploadFileChange() {
+  const file = elements.uploadFile ? elements.uploadFile.files[0] : null;
+  const error = validateUploadFile(file);
+  setUploadError(error);
+  if (elements.uploadFileLabel) {
+    elements.uploadFileLabel.innerText = file && !error ? `${file.name} (${formatBytes(file.size)})` : 'Pilih file KAK / TOR';
+  }
+}
+
+function formatBytes(bytes) {
+  if (!bytes) return '0 B';
+  const units = ['B', 'KB', 'MB'];
+  const unitIndex = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+  return `${(bytes / (1024 ** unitIndex)).toFixed(unitIndex ? 1 : 0)} ${units[unitIndex]}`;
+}
+
+async function submitUpload(event) {
+  if (event) event.preventDefault();
+  const file = elements.uploadFile ? elements.uploadFile.files[0] : null;
+  const validationError = validateUploadFile(file);
+  if (validationError) {
+    setUploadError(validationError);
+    showToast(validationError, 'error');
+    return;
+  }
+
+  if (elements.btnSubmitUpload) {
+    elements.btnSubmitUpload.disabled = true;
+    elements.btnSubmitUpload.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Mengunggah...</span>';
+  }
+
+  if (appState.mode === 'demo') {
+    setTimeout(() => {
+      closeUploadModal();
+      showToast('Simulasi upload KAK berhasil. Data diperbarui.', 'success');
+      if (elements.btnSubmitUpload) resetUploadButton();
+    }, 700);
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('data', file);
+  formData.append('action', 'TOR');
+
+  try {
+    const response = await fetch(`${appState.webhookUrl}/upload-dokumen`, {
+      method: 'POST',
+      body: formData
+    });
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    closeUploadModal();
+    showToast('Upload KAK berhasil dikirim ke n8n.', 'success');
+    await syncData(true);
+  } catch (error) {
+    console.error('Gagal upload KAK/TOR:', error);
+    showToast('Upload gagal. Periksa koneksi n8n dan coba lagi.', 'error');
+  } finally {
+    resetUploadButton();
+  }
+}
+
+function resetUploadButton() {
+  if (!elements.btnSubmitUpload) return;
+  elements.btnSubmitUpload.disabled = false;
+  elements.btnSubmitUpload.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i><span>Upload Dokumen</span>';
+}
+
+function openCompareModal() {
+  if (!elements.compareModal) return;
+  elements.compareModal.classList.remove('hidden');
+  setTimeout(() => elements.compareModal.classList.remove('opacity-0'), 50);
+}
+
+function closeCompareModal() {
+  if (!elements.compareModal) return;
+  elements.compareModal.classList.add('opacity-0');
+  setTimeout(() => elements.compareModal.classList.add('hidden'), 300);
+}
+
+function renderCompareResult(result) {
+  const accepted = result.status_revisi === 'REVISI_DITERIMA';
+  if (elements.compareStatus) {
+    elements.compareStatus.innerText = result.status_revisi || 'STATUS TIDAK TERSEDIA';
+    elements.compareStatus.className = `compare-status-badge ${accepted ? 'compare-status-accepted' : 'compare-status-revision'}`;
+  }
+  if (elements.compareVerified) elements.compareVerified.innerText = result.perbaikan_terverifikasi || 'Tidak ada poin yang terverifikasi.';
+  if (elements.compareRemaining) elements.compareRemaining.innerText = result.kekurangan_tersisa || 'Nihil';
+  if (elements.compareSummary) elements.compareSummary.innerText = result.ringkasan_analisis || 'Tidak ada ringkasan analisis.';
+}
+
+async function compareRevision(taskId, referTaskId) {
+  const normalizedReferTaskId = normalizeReferTaskValue(referTaskId);
+  if (!taskId || !normalizedReferTaskId) {
+    showToast('Refer Task ID diperlukan untuk komparasi revisi.', 'error');
+    return;
+  }
+
+  if (elements.compareTaskLabel) elements.compareTaskLabel.innerText = `${taskId} dibandingkan dengan ${normalizedReferTaskId}`;
+  if (elements.compareResult) elements.compareResult.classList.add('hidden');
+  if (elements.compareLoading) elements.compareLoading.classList.remove('hidden');
+  openCompareModal();
+
+  if (appState.mode === 'demo') {
+    setTimeout(() => {
+      renderCompareResult({
+        status_revisi: 'REVISI_DITERIMA',
+        perbaikan_terverifikasi: 'Catatan revisi utama sudah ditindaklanjuti pada dokumen baru.',
+        kekurangan_tersisa: 'Nihil',
+        ringkasan_analisis: 'Simulasi Gemini: dokumen baru memenuhi perbaikan yang diminta.'
+      });
+      if (elements.compareLoading) elements.compareLoading.classList.add('hidden');
+      if (elements.compareResult) elements.compareResult.classList.remove('hidden');
+    }, 700);
+    return;
+  }
+
+  try {
+    const response = await fetch(`${appState.webhookUrl}/update-doc-status`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'compare-revision', task_id: taskId, refer_task_id: normalizedReferTaskId })
+    });
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const result = await response.json();
+    if (!result.success) throw new Error('n8n mengembalikan status gagal.');
+    renderCompareResult(result);
+  } catch (error) {
+    console.error('Gagal membandingkan revisi:', error);
+    closeCompareModal();
+    showToast('Komparasi revisi gagal diproses oleh n8n.', 'error');
+  } finally {
+    if (elements.compareLoading) elements.compareLoading.classList.add('hidden');
+    if (elements.compareResult) elements.compareResult.classList.remove('hidden');
+  }
+}
+
+function compareRevisionFromActionModal() {
+  const taskId = appState.pendingActionDocId;
+  const referTaskId = elements.referTaskIdInput ? elements.referTaskIdInput.value : '';
+  closeActionModal();
+  compareRevision(taskId, referTaskId);
 }
 
 // Local Simulation Helper (Demo Mode)

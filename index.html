@@ -108,37 +108,44 @@
   </header>
 
   <main class="max-w-7xl mx-auto px-4 md:px-12 mt-6 md:mt-8 relative z-10">
-    <!-- Status Navigation Tabs (Tab Navigasi Status) -->
-    <section class="mb-6">
-      <div class="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl glass-panel border border-brandgold-500/15">
-        <button id="tab-pending" onclick="switchStatusTab('pending')" class="nav-tab-item active flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold flex items-center justify-center gap-2 transition-all duration-200">
-          <i class="fa-regular fa-clock text-brandgold-400"></i>
-          <span>Menunggu Review</span>
-          <span id="badge-pending-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-brandgold-500/20 text-brandgold-300">0</span>
+    <!-- Grouped Status Stats Ribbon -->
+    <section id="stats-ribbon" class="stats-ribbon mb-6 md:mb-8" aria-label="Ringkasan status dokumen">
+      <div class="stats-group stats-group-active">
+        <div class="stats-group-heading">Antrean Aktif</div>
+        <button id="stat-pending" class="stat-card stat-card-amber" onclick="switchStatusTab('pending')">
+          <span class="stat-card-icon"><i class="fa-regular fa-clock"></i></span>
+          <span class="stat-card-copy"><span class="stat-card-label">Menunggu Review</span><strong id="stat-pending-count">0</strong></span>
         </button>
-
-        <button id="tab-approved" onclick="switchStatusTab('approved')" class="nav-tab-item flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text)] flex items-center justify-center gap-2 transition-all duration-200">
-          <i class="fa-regular fa-circle-check text-brandpurple-400"></i>
-          <span>Disetujui</span>
-          <span id="badge-approved-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-brandpurple-500/20 text-brandpurple-300">0</span>
+      </div>
+      <div class="stats-group stats-group-decisions">
+        <div class="stats-group-heading">Keputusan Terproses</div>
+        <div class="stats-group-grid">
+          <button id="stat-approved" class="stat-card stat-card-emerald" onclick="switchStatusTab('approved')">
+            <span class="stat-card-icon"><i class="fa-regular fa-circle-check"></i></span>
+            <span class="stat-card-copy"><span class="stat-card-label">Disetujui</span><strong id="stat-approved-count">0</strong></span>
+          </button>
+          <button id="stat-revised" class="stat-card stat-card-orange" onclick="switchStatusTab('needs revision')">
+            <span class="stat-card-icon"><i class="fa-regular fa-pen-to-square"></i></span>
+            <span class="stat-card-copy"><span class="stat-card-label">Perlu Revisi</span><strong id="stat-revised-count">0</strong></span>
+          </button>
+          <button id="stat-rejected" class="stat-card stat-card-rose" onclick="switchStatusTab('rejected')">
+            <span class="stat-card-icon"><i class="fa-solid fa-ban"></i></span>
+            <span class="stat-card-copy"><span class="stat-card-label">Ditolak</span><strong id="stat-rejected-count">0</strong></span>
+          </button>
+        </div>
+      </div>
+      <div class="stats-group stats-group-archive">
+        <div class="stats-group-heading">Arsip</div>
+        <button id="stat-archived" class="stat-card stat-card-slate" onclick="switchStatusTab('archived')">
+          <span class="stat-card-icon"><i class="fa-solid fa-box-archive"></i></span>
+          <span class="stat-card-copy"><span class="stat-card-label">Archived / Selesai</span><strong id="stat-archived-count">0</strong></span>
         </button>
-
-        <button id="tab-revised" onclick="switchStatusTab('needs revision')" class="nav-tab-item flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text)] flex items-center justify-center gap-2 transition-all duration-200">
-          <i class="fa-regular fa-pen-to-square text-brandgold-300"></i>
-          <span>Revisi</span>
-          <span id="badge-revised-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-brandgold-500/20 text-brandgold-300">0</span>
-        </button>
-
-        <button id="tab-rejected" onclick="switchStatusTab('rejected')" class="nav-tab-item flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text)] flex items-center justify-center gap-2 transition-all duration-200">
-          <i class="fa-solid fa-ban text-brandwine-400"></i>
-          <span>Ditolak</span>
-          <span id="badge-rejected-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-brandwine-500/20 text-brandwine-300">0</span>
-        </button>
-
-        <button id="tab-archived" onclick="switchStatusTab('archived')" class="nav-tab-item flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text)] flex items-center justify-center gap-2 transition-all duration-200">
-          <i class="fa-solid fa-box-archive text-brandpurple-400"></i>
-          <span>Archived</span>
-          <span id="badge-archived-count" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-brandpurple-500/20 text-brandpurple-300">0</span>
+      </div>
+      <div class="stats-group stats-group-upload">
+        <div class="stats-group-heading">Dokumen Baru</div>
+        <button id="btn-open-upload" class="stat-card stat-card-upload" type="button">
+          <span class="stat-card-icon"><i class="fa-solid fa-cloud-arrow-up"></i></span>
+          <span class="stat-card-copy"><span class="stat-card-label">Upload KAK / TOR</span><strong class="stat-card-action">Tambah</strong></span>
         </button>
       </div>
     </section>
@@ -390,6 +397,11 @@
             </a>
           </div>
 
+          <button id="btn-compare-revision" type="button" onclick="compareRevisionFromActionModal()" class="hidden w-full min-h-[42px] px-4 py-2.5 rounded-xl border border-brandpurple-500/30 bg-brandpurple-500/10 text-brandpurple-300 hover:bg-brandpurple-500/20 text-xs font-bold items-center justify-center gap-2 transition-all duration-200">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Bandingkan Catatan Revisi (AI)</span>
+          </button>
+
           <span class="text-[10px] text-[var(--text-muted)] mt-1 block">Daftar referensi hanya menampilkan dokumen lama dengan status Revisi atau Ditolak dan belum memiliki Refer_Task_ID, agar admin bisa cek konteks pengajuan sebelumnya.</span>
         </div>
 
@@ -461,6 +473,50 @@
           </button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Upload KAK/TOR Modal -->
+  <div id="upload-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm hidden transition-opacity duration-300">
+    <div class="glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-brandpurple-500/10 border border-brandpurple-500/30 flex items-center justify-center text-brandpurple-300"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+          <div><h3 class="text-base md:text-lg font-bold">Upload KAK / TOR</h3><p class="text-[11px] text-[var(--text-muted)]">PDF, DOC, atau DOCX maksimal 5 MB</p></div>
+        </div>
+        <button id="btn-close-upload" type="button" class="text-[var(--text-muted)] hover:text-[var(--text)]"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <form id="upload-form" class="space-y-4">
+        <label for="upload-file" class="upload-dropzone">
+          <i class="fa-solid fa-file-arrow-up text-2xl text-brandpurple-300"></i>
+          <span id="upload-file-label" class="text-xs font-semibold">Pilih file KAK / TOR</span>
+          <span class="text-[10px] text-[var(--text-muted)]">Format: .pdf, .doc, .docx</span>
+        </label>
+        <input id="upload-file" type="file" name="data" accept=".pdf,.doc,.docx" class="sr-only" required>
+        <div id="upload-file-error" class="hidden text-xs text-brandwine-300"></div>
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-brandgold-500/10">
+          <button id="btn-cancel-upload" type="button" class="px-4 py-2.5 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text)]">Batal</button>
+          <button id="btn-submit-upload" type="submit" class="px-5 py-2.5 bg-brandpurple-600 hover:bg-brandpurple-500 text-white text-xs font-bold rounded-xl flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i><span>Upload Dokumen</span></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- AI Revision Comparison Result Modal -->
+  <div id="compare-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm hidden transition-opacity duration-300">
+    <div class="glass-modal w-full max-w-2xl rounded-3xl p-6 md:p-8 animate-fade-in-up">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-brandpurple-500/10 border border-brandpurple-500/30 flex items-center justify-center text-brandpurple-300"><i class="fa-solid fa-wand-magic-sparkles"></i></div><div><h3 class="text-base md:text-lg font-bold">Perbandingan Revisi AI</h3><p id="compare-task-label" class="text-[11px] text-[var(--text-muted)]"></p></div></div>
+        <button id="btn-close-compare" type="button" class="text-[var(--text-muted)] hover:text-[var(--text)]"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <div id="compare-loading" class="hidden py-10 text-center text-[var(--text-muted)]"><i class="fa-solid fa-circle-notch fa-spin text-2xl text-brandpurple-300 mb-3"></i><p class="text-xs">Gemini sedang membandingkan catatan...</p></div>
+      <div id="compare-result" class="space-y-4">
+        <div class="flex items-center justify-between gap-3"><span class="text-[10px] uppercase tracking-wider font-bold text-[var(--text-muted)]">Status Revisi</span><span id="compare-status" class="compare-status-badge"></span></div>
+        <div class="compare-result-block"><h4><i class="fa-solid fa-circle-check"></i> Poin Terverifikasi</h4><p id="compare-verified"></p></div>
+        <div class="compare-result-block"><h4><i class="fa-solid fa-triangle-exclamation"></i> Kekurangan Tersisa</h4><p id="compare-remaining"></p></div>
+        <div class="compare-result-block"><h4><i class="fa-solid fa-align-left"></i> Ringkasan Analisis</h4><p id="compare-summary"></p></div>
+      </div>
+      <div class="flex justify-end mt-6"><button id="btn-dismiss-compare" type="button" class="px-4 py-2.5 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text)]">Tutup</button></div>
     </div>
   </div>
 

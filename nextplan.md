@@ -7,10 +7,14 @@
 - Menjadikan auto-sync 15 detik nonaktif secara default.
 - Mempertahankan sinkronisasi manual.
 - Memperbarui PRD, README, dan dokumentasi n8n.
+- Menambahkan grouped stats ribbon untuk antrean, keputusan, dan arsip.
+- Menggabungkan tampilan menjadi satu ribbon dan menempatkan upload pada grup `Dokumen Baru`.
+- Menambahkan upload KAK/TOR maksimal 5 MB.
+- Menambahkan komparasi catatan revisi berbasis AI secara kondisional.
 
 ## Langkah Berikutnya
 
-1. Hapus kolom `File_Type` dari Google Sheets production setelah memastikan workflow n8n tidak lagi membutuhkannya.
-2. Uji endpoint `GET /get-pending-docs` dengan payload tanpa `File_Type`.
-3. Jalankan simulasi UI dan periksa perilaku checkbox auto-sync pada desktop dan mobile.
+1. Uji endpoint `POST /upload-dokumen` menggunakan file valid dan file di atas 5 MB.
+2. Uji endpoint `POST /update-doc-status` dengan `action=compare-revision` pada dua Task ID nyata.
+3. Jalankan simulasi UI dan periksa grouped stats pada desktop dan mobile.
 4. Aktifkan auto-sync hanya pada deployment yang memang membutuhkan polling berkala.

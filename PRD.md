@@ -108,6 +108,10 @@ Tidak muncul:
 3. **Mobile-First Responsiveness:** Tampilan ramah ponsel dengan target area sentuh minimum 42px.
 4. **Manual Sync dengan Auto-Sync Opt-in:** Sinkronisasi otomatis 15 detik nonaktif secara default. Pengguna dapat mengaktifkannya sendiri; tombol sinkronisasi manual tetap tersedia.
 
+5. **Single Grouped Stats Ribbon:** Dashboard hanya memiliki satu ribbon dengan bagian Antrean Aktif (Pending), Keputusan Terproses (Approved, Needs Revision, Rejected), Arsip (Archived/Selesai), dan Dokumen Baru (Upload KAK/TOR). Semua counter dihitung ulang dari response API.
+6. **Upload KAK/TOR:** Admin dapat mengunggah `.pdf`, `.doc`, atau `.docx` maksimal 5 MB melalui `POST /upload-dokumen` menggunakan multipart field `data` dan `action=TOR`.
+7. **Komparasi Catatan Revisi AI:** Aksi komparasi hanya tersedia bila `Refer_Task_ID` valid. Frontend mengirim `action=compare-revision` ke `/update-doc-status` dan menampilkan status, poin terverifikasi, kekurangan tersisa, serta ringkasan AI.
+
 ---
 
 ## 4. Database Schema (Google Sheets - Sheet: `Documents`)

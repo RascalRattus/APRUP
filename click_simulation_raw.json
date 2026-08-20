@@ -1,7 +1,95 @@
 {
-  "generatedAt": "2026-08-19T15:14:18.423Z",
+  "generatedAt": "2026-08-20T06:19:21.271Z",
+  "targetUrl": "http://localhost:8888/index.html",
+  "executionDurationMs": 111644,
+  "summary": {
+    "totalTests": 56,
+    "passed": 56,
+    "warned": 0,
+    "failed": 0
+  },
+  "performance": {
+    "1920x1080": {
+      "domLoadedTime": 1384,
+      "domInteractiveMs": 1222,
+      "loadEventMs": 1700,
+      "jsHeapUsedMB": "9.54"
+    },
+    "1440x900": {
+      "domLoadedTime": 12408,
+      "domInteractiveMs": 12394,
+      "loadEventMs": 12747,
+      "jsHeapUsedMB": "9.54"
+    },
+    "768x1024": {
+      "domLoadedTime": 6338,
+      "domInteractiveMs": 6126,
+      "loadEventMs": 6462,
+      "jsHeapUsedMB": "9.54"
+    },
+    "375x812": {
+      "domLoadedTime": 805,
+      "domInteractiveMs": 691,
+      "loadEventMs": 1003,
+      "jsHeapUsedMB": "9.54"
+    }
+  },
+  "consoleErrors": {
+    "1920x1080": [],
+    "1440x900": [],
+    "768x1024": [],
+    "375x812": []
+  },
+  "networkFailures": {
+    "1920x1080": [],
+    "1440x900": [],
+    "768x1024": [],
+    "375x812": []
+  },
+  "screenshots": [
+    "1920x1080_00_initial.png",
+    "1920x1080_01_theme.png",
+    "1920x1080_02_mode.png",
+    "1920x1080_03_login.png",
+    "1920x1080_05_filters.png",
+    "1920x1080_06_search.png",
+    "1920x1080_07_modal.png",
+    "1920x1080_08_settings.png",
+    "1920x1080_09_refresh.png",
+    "1440x900_00_initial.png",
+    "1440x900_01_theme.png",
+    "1440x900_02_mode.png",
+    "1440x900_03_login.png",
+    "1440x900_05_filters.png",
+    "1440x900_06_search.png",
+    "1440x900_07_modal.png",
+    "1440x900_08_settings.png",
+    "1440x900_09_refresh.png",
+    "768x1024_00_initial.png",
+    "768x1024_01_theme.png",
+    "768x1024_02_mode.png",
+    "768x1024_03_login.png",
+    "768x1024_05_filters.png",
+    "768x1024_06_search.png",
+    "768x1024_07_modal.png",
+    "768x1024_08_settings.png",
+    "768x1024_09_refresh.png",
+    "375x812_00_initial.png",
+    "375x812_01_theme.png",
+    "375x812_02_mode.png",
+    "375x812_03_login.png",
+    "375x812_05_filters.png",
+    "375x812_06_search.png",
+    "375x812_07_modal.png",
+    "375x812_08_settings.png",
+    "375x812_09_refresh.png"
+  ],
   "viewports": {
     "1920x1080": {
+      "Page Load": {
+        "status": "PASS",
+        "detail": "Loaded http://localhost:8888/index.html"
+      },
       "Theme Toggle": {
         "status": "PASS",
         "detail": "dark → light → restored"
@@ -14,13 +102,21 @@
         "status": "PASS",
         "detail": "Modal opened. Role after login: \"Role: Admin\""
       },
-      "Navigation Tabs": {
+      "Single Grouped Ribbon": {
         "status": "PASS",
-        "detail": "approved:clicked | revised:clicked | rejected:clicked | pending:clicked"
+        "detail": "legacy_ribbon:0 | grouped_sections:4"
+      },
+      "Grouped Stats Ribbon": {
+        "status": "PASS",
+        "detail": "groups:4 | pending:4 | approved:0 | revised:0 | rejected:0 | archived:0 | upload_card:true"
       },
       "Format Filters Removed": {
         "status": "PASS",
         "detail": "format_filters:0 | auto_sync:false"
+      },
+      "Upload & AI Compare": {
+        "status": "PASS",
+        "detail": "oversize_error:Ukuran file terlalu besar! Maksimal 5 MB. | compare_button:true | compare_modal:true | status:REVISI_DITERIMA"
       },
       "Search Input": {
         "status": "PASS",
@@ -32,7 +128,7 @@
       },
       "Settings Modal": {
         "status": "PASS",
-        "detail": "Overlay elements visible: 4. Closed with Escape."
+        "detail": "Overlay elements visible: 6. Closed with Escape."
       },
       "Refresh Button": {
         "status": "PASS",
@@ -48,6 +144,10 @@
       }
     },
     "1440x900": {
+      "Page Load": {
+        "status": "PASS",
+        "detail": "Loaded http://localhost:8888/index.html"
+      },
       "Theme Toggle": {
         "status": "PASS",
         "detail": "dark → light → restored"
@@ -60,13 +160,21 @@
         "status": "PASS",
         "detail": "Modal opened. Role after login: \"Role: Admin\""
       },
-      "Navigation Tabs": {
+      "Single Grouped Ribbon": {
         "status": "PASS",
-        "detail": "approved:clicked | revised:clicked | rejected:clicked | pending:clicked"
+        "detail": "legacy_ribbon:0 | grouped_sections:4"
+      },
+      "Grouped Stats Ribbon": {
+        "status": "PASS",
+        "detail": "groups:4 | pending:4 | approved:0 | revised:0 | rejected:0 | archived:0 | upload_card:true"
       },
       "Format Filters Removed": {
         "status": "PASS",
         "detail": "format_filters:0 | auto_sync:false"
+      },
+      "Upload & AI Compare": {
+        "status": "PASS",
+        "detail": "oversize_error:Ukuran file terlalu besar! Maksimal 5 MB. | compare_button:true | compare_modal:true | status:REVISI_DITERIMA"
       },
       "Search Input": {
         "status": "PASS",
@@ -78,7 +186,7 @@
       },
       "Settings Modal": {
         "status": "PASS",
-        "detail": "Overlay elements visible: 4. Closed with Escape."
+        "detail": "Overlay elements visible: 6. Closed with Escape."
       },
       "Refresh Button": {
         "status": "PASS",
@@ -94,6 +202,10 @@
       }
     },
     "768x1024": {
+      "Page Load": {
+        "status": "PASS",
+        "detail": "Loaded http://localhost:8888/index.html"
+      },
       "Theme Toggle": {
         "status": "PASS",
         "detail": "dark → light → restored"
@@ -106,13 +218,21 @@
         "status": "PASS",
         "detail": "Modal opened. Role after login: \"Role: Admin\""
       },
-      "Navigation Tabs": {
+      "Single Grouped Ribbon": {
         "status": "PASS",
-        "detail": "approved:clicked | revised:clicked | rejected:clicked | pending:clicked"
+        "detail": "legacy_ribbon:0 | grouped_sections:4"
+      },
+      "Grouped Stats Ribbon": {
+        "status": "PASS",
+        "detail": "groups:4 | pending:4 | approved:0 | revised:0 | rejected:0 | archived:0 | upload_card:true"
       },
       "Format Filters Removed": {
         "status": "PASS",
         "detail": "format_filters:0 | auto_sync:false"
+      },
+      "Upload & AI Compare": {
+        "status": "PASS",
+        "detail": "oversize_error:Ukuran file terlalu besar! Maksimal 5 MB. | compare_button:true | compare_modal:true | status:REVISI_DITERIMA"
       },
       "Search Input": {
         "status": "PASS",
@@ -124,7 +244,7 @@
       },
       "Settings Modal": {
         "status": "PASS",
-        "detail": "Overlay elements visible: 4. Closed with Escape."
+        "detail": "Overlay elements visible: 6. Closed with Escape."
       },
       "Refresh Button": {
         "status": "PASS",
@@ -140,6 +260,10 @@
       }
     },
     "375x812": {
+      "Page Load": {
+        "status": "PASS",
+        "detail": "Loaded http://localhost:8888/index.html"
+      },
       "Theme Toggle": {
         "status": "PASS",
         "detail": "dark → light → restored"
@@ -152,13 +276,21 @@
         "status": "PASS",
         "detail": "Modal opened. Role after login: \"Role: Admin\""
       },
-      "Navigation Tabs": {
+      "Single Grouped Ribbon": {
         "status": "PASS",
-        "detail": "approved:clicked | revised:clicked | rejected:clicked | pending:clicked"
+        "detail": "legacy_ribbon:0 | grouped_sections:4"
+      },
+      "Grouped Stats Ribbon": {
+        "status": "PASS",
+        "detail": "groups:4 | pending:4 | approved:0 | revised:0 | rejected:0 | archived:0 | upload_card:true"
       },
       "Format Filters Removed": {
         "status": "PASS",
         "detail": "format_filters:0 | auto_sync:false"
+      },
+      "Upload & AI Compare": {
+        "status": "PASS",
+        "detail": "oversize_error:Ukuran file terlalu besar! Maksimal 5 MB. | compare_button:true | compare_modal:true | status:REVISI_DITERIMA"
       },
       "Search Input": {
         "status": "PASS",
@@ -170,7 +302,7 @@
       },
       "Settings Modal": {
         "status": "PASS",
-        "detail": "Overlay elements visible: 4. Closed with Escape."
+        "detail": "Overlay elements visible: 6. Closed with Escape."
       },
       "Refresh Button": {
         "status": "PASS",

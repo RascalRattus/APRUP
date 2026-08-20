@@ -1,0 +1,3752 @@
+{
+  "name": "SUDAH OKE YA",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "### 📥 1. INGESTION & CEK DUPLIKAT\n- Scan berkala Google Drive folder input.\n- Filter ekstensi dokumen (.pdf, .doc, .docx).\n- Download file & cek duplikasi terhadap Google Sheets.",
+        "height": 596,
+        "width": 1280,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c5a3eb1e-a61d-4c5c-9cba-87d3831fe2a0",
+      "name": "Note - Ingestion & Deduplikasi"
+    },
+    {
+      "parameters": {
+        "content": "### 🚪 2. GATEKEEPER & VALIDASI AWAL\n- Evaluasi kilat struktur dokumen oleh AI Gatekeeper.\n- Memisahkan dokumen valid TOR/KAK dengan dokumen non-TOR.",
+        "height": 596,
+        "width": 652,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1344,
+        0
+      ],
+      "id": "401ad654-1435-4450-9e11-08d644f37379",
+      "name": "Note - Gatekeeper"
+    },
+    {
+      "parameters": {
+        "content": "### 👥 3. MULTI-AGENT REVIEW PANEL & AUDIT LOG\n- Evaluasi paralel 3 Agen AI Gemini (Compliance, Substance, Risk).\n- Penggabungan output & pencatatan audit trail ke MongoDB.",
+        "height": 596,
+        "width": 820,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2064,
+        0
+      ],
+      "id": "b7b40e46-72c8-4a28-843a-808cc64176ab",
+      "name": "Note - Reviewer Panel"
+    },
+    {
+      "parameters": {
+        "content": "### ⚖️ 4. CHIEF ADJUDICATOR\n- Sintesis temuan Reviewer A, B, & C.\n- Penetapan keputusan akhir: PASS, REVIEW, atau ESCALATE.",
+        "height": 596,
+        "width": 560,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2944,
+        0
+      ],
+      "id": "cd0cd2f8-7cfc-4cf1-923f-d526a6653ef0",
+      "name": "Note - Chief Adjudicator"
+    },
+    {
+      "parameters": {
+        "content": "### 💾 5. PENYIMPANAN HASIL & ANALISIS LANJUTAN\n- Jalur PASS: Siap tender -> Simpan -> Arsip file.\n- Jalur REVIEW: Analisis Pro Lite -> Simpan -> Arsip file.\n- Jalur ESCALATE: Analisis Pro Full -> Simpan -> Arsip file.",
+        "height": 596,
+        "width": 880,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3552,
+        0
+      ],
+      "id": "49b4a5c2-7e27-45f1-8671-3896cd80caa1",
+      "name": "Note - Storage & Pro Paths"
+    },
+    {
+      "parameters": {
+        "content": "### 🔍 API: AMBIL DOKUMEN PENDING (GET)\n- Endpoint Webhook untuk mengambil data KAK pending dari Google Sheets.",
+        "height": 300,
+        "width": 860,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        640
+      ],
+      "id": "e13a8973-4675-4d25-b6e3-164f92b67c39",
+      "name": "Note - API Pending Docs"
+    },
+    {
+      "parameters": {
+        "content": "### ⚡ API: UPDATE STATUS DOKUMEN & KOMPARASI REVISI (POST)\n- Menerima aksi keputusan verifikator (Approve / Revise / Reject).\n- Mendukung perbandingan revisi otomatis via MongoDB & Google Gemini AI.",
+        "height": 968,
+        "width": 2220,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        1008
+      ],
+      "id": "731d2fbf-993b-4845-b3c7-fee5b1d06578",
+      "name": "Note - API Update Status"
+    },
+    {
+      "parameters": {
+        "content": "### 📤 API: UPLOAD DOKUMEN (POST)\n- Menerima file upload KAK baru ke folder Google Drive utama.",
+        "height": 300,
+        "width": 1040,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        2064
+      ],
+      "id": "7b88e86e-3dcf-4e79-82a7-ec0f7a00c4b2",
+      "name": "Note - API Upload Dokumen"
+    },
+    {
+      "parameters": {
+        "content": "### 📦 ARSIP & NODE TIDAK TERPAKAI\n- Disimpan untuk referensi pipeline versi legacy/arsip.",
+        "height": 300,
+        "width": 1728,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        2432
+      ],
+      "id": "cf315f2f-81db-4f19-bc16-90ade13e9e5b",
+      "name": "Note - Unused Archive"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        64,
+        272
+      ],
+      "id": "f5238fe4-ea16-443b-a674-63a6796a6f68",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "https://drive.google.com/drive/u/0/folders/1S_-9xyUPCNHNqM0dVkVGFxQ1LLFU8IHL",
+            "mode": "url"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        272,
+        272
+      ],
+      "id": "2321d6a1-30af-491b-a5ba-f44622132935",
+      "name": "Search Files and Folders",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "ip4pSWKhkscoVKEs",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Search Files and Folders').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        736,
+        64
+      ],
+      "id": "09f3118b-b570-43ee-aee7-9fce4b2d6803",
+      "name": "Download File",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "ip4pSWKhkscoVKEs",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "value": "18kQPVyt0xuq_HkUDDm38G6mztgMRVlZd",
+          "mode": "id"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "18kQPVyt0xuq_HkUDDm38G6mztgMRVlZd",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        736,
+        432
+      ],
+      "id": "2055385c-0844-4ae5-be63-7879eff504c3",
+      "name": "Pindahkan File Non-Dokumen (Drive)",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "ip4pSWKhkscoVKEs",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 163080752,
+          "mode": "list",
+          "cachedResultName": "DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit#gid=163080752"
+        },
+        "filtersUI": {
+          "values": []
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        736,
+        240
+      ],
+      "id": "d5d97d7d-6ef0-4e72-aa1b-5da31edc5343",
+      "name": "Ambil Data Existing (Cek Duplikat)",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T9P5nKCYYhnlYxnZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "id",
+              "field2": "File_ID"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        992,
+        208
+      ],
+      "id": "b81e458d-fb69-451d-b2bc-5282a6ea3baa",
+      "name": "Compare Datasets"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1392,
+        672
+      ],
+      "id": "5f5f074f-6bcd-45c3-a252-a7957686f8a2",
+      "name": "Loop Over Items (Jalur Lama)"
+    },
+    {
+      "parameters": {
+        "resource": "document",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-flash-lite-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-flash-lite-latest",
+          "cachedResultUrl": ""
+        },
+        "text": "==Role:\nAnda adalah Gatekeeper Dokumen. Tugas Anda HANYA SATU: \nEvaluasi dokumen terlampir dan tentukan apakah dokumen ini adalah Kerangka Acuan Kerja (KAK) / Term of Reference (TOR) / Spesifikasi Teknis Pengadaan.\n\n[DATA FILE]\nFile ID: {{ $json.id }} \\vert{} File Name: {{$json.name }}\n\n[PANDUAN IDENTIFIKASI]\nCiri-ciri KAK/TOR/Spesifikasi Teknis biasanya memiliki: Latar Belakang, Tujuan, Spesifikasi Barang/Jasa, atau Anggaran.\nPENTING: JANGAN menilai kualitas dokumen! Meskipun isinya sangat jelek, tidak lengkap, atau berantakan, selama esensinya adalah dokumen KAK/TOR, Anda WAJIB menjawab \"is_tor\": true.\nJawab \"is_tor\": false HANYA JIKA dokumen ini jelas-jelas surat lain (contoh: Kwitansi, Undangan Rapat, Brosur).\n\nOUTPUT WAJIB JSON MURNI (tanpa markdown ```json):\n{\n  \"file_id\": \"{{ $json.id }}\",\n  \"file_name\": \"{{ $json.name }}\",\n  \"is_tor\": true,\n  \"alasan\": \"[Penjelasan singkat max 1 kalimat mengapa ini TOR atau bukan TOR]\"\n}",
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        1376,
+        208
+      ],
+      "id": "2ff151b2-d5d2-4a79-8cf9-f01545be8ded",
+      "name": "Gatekeeper - Cek Jenis Dokumen (Lite) (Jalur Lama)",
+      "retryOnFail": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "k4QU9daaOVYQ4rQA",
+          "name": "Gatekeeper - Cek Jenis Dokumen (Lite)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ambil item yang SEDANG BERJALAN di Loop saat ini\nconst activeLoopItem = $('Loop Over Items (Jalur Lama)').item;\n\nconst result = [];\n\nfor (const item of $input.all()) {\n  // 1. Ambil teks dari item.json.output atau fallback ke path lainnya\n  const rawText = item.json.output || item.json.content?.parts?.[0]?.text || item.json.text || \"\";\n  \n  // 2. Pembersihan tag Markdown markdown code block jika ada\n  const cleanedText = rawText.replace(/```json|```/g, '').trim();\n  \n  let parsedData = {};\n  try {\n    parsedData = JSON.parse(cleanedText);\n  } catch(e) {\n    parsedData = { \n      is_tor: false, \n      alasan: \"Gagal parse JSON Gatekeeper\" \n    };\n  }\n\n  // 3. Buat objek item baru untuk n8n\n  const newItem = {\n    json: {\n      ...parsedData,\n      // Prioritaskan ID & Name dari hasil parse AI, fallback ke activeLoopItem\n      file_id: parsedData.file_id || activeLoopItem?.json?.id,\n      file_name: parsedData.file_name || activeLoopItem?.json?.name\n    }\n  };\n\n  // 4. Ambil data binary secara eksplisit jika ada di activeLoopItem\n  if (activeLoopItem?.binary) {\n    newItem.binary = activeLoopItem.binary;\n  }\n\n  result.push(newItem);\n}\n\nreturn result;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1584,
+        208
+      ],
+      "id": "0e312c5f-1b4a-44df-b1ed-5bef4df964aa",
+      "name": "Parse Hasil Gatekeeper (Code) (Jalur Lama)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "bd7d75f4-7a5b-48ff-a6e2-9b78ae5d74b8",
+              "leftValue": "={{ $json.is_tor }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1776,
+        208
+      ],
+      "id": "fc85aa7c-f45d-45f1-abfc-48f8c41c4212",
+      "name": "If - Lolos Gatekeeper (Is TOR) (Jalur Lama)"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A",
+          "mode": "list",
+          "cachedResultName": "AI TEST",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 163080752,
+          "mode": "list",
+          "cachedResultName": "DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit#gid=163080752"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Spesifikasi_Check": "=",
+            "TOR_Completeness": "=",
+            "AI_Notes": "={{ $json.alasan || $json.ai_notes }}",
+            "File_ID": "={{ $json.file_id }}",
+            "File_Name": "={{ $json.file_name }}",
+            "File_Type": "=REJECTED_NOT_TOR",
+            "Task_ID": "=TASK-{{ $now.toFormat('yyMMdd-HHmm') }}-{{ $json.file_id.substring(0,4).toUpperCase() }}",
+            "Pengesahan": "=",
+            "Status": "REJECTED_NOT_TOR",
+            "Timestamp": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}",
+            "File_Link": "=https://drive.google.com/file/d/{{ $json.file_id }}/view"
+          },
+          "matchingColumns": [
+            "File_ID"
+          ],
+          "schema": [
+            {
+              "id": "Task_ID",
+              "displayName": "Task_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "File_ID",
+              "displayName": "File_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "File_Name",
+              "displayName": "File_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "File_Type",
+              "displayName": "File_Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Spesifikasi_Check",
+              "displayName": "Spesifikasi_Check",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "TOR_Completeness",
+              "displayName": "TOR_Completeness",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI_Notes",
+              "displayName": "AI_Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Pengesahan",
+              "displayName": "Pengesahan",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Is_Reapplication",
+              "displayName": "Is_Reapplication",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Refer_Task_ID",
+              "displayName": "Refer_Task_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Admin_Notes",
+              "displayName": "Admin_Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Admin_Notes2",
+              "displayName": "Admin_Notes2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "File_Link",
+              "displayName": "File_Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1584,
+        432
+      ],
+      "id": "7cdd409c-30da-48e9-abd1-424af666da15",
+      "name": "Simpan Hasil - Ditolak Gatekeeper (Not TOR) (Jalur Lama)",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T9P5nKCYYhnlYxnZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.File_ID }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "value": "18kQPVyt0xuq_HkUDDm38G6mztgMRVlZd",
+          "mode": "id"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "18kQPVyt0xuq_HkUDDm38G6mztgMRVlZd",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1776,
+        432
+      ],
+      "id": "2d0ae486-2d1d-4d64-bdac-69ea1b539c49",
+      "name": "Pindahkan File Bukan KAK (Drive) (Jalur Lama)",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "ip4pSWKhkscoVKEs",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "document",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-flash-lite-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-flash-lite-latest",
+          "cachedResultUrl": ""
+        },
+        "text": "==Role:\nAnda adalah Reviewer A (Compliance & Gatekeeper Reviewer). Tugas utama Anda: \n1. Validasi awal: Tentukan apakah dokumen ini adalah Kerangka Acuan Kerja (KAK) / TOR / Spesifikasi Teknis pengadaan. Jika bukan, set 'REJECTED_NOT_TOR'.\n2. Jika valid, ekstrak ringkasan isi untuk 8 elemen wajib dan deteksi status pengesahan.\n\n[DATA FILE]\nFile ID: {{ $json.id }} \\vert{} File Name: {{$json.name }}\n\n[DAFTAR 8 ELEMEN WAJIB]\n1. Latar Belakang\n2. Maksud dan Tujuan\n3. Target / Sasaran\n4. Nama Organisasi Pengadaan Barang\n5. Sumber Dana dan Perkiraan Biaya\n6. Jangka Waktu Pelaksanaan Pekerjaan\n7. Spesifikasi Teknis\n8. Spesifikasi Jumlah\n\n[INSTRUKSI]\n1. Isi kolom 'detail' WAJIB berupa EKSTRAKSI POIN-POIN PENTING. \n2. ATURAN EKSTRAKSI: Buang kalimat pengantar atau basa-basi formalitas, TETAPI Anda DILARANG KERAS menghilangkan rincian spesifik (seperti angka, nama barang, lokasi, atau rincian target). Ambil \"daging\" substansinya saja.\n3. ATURAN JSON AMAN: Jika ada beberapa poin penting, gabungkan dalam satu kalimat dan pisahkan menggunakan titik koma (;). JANGAN gunakan karakter enter/newline, dan hindari tanda kutip ganda (\") di dalam teks 'detail' agar format JSON tidak rusak.\n4. Status Pengesahan: 'VALID_TTE', 'VALID_TTD_BASAH', atau 'TIDAK_ADA'.\n5. OUTPUT WAJIB JSON MURNI: DILARANG menggunakan markdown ```json.\n\nFormat Output:\n{\n  \"file_id\": \"{{ $json.id }}\",\n  \"document_validation\": \"VALID_TOR / REJECTED_NOT_TOR\",\n  \"validation_note\": \"[Penjelasan singkat mengapa dokumen diterima/ditolak]\",\n  \"analisis_8_elemen\": {\n    \"latar_belakang\": {\"status\": \"ADA/TIDAK\", \"detail\": \"[Poin penting latar belakang; dipisahkan titik koma; tanpa enter]\"},\n    \"maksud_dan_tujuan\": {\"status\": \"ADA/TIDAK\", \"detail\": \"[Poin-poin spesifik tujuan; dipisahkan titik koma; tanpa enter]\"},\n    \"target_sasaran\": {\"status\": \"ADA/TIDAK\", \"detail\": \"[Rincian target/sasaran; dipisahkan titik koma; tanpa enter]\"},\n    \"nama_organisasi_pengadaan_barang\": {\"status\": \"ADA/TIDAK\", \"detail\": \"[Nama organisasi pengadaan]\"},\n    \"sumber_dana_dan_biaya\": {\"status\": \"ADA/TIDAK\", \"detail\": \"[Sumber dana; Rincian angka/biaya spesifik]\"},\n    \"jangka_waktu_pelaksanaan_pekerjaan\": {\"status\": \"ADA/TIDAK\", \"detail\": \"[Waktu spesifik pelaksanaan]\"},\n    \"spesifikasi_teknis\": {\"status\": \"ADA/TIDAK\", \"detail\": \"[Poin-poin rincian teknis; dipisahkan titik koma; tanpa enter]\"},\n    \"spesifikasi_jumlah\": {\"status\": \"ADA/TIDAK\", \"detail\": \"[Rincian barang/jasa beserta jumlah angka spesifiknya; dipisahkan titik koma; tanpa enter]\"}\n  },\n  \"status_pengesahan\": \"VALID_TTE / VALID_TTD_BASAH / TIDAK_ADA\",\n  \"nama_pejabat_pengesah\": \"[Nama atau 'Tidak Terdeteksi']\",\n  \"catatan_a\": \"[Ringkasan kepatuhan]\"\n}",
+        "inputType": "binary",
+        "simplify": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        2096,
+        80
+      ],
+      "id": "ddfe09ef-1fe2-4157-b628-d9ea7871d005",
+      "name": "Reviewer A - Compliance Check (Lite) (Jalur Lama)",
+      "retryOnFail": true,
+      "waitBetweenTries": 1000,
+      "maxTries": 2,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "HAUy60VhWrPY5CVd",
+          "name": "Reviewer A - Compliance Check (Lite)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "document",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-flash-lite-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-flash-lite-latest",
+          "cachedResultUrl": ""
+        },
+        "text": "==Role:\nAnda adalah Reviewer B (Substantive Rater). Tugas Anda menilai kualitas, rasionalitas, dan kedalaman isi dokumen KAK ini.\n\n[DATA FILE]\nFile ID: {{ $json.id }} \\vert{} File Name: {{$json.name }}\n\n[ELEMEN YANG DINILAI KUALITASNYA]\n1. Latar Belakang | 2. Maksud Tujuan | 3. Target | 4. Organisasi | 5. Sumber Dana | 6. Jangka Waktu | 7. Spek Teknis | 8. Volume.\n\n[RUBRIK PENILAIAN]\n- 80-100: Detail, terukur (SMART), realistis.\n- 50-79: Terlalu umum, deskripsi mengambang.\n- <50: Copas template, kosong, atau tidak rasional.\n\n[INSTRUKSI]\nOUTPUT WAJIB JSON MURNI tanpa markdown ```json.\n\nFormat Output:\n{\n  \"file_id\": \"{{ $json.id }}\",\n  \"reviewer\": \"B\",\n  \"overall_score\": 85,\n  \"kualitas_substansi\": \"BAIK / CUKUP / BURUK\",\n  \"analisis_spesifikasi\": \"[Jelaskan apakah spesifikasi teknis dan volume sudah memadai atau bahasa bersayap]\",\n  \"catatan_b\": \"[Tuliskan kelemahan substansi yang butuh didetailkan]\"\n}",
+        "inputType": "binary",
+        "simplify": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        2096,
+        224
+      ],
+      "id": "0f021a42-6aa5-407b-bfcd-2d11dc605eb5",
+      "name": "Reviewer B - Substantive Rating (Lite) (Jalur Lama)",
+      "retryOnFail": true,
+      "waitBetweenTries": 1000,
+      "maxTries": 2,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "UGtraLW4yRbLoVio",
+          "name": "Reviewer B - Substantive Rating (Lite)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "document",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-flash-lite-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-flash-lite-latest",
+          "cachedResultUrl": ""
+        },
+        "text": "==Role:\nAnda adalah Reviewer C (Risk & Consistency Auditor). Tugas Anda mencari kontradiksi internal dan risiko red flag.\n\n[DATA FILE]\nFile ID: {{ $json.id }} \\vert{} File Name: {{$json.name }}\n\n[INSTRUKSI INVESTIGASI]\n1. Cek rasionalitas: Apakah waktu pelaksanaan masuk akal dengan volume? Apakah pagu anggaran konsisten antara narasi dan tabel?\n2. OUTPUT WAJIB JSON MURNI tanpa markdown ```json.\n\nFormat Output:\n{\n  \"file_id\": \"{{ $json.id }}\",\n  \"reviewer\": \"C\",\n  \"risk_level\": \"LOW / MEDIUM / HIGH / CRITICAL\",\n  \"inkonsistensi_ditemukan\": \"[Jelaskan jika ada perbedaan data, atau tulis 'Tidak ada indikasi kontradiksi']\",\n  \"catatan_c\": \"[Tuliskan risiko operasional/hukum yang perlu diwaspadai PPK]\"\n}",
+        "inputType": "binary",
+        "simplify": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        2096,
+        368
+      ],
+      "id": "60b7e340-da41-49e7-ac14-0e2b19c28424",
+      "name": "Reviewer C - Risk Audit (Lite) (Jalur Lama)",
+      "retryOnFail": true,
+      "waitBetweenTries": 1000,
+      "maxTries": 2,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "bzROLM4Q8ZidTtug",
+          "name": "Reviewer C - Risk Audit (Lite)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2320,
+        224
+      ],
+      "id": "75a80d7d-7477-4804-a4a2-a260e56b2f79",
+      "name": "Merge Reviewer A-B-C (Jalur Lama)"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Ambil metadata file dari item loop yang sedang aktif\nconst activeLoopItem = $('Loop Over Items (Jalur Lama)').item;\nconst fileId = activeLoopItem.json.id || activeLoopItem.json.file_id || \"UNKNOWN_ID\";\nconst fileName = activeLoopItem.json.name || activeLoopItem.json.file_name || \"Dokumen Pengadaan\";\n\n// 2. Buat wadah utama hasil penggabungan\nconst mergedOutput = {\n  file_id: fileId,\n  file_name: fileName,\n  reviewer_a: null,\n  reviewer_b: null,\n  reviewer_c: null\n};\n\n// 3. Looping 3 item hasil Append dari Reviewer A, B, dan C\nfor (const item of $input.all()) {\n  // Extract string JSON dari struktur respons Gemini\n  const rawText = item.json.candidates?.[0]?.content?.parts?.[0]?.text || item.json.text || \"\";\n  if (!rawText) continue;\n\n  let parsed = {};\n  try {\n    // Bersihkan format Markdown block ```json ... ``` jika ada\n    const cleanText = rawText\n      .replace(/^```json\\s*/i, \"\")\n      .replace(/^```\\s*/i, \"\")\n      .replace(/\\s*```$/i, \"\")\n      .trim();\n    parsed = JSON.parse(cleanText);\n  } catch (e) {\n    parsed = { error: \"Gagal parse JSON\", raw: rawText };\n  }\n\n  // Lengkapi file_id di dalam objek parser jika kosong\n  parsed.file_id = fileId;\n\n  // 4. Petakan otomatis ke Reviewer A, B, atau C berdasarkan atribut uniknya\n  if (parsed.document_validation || parsed.analisis_8_elemen) {\n    mergedOutput.reviewer_a = parsed;\n  } else if (parsed.overall_score || parsed.reviewer === \"B\") {\n    mergedOutput.reviewer_b = parsed;\n  } else if (parsed.risk_level || parsed.reviewer === \"C\") {\n    mergedOutput.reviewer_c = parsed;\n  }\n}\n\n// 5. Kembalikan 1 item tunggal gabungan ke node selanjutnya (Simpan ke Sheet)\nreturn [{ json: mergedOutput }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2544,
+        224
+      ],
+      "id": "7788b468-8eca-41f0-a34e-e1673c388b98",
+      "name": "Group Hasil Reviewer per File (Code) (Jalur Lama)"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "audit_trail_kak",
+        "fields": "={\n  \"task_id\": \"=TASK-{{ $now.toFormat('yyMMdd-HHmm') }}-{{ $json.file_id.substring(0,4).toUpperCase() }}\",\n  \"file_id\": \"={{ $json.file_id }}\",\n  \"file_name\": \"={{ $json.file_name }}\",\n  \"created_at\": \"={{ $now.toISO() }}\",\n  \"reviewer_a\": \"={{ $json.reviewer_a }}\",\n  \"reviewer_b\": \"={{ $json.reviewer_b }}\",\n  \"reviewer_c\": \"={{ $json.reviewer_c }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.4,
+      "position": [
+        2752,
+        80
+      ],
+      "id": "13caabb5-ed39-4d92-84fa-c68b0d0fe161",
+      "name": "Insert documents",
+      "credentials": {
+        "mongoDb": {
+          "id": "fvbGrfIu732tFRSN",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-flash-lite-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-flash-lite-latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Role:\nAnda adalah Chief Adjudicator. Tugas Anda membaca laporan dari Reviewer A, B, dan C, lalu mengambil keputusan final yang bijak.\n\n[DATA LAPORAN]\nFile ID: {{ $json.file_id }} \\vert{} File Name: {{$json.file_name }}\nLaporan A: {{ JSON.stringify($json.reviewer_a) }}\nLaporan B: {{ JSON.stringify($json.reviewer_b) }}\nLaporan C: {{ JSON.stringify($json.reviewer_c) }}\n\n[ATURAN ADJUDIKASI FINAL (WAJIB DIIKUTI)]\n1. JANGAN menilai ulang dokumen asli. Sintesiskan dari JSON di atas.\n2. TOLERANSI (PASS RULE): Jika Reviewer menemukan kekurangan yang TIDAK MASIF (misal: typo, Latar Belakang kurang panjang sedikit, nilai B > 70, risiko C Low), berikan status 'PASS' dan cantumkan perbaikannya di 'AI_Notes' sebagai saran ringan.\n3. Berikan status 'REVIEW' JIKA: Ada elemen wajib benar-benar hilang (A), nilai di bawah 60 (B), atau ada inkonsistensi menengah (C).\n4. Berikan status 'ESCALATE' JIKA: Reviewer C menyatakan HIGH/CRITICAL RISK (indikasi mark-up fatal).\n5. OUTPUT WAJIB JSON MURNI tanpa markdown ```json. Mulai dengan { dan akhiri }.\n6. HARD RULE: Jika 'reviewer_a.document_validation' bernilai 'REJECTED_NOT_TOR', JANGAN memproses isi laporan B dan C. Tetapkan 'Gate_Status' secara otomatis menjadi 'REJECTED_NOT_TOR'.\n7. Jika dokumen valid ('VALID_TOR'):\n   - Jika ada risiko 'HIGH/CRITICAL' (Reviewer C), status 'ESCALATE'.\n   - Jika elemen wajib hilang (Reviewer A) atau skor < 60 (Reviewer B), status 'REVIEW'.\n   - Jika semua aman, status 'PASS'.\n\n[ATURAN KETAT PENGISIAN JSON (STRICT ENUM)]\n- \"Gate_Status\" WAJIB pilih SATU nilai saja: \"PASS\", \"REVIEW\", \"REJECTED_NOT_TOR\", atau \"ESCALATE\". (DILARANG pakai garis miring).\n- \"File_Type\" WAJIB pilih SATU nilai saja: \"Kerangka Acuan Kerja (KAK)\" atau \"BUKAN KAK\".\n- \"TOR_Completeness_Summary\" WAJIB langsung tulis angkanya (Contoh: \"8/8 Terpenuhi\" atau \"7/8 Terpenuhi\"). Dilarang menulis kata \"[Ringkasan:]\".\n- \"Status_Pengesahan\" WAJIB pilih SATU dari 4 opsi ini saja berdasarkan Laporan A: \"TTE\", \"TTD\", \"Belum Disahkan\", atau \"Tidak Ada Kolom TTD\".\n\nFormat Output (WAJIB MENGANDUNG INI):\n{\n  \"File_ID\": \"{{ $json.file_id }}\",\n  \"Gate_Status\": \"PASS / REVIEW / REJECTED_NOT_TOR / ESCALATE\",\n  \"TOR_Completeness_Summary\": \"[Ringkasan: misal 8/8 Terpenuhi]\",\n  \"File_Type\": \"Kerangka Acuan Kerja (KAK) / BUKAN\",\n  \"Detail_8_Elemen\": {\n    \"Latar_Belakang\": \"[Status dari A] - [Detail dari A]\",\n    \"Maksud_Tujuan\": \"[Status dari A] - [Detail dari A]\",\n    \"Target_Sasaran\": \"[Status dari A] - [Detail dari A]\",\n    \"Organisasi_Pengadaan\": \"[Status dari A] - [Detail dari A]\",\n    \"Sumber_Dana_Biaya\": \"[Status dari A] - [Detail dari A]\",\n    \"Jangka_Waktu\": \"[Status dari A] - [Detail dari A]\",\n    \"Spesifikasi_Teknis\": \"[Status dari A] - [Detail dari A]\",\n    \"Spesifikasi_Jumlah\": \"[Status dari A] - [Detail dari A]\"\n  },\n  \"Status_Pengesahan\": \"[Ambil dari reviewer_a.status_pengesahan]\",\n  \"Spesifikasi_Check_Synthesis\": \"[Gabungan analisis B dan C]\",\n  \"AI_Notes\": \"[Saran dari Si D]\"\n}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        2976,
+        224
+      ],
+      "id": "3d521bbb-d19c-49d4-90f0-8731b4393470",
+      "name": "Adjudicator - Sintesis Keputusan (Chief) (Jalur Lama)",
+      "retryOnFail": false,
+      "waitBetweenTries": 5000,
+      "maxTries": 5,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "oqLTX7pMkXxK819J",
+          "name": "Adjudicator - Sintesis Keputusan (Chief)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const inputItems = $input.all();\nconst parsedResults = [];\n\n// 1. Ambil SEMUA data dari node awal untuk referensi pencocokan nama file\nlet sourceItems = [];\ntry {\n    sourceItems = $('Compare Datasets').all();\n} catch (e) {\n    try {\n        sourceItems = $('Download File').all();\n    } catch (err) {\n        sourceItems = [];\n    }\n}\n\nfor (const item of inputItems) {\n  let targetData = item.json || item;\n\n  // Jika dibungkus dalam array oleh n8n sebelumnya\n  if (Array.isArray(targetData)) {\n    targetData = targetData[0];\n  }\n\n  let rawText = null;\n\n  // Ekstrak teks dari struktur respons Gemini\n  if (targetData.content?.parts?.[0]?.text) {\n    rawText = targetData.content.parts[0].text;\n  } else if (targetData.candidates?.[0]?.content?.parts?.[0]?.text) {\n    rawText = targetData.candidates[0].content.parts[0].text;\n  } else if (typeof targetData.text === 'string') {\n    rawText = targetData.text;\n  } else if (targetData.Gate_Status) {\n    // Jika data sudah berbentuk objek bersih\n    rawText = JSON.stringify(targetData);\n  }\n\n  if (!rawText) continue;\n\n  try {\n    // Bersihkan format markdown code block jika ada\n    const cleanText = rawText\n      .replace(/^```json\\s*/i, \"\")\n      .replace(/^```\\s*/i, \"\")\n      .replace(/\\s*```$/i, \"\")\n      .trim();\n\n    const adjudicationResult = JSON.parse(cleanText);\n\n    const fid = adjudicationResult.File_ID || \"unknown\";\n\n    // 2. Cocokkan nama file asli berdasarkan file_id dari node awal\n    let matchingFile = sourceItems.find(s => s.json.id === fid);\n    let realFileName = matchingFile ? matchingFile.json.name : (adjudicationResult.File_Name || \"Dokumen Pengadaan\");\n\n    // Masukkan ke dalam item n8n dengan nama file asli yang sudah match\n    parsedResults.push({\n      json: {\n        file_id: fid,\n        file_name: realFileName, // Sekarang dijamin match dengan nama file aslinya!\n        file_type: adjudicationResult.File_Type || \"\",\n        gate_status: adjudicationResult.Gate_Status || \"REVIEW\", // PASS, REVIEW, REJECTED_NOT_TOR, ESCALATE\n        tor_completeness_summary: adjudicationResult.TOR_Completeness_Summary || adjudicationResult.TOR_Completeness || \"\",\n        detail_8_elemen: adjudicationResult.Detail_8_Elemen || {},\n        status_pengesahan: adjudicationResult.Status_Pengesahan || adjudicationResult.Pengesahan || \"\",\n        spesifikasi_check_synthesis: adjudicationResult.Spesifikasi_Check_Synthesis || adjudicationResult.Spesifikasi_Check || \"\",\n        ai_notes: adjudicationResult.AI_Notes || \"\"\n      }\n    });\n\n  } catch (e) {\n    parsedResults.push({\n      json: {\n        error: \"Gagal memparsing JSON Adjudicator D\",\n        raw_output: rawText\n      }\n    });\n  }\n}\n\nreturn parsedResults;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3184,
+        224
+      ],
+      "id": "24074146-76df-40a2-85fe-dbd70b1757e8",
+      "name": "Parse Hasil Adjudicator (Code) (Jalur Lama)"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.gate_status }}",
+                    "rightValue": "PASS",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "02c508b7-b654-45e9-8b6b-c36ab5ccd95b"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ad677042-6047-443e-ae5b-04903dce3e6c",
+                    "leftValue": "={{ $json.gate_status }}",
+                    "rightValue": "REVIEW",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "2a012477-c858-4cb3-be8a-3265d20906cd",
+                    "leftValue": "={{ $json.gate_status }}",
+                    "rightValue": "ESCALATE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "9d052c3e-11ef-48da-bae5-3ec924156dda",
+                    "leftValue": "={{ $json.gate_status }}",
+                    "rightValue": "REJECTED_NOT_TOR",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        3376,
+        224
+      ],
+      "id": "6f92c43b-c9dd-489e-b6c2-c4f1a5a000c5",
+      "name": "Switch - Gate Status (Pass-Review-Escalate-Rejected) (Jalur Lama)",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3600,
+        80
+      ],
+      "id": "62a28132-b136-42ba-b2db-8b46755c1626",
+      "name": "Set Flag Selesai (Pass) (Jalur Lama)"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-flash-lite-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-flash-lite-latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Role:\nAnda adalah \"Rivie\" (AI Lite), Agen Penyaring Awal Dokumen Pengadaan (KAK/TOR/SPEKTEK). Tugas Anda adalah inspeksi kilat: pastikan ini benar dokumen KAK dan cek ketersediaan elemen wajibnya.\n\n[DATA FILE SAAT INI]\nFile ID: {{ $json.file_id }} \\vert{} File Name: {{$json.file_name }}\n\n[DAFTAR 8 ELEMEN WAJIB + PENGESAHAN YANG DIEVALUASI]\n1. Latar Belakang (Dasar hukum, urgensi pengadaan).\n2. Maksud dan Tujuan (Apa yang ingin dicapai).\n3. Target/Sasaran (Penerima manfaat/output).\n4. Nama Organisasi Pengadaan (Identitas KPA/PPK/UKPBJ).\n5. Sumber Dana dan Perkiraan Biaya (Asal dana dan Pagu/HPS).\n6. Jangka Waktu Pelaksanaan (Timeline/jadwal).\n7. Spesifikasi Teknis (Ruang lingkup kerja/metode).\n8. Spesifikasi Jumlah/Volume (Kuantitas terukur).\n9. Tanda Tangan/Pengesahan (Nama PPK dan status TTE/TTD basah).\n\n[INSTRUKSI WAJIB]\n1. Jika isi dokumen bukan KAK/TOR (misal: modul, surat edaran), tentukan Gate_Status menjadi \"REJECTED_NOT_TOR\". Jika ada elemen kurang, tentukan \"REVIEW\". Jika dokumen aman, \"PASS\".\n2. OUTPUT WAJIB JSON MURNI: DILARANG KERAS menggunakan markdown ```json. Mulai langsung dengan { dan akhiri dengan }.\n\n[ATURAN KETAT PENGISIAN JSON (STRICT ENUM)]\n- \"Gate_Status\" WAJIB pilih SATU nilai saja: \"PASS\", \"REVIEW\", \"REJECTED_NOT_TOR\", atau \"ESCALATE\". (DILARANG pakai garis miring).\n- \"File_Type\" WAJIB pilih SATU nilai saja: \"Kerangka Acuan Kerja (KAK)\" atau \"BUKAN KAK\".\n- \"TOR_Completeness_Summary\" WAJIB langsung tulis angkanya (Contoh: \"8/8 Terpenuhi\" atau \"7/8 Terpenuhi\"). Dilarang menulis kata \"[Ringkasan:]\".\n- \"Status_Pengesahan\" WAJIB pilih SATU dari 4 opsi ini saja berdasarkan Laporan A: \"TTE\", \"TTD\", \"Belum Disahkan\", atau \"Tidak Ada Kolom TTD\".\n\nFormat Output (HARUS PERSIS SEPERTI INI, perhatikan huruf besar/kecil):\n{\n  \"File_ID\": \"{{ $json.file_id }}\",\n  \"File_Name\": \"{{$json.file_name }}\",\n  \"File_Type\": \"Kerangka Acuan Kerja (KAK) / BUKAN\",\n  \"Gate_Status\": \"PASS / REVIEW / REJECTED_NOT_TOR / ESCALATE\",\n  \"TOR_Completeness_Summary\": \"[Tulis ringkasan misal: 6/8 Terpenuhi]\",\n  \"Detail_8_Elemen\": {\n    \"Latar_Belakang\": \"[ADA/TIDAK] - [Detail singkat]\",\n    \"Maksud_Tujuan\": \"[ADA/TIDAK] - [Detail singkat]\",\n    \"Target_Sasaran\": \"[ADA/TIDAK] - [Detail singkat]\",\n    \"Organisasi_Pengadaan\": \"[ADA/TIDAK] - [Detail singkat]\",\n    \"Sumber_Dana_Biaya\": \"[ADA/TIDAK] - [Detail singkat]\",\n    \"Jangka_Waktu\": \"[ADA/TIDAK] - [Detail singkat]\",\n    \"Spesifikasi_Teknis\": \"[ADA/TIDAK] - [Detail singkat]\",\n    \"Spesifikasi_Jumlah\": \"[ADA/TIDAK] - [Detail singkat]\"\n  },\n  \"Status_Pengesahan\": \"[Sebutkan siapa yang TTD & statusnya: ADA/TIDAK ADA]\",\n  \"Spesifikasi_Check_Synthesis\": \"[Tulis paragraf singkat hasil pengecekan elemen teknis]\",\n  \"AI_Notes\": \"[⚠️ WARNING / PERHATIAN UTAMA]: [Sebutkan alasan utama kenapa dokumen di-REVIEW/DITOLAK]. [CATATAN REVIEW B & C]: [Sebutkan secara eksplisit temuan/masukan penting dari Adjudicator B dan C agar diperhatikan user]. [TINDAKAN]: [Langkah perbaikan konkret yang harus dilakukan]\"\n}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        3600,
+        224
+      ],
+      "id": "ac63a895-b8b1-4262-bdce-85bf0af6efe9",
+      "name": "Analisis Lanjutan - Lite (Review Path) (Jalur Lama)",
+      "retryOnFail": false,
+      "waitBetweenTries": 5000,
+      "maxTries": 5,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "gkZpMzhdozGEPOGI",
+          "name": "Analisis Lanjutan"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-flash-lite-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-flash-lite-latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Role:\nAnda adalah AI Pro, Senior Auditor Pengadaan Negara. Lakukan bedah mendalam mengevaluasi substansi dokumen berdasarkan temuan awal.\n\n[DATA FILE SAAT INI]\nFile ID: {{ $json.file_id }} \\vert{} File Name: {{$json.file_name }}\n\n[DAFTAR 8 ELEMEN WAJIB + PENGESAHAN]\n(Latar Belakang, Maksud Tujuan, Target, Organisasi, Sumber Dana, Jangka Waktu, Spek Teknis, Volume, dan TTD Pengesahan).\n\n[INSTRUKSI & RUBRIK]\n1. Berikan status: \n   - 'PASS' (Siap tender / kekurangan sangat minor).\n   - 'REVIEW' (Kekurangan substansial yang masih bisa diperbaiki).\n   - 'ESCALATE' (Indikasi manipulasi / fatal).\n   - 'REJECTED_NOT_TOR' (Jika dokumen ternyata terbukti bukan KAK).\n2. AI_Notes harus berisi arahan revisi yang solutif dan tidak menyalahkan.\n3. OUTPUT WAJIB JSON MURNI tanpa markdown ```json. Mulai langsung dengan { dan akhiri dengan }.\n\n[ATURAN KETAT PENGISIAN JSON (STRICT ENUM)]\n- \"Gate_Status\" WAJIB pilih SATU nilai saja: \"PASS\", \"REVIEW\", \"REJECTED_NOT_TOR\", atau \"ESCALATE\". (DILARANG pakai garis miring).\n- \"File_Type\" WAJIB pilih SATU nilai saja: \"Kerangka Acuan Kerja (KAK)\" atau \"BUKAN KAK\".\n- \"TOR_Completeness_Summary\" WAJIB langsung tulis angkanya (Contoh: \"8/8 Terpenuhi\" atau \"7/8 Terpenuhi\"). Dilarang menulis kata \"[Ringkasan:]\".\n- \"Status_Pengesahan\" WAJIB pilih SATU dari 4 opsi ini saja berdasarkan Laporan A: \"TTE\", \"TTD\", \"Belum Disahkan\", atau \"Tidak Ada Kolom TTD\".\n\nFormat Output (HARUS PERSIS SEPERTI INI, perhatikan huruf besar/kecil):\n{\n  \"File_ID\": \"{{ $json.file_id }}\",\n  \"File_Name\": \"{{$json.file_name }}\",\n  \"File_Type\": \"Kerangka Acuan Kerja (KAK) / BUKAN\",\n  \"Gate_Status\": \"PASS / REVIEW / REJECTED_NOT_TOR / ESCALATE\",\n  \"TOR_Completeness_Summary\": \"[Status kelengkapan, misal: 8/8 Terpenuhi]\",\n  \"Detail_8_Elemen\": {\n    \"Latar_Belakang\": \"[ADA/TIDAK] - [Analisis mendalam]\",\n    \"Maksud_Tujuan\": \"[ADA/TIDAK] - [Analisis mendalam]\",\n    \"Target_Sasaran\": \"[ADA/TIDAK] - [Analisis mendalam]\",\n    \"Organisasi_Pengadaan\": \"[ADA/TIDAK] - [Analisis mendalam]\",\n    \"Sumber_Dana_Biaya\": \"[ADA/TIDAK] - [Analisis mendalam]\",\n    \"Jangka_Waktu\": \"[ADA/TIDAK] - [Analisis mendalam]\",\n    \"Spesifikasi_Teknis\": \"[ADA/TIDAK] - [Analisis mendalam]\",\n    \"Spesifikasi_Jumlah\": \"[ADA/TIDAK] - [Analisis mendalam]\"\n  },\n  \"Status_Pengesahan\": \"[Sebutkan nama pejabat dan status TTD]\",\n  \"Spesifikasi_Check_Synthesis\": \"[Paragraf evaluasi teknis terkait kedalaman spesifikasi dan kelayakan teknis]\",\n  \"AI_Notes\": \"[⚠️ WARNING / PERHATIAN UTAMA]: [Sebutkan alasan utama kenapa dokumen di-REVIEW/DITOLAK]. [CATATAN REVIEW B & C]: [Sebutkan secara eksplisit temuan/masukan penting dari Adjudicator B dan C agar diperhatikan user]. [TINDAKAN]: [Langkah perbaikan konkret yang harus dilakukan]\"\n}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        3600,
+        368
+      ],
+      "id": "8e13381a-ab16-4e4f-9537-47effa822d74",
+      "name": "Analisis Lanjutan - Pro Full (Escalate Path) (Jalur Lama)",
+      "retryOnFail": true,
+      "waitBetweenTries": 1000,
+      "maxTries": 2,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "gkZpMzhdozGEPOGI",
+          "name": "Analisis Lanjutan"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const inputItems = $input.all();\nconst parsedResults = [];\n\n// 1. Ambil SEMUA data dari node awal untuk referensi pencocokan nama file\nlet sourceItems = [];\ntry {\n    sourceItems = $('Compare Datasets').all();\n} catch (e) {\n    try {\n        sourceItems = $('Download File').all();\n    } catch (err) {\n        sourceItems = [];\n    }\n}\n\nfor (const item of inputItems) {\n  let targetData = item.json || item;\n\n  // Jika dibungkus dalam array oleh n8n sebelumnya\n  if (Array.isArray(targetData)) {\n    targetData = targetData[0];\n  }\n\n  let rawText = null;\n\n  // Ekstrak teks dari struktur respons Gemini\n  if (targetData.content?.parts?.[0]?.text) {\n    rawText = targetData.content.parts[0].text;\n  } else if (targetData.candidates?.[0]?.content?.parts?.[0]?.text) {\n    rawText = targetData.candidates[0].content.parts[0].text;\n  } else if (typeof targetData.text === 'string') {\n    rawText = targetData.text;\n  } else if (targetData.Gate_Status) {\n    // Jika data sudah berbentuk objek bersih\n    rawText = JSON.stringify(targetData);\n  }\n\n  if (!rawText) continue;\n\n  try {\n    // Bersihkan format markdown code block jika ada\n    const cleanText = rawText\n      .replace(/^```json\\s*/i, \"\")\n      .replace(/^```\\s*/i, \"\")\n      .replace(/\\s*```$/i, \"\")\n      .trim();\n\n    const adjudicationResult = JSON.parse(cleanText);\n\n    const fid = adjudicationResult.File_ID || \"unknown\";\n\n    // 2. Cocokkan nama file asli berdasarkan file_id dari node awal\n    let matchingFile = sourceItems.find(s => s.json.id === fid);\n    let realFileName = matchingFile ? matchingFile.json.name : (adjudicationResult.File_Name || \"Dokumen Pengadaan\");\n\n    // Masukkan ke dalam item n8n dengan nama file asli yang sudah match\n    parsedResults.push({\n      json: {\n        file_id: fid,\n        file_name: realFileName, // Sekarang dijamin match dengan nama file aslinya!\n        file_type: adjudicationResult.File_Type || \"\",\n        gate_status: adjudicationResult.Gate_Status || \"REVIEW\", // PASS, REVIEW, REJECTED_NOT_TOR, ESCALATE\n        tor_completeness_summary: adjudicationResult.TOR_Completeness_Summary || adjudicationResult.TOR_Completeness || \"\",\n        detail_8_elemen: adjudicationResult.Detail_8_Elemen || {},\n        status_pengesahan: adjudicationResult.Status_Pengesahan || adjudicationResult.Pengesahan || \"\",\n        spesifikasi_check_synthesis: adjudicationResult.Spesifikasi_Check_Synthesis || adjudicationResult.Spesifikasi_Check || \"\",\n        ai_notes: adjudicationResult.AI_Notes || \"\"\n      }\n    });\n\n  } catch (e) {\n    parsedResults.push({\n      json: {\n        error: \"Gagal memparsing JSON Adjudicator D\",\n        raw_output: rawText\n      }\n    });\n  }\n}\n\nreturn parsedResults;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3824,
+        224
+      ],
+      "id": "6bd56da0-860d-440c-9d07-1706335dd0b0",
+      "name": "Parse Hasil Pro Lite (Review) (Jalur Lama)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const inputItems = $input.all();\nconst parsedResults = [];\n\n// 1. Ambil SEMUA data dari node awal untuk referensi pencocokan nama file\nlet sourceItems = [];\ntry {\n    sourceItems = $('Compare Datasets').all();\n} catch (e) {\n    try {\n        sourceItems = $('Download File').all();\n    } catch (err) {\n        sourceItems = [];\n    }\n}\n\nfor (const item of inputItems) {\n  let targetData = item.json || item;\n\n  // Jika dibungkus dalam array oleh n8n sebelumnya\n  if (Array.isArray(targetData)) {\n    targetData = targetData[0];\n  }\n\n  let rawText = null;\n\n  // Ekstrak teks dari struktur respons Gemini\n  if (targetData.content?.parts?.[0]?.text) {\n    rawText = targetData.content.parts[0].text;\n  } else if (targetData.candidates?.[0]?.content?.parts?.[0]?.text) {\n    rawText = targetData.candidates[0].content.parts[0].text;\n  } else if (typeof targetData.text === 'string') {\n    rawText = targetData.text;\n  } else if (targetData.Gate_Status) {\n    // Jika data sudah berbentuk objek bersih\n    rawText = JSON.stringify(targetData);\n  }\n\n  if (!rawText) continue;\n\n  try {\n    // Bersihkan format markdown code block jika ada\n    const cleanText = rawText\n      .replace(/^```json\\s*/i, \"\")\n      .replace(/^```\\s*/i, \"\")\n      .replace(/\\s*```$/i, \"\")\n      .trim();\n\n    const adjudicationResult = JSON.parse(cleanText);\n\n    const fid = adjudicationResult.File_ID || \"unknown\";\n\n    // 2. Cocokkan nama file asli berdasarkan file_id dari node awal\n    let matchingFile = sourceItems.find(s => s.json.id === fid);\n    let realFileName = matchingFile ? matchingFile.json.name : (adjudicationResult.File_Name || \"Dokumen Pengadaan\");\n\n    // Masukkan ke dalam item n8n dengan nama file asli yang sudah match\n    parsedResults.push({\n      json: {\n        file_id: fid,\n        file_name: realFileName, // Sekarang dijamin match dengan nama file aslinya!\n        file_type: adjudicationResult.File_Type || \"\",\n        gate_status: adjudicationResult.Gate_Status || \"REVIEW\", // PASS, REVIEW, REJECTED_NOT_TOR, ESCALATE\n        tor_completeness_summary: adjudicationResult.TOR_Completeness_Summary || adjudicationResult.TOR_Completeness || \"\",\n        detail_8_elemen: adjudicationResult.Detail_8_Elemen || {},\n        status_pengesahan: adjudicationResult.Status_Pengesahan || adjudicationResult.Pengesahan || \"\",\n        spesifikasi_check_synthesis: adjudicationResult.Spesifikasi_Check_Synthesis || adjudicationResult.Spesifikasi_Check || \"\",\n        ai_notes: adjudicationResult.AI_Notes || \"\"\n      }\n    });\n\n  } catch (e) {\n    parsedResults.push({\n      json: {\n        error: \"Gagal memparsing JSON Adjudicator D\",\n        raw_output: rawText\n      }\n    });\n  }\n}\n\nreturn parsedResults;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3824,
+        368
+      ],
+      "id": "945b2912-14d7-4b8d-8d05-acb71a3d7727",
+      "name": "Parse Hasil Pro Full (Escalate) (Jalur Lama)"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A",
+          "mode": "list",
+          "cachedResultName": "AI TEST",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 163080752,
+          "mode": "list",
+          "cachedResultName": "DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit#gid=163080752"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Spesifikasi_Check": "=1. Latar Belakang: {{ $json.detail_8_elemen.Latar_Belakang }}\n|\n2. Maksud & Tujuan: {{ $json.detail_8_elemen.Maksud_Tujuan }}\n|\n3. Target Sasaran: {{ $json.detail_8_elemen.Target_Sasaran }}\n|\n4. Organisasi Pengadaan: {{ $json.detail_8_elemen.Organisasi_Pengadaan }}\n|\n5. Sumber Dana & Biaya: {{ $json.detail_8_elemen.Sumber_Dana_Biaya }}\n|\n6. Jangka Waktu: {{ $json.detail_8_elemen.Jangka_Waktu }}\n|\n7. Spesifikasi Teknis: {{ $json.detail_8_elemen.Spesifikasi_Teknis }}\n|\n8. Spesifikasi Jumlah: {{ $json.detail_8_elemen.Spesifikasi_Jumlah }}\n",
+            "TOR_Completeness": "={{ $json.tor_completeness_summary }}",
+            "AI_Notes": "={{ $json.ai_notes }}",
+            "File_ID": "={{ $json.file_id }}",
+            "File_Name": "={{ $json.file_name }}",
+            "File_Type": "={{ $json.file_type }}",
+            "Task_ID": "=TASK-{{ $now.toFormat('yyMMdd-HHmm') }}-{{ $json.file_id.substring(0,4).toUpperCase() }}",
+            "Pengesahan": "={{ $json.status_pengesahan }}",
+            "Status": "Pending",
+            "File_Link": "=https://drive.google.com/file/d/{{ $json.file_id }}/view",
+            "Timestamp": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}"
+          },
+          "matchingColumns": [
+            "File_ID"
+          ],
+          "schema": [
+            {
+              "id": "Task_ID",
+              "displayName": "Task_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "File_ID",
+              "displayName": "File_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "File_Name",
+              "displayName": "File_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "File_Type",
+              "displayName": "File_Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Spesifikasi_Check",
+              "displayName": "Spesifikasi_Check",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "TOR_Completeness",
+              "displayName": "TOR_Completeness",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI_Notes",
+              "displayName": "AI_Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Pengesahan",
+              "displayName": "Pengesahan",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Is_Reapplication",
+              "displayName": "Is_Reapplication",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Refer_Task_ID",
+              "displayName": "Refer_Task_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Admin_Notes",
+              "displayName": "Admin_Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Admin_Notes2",
+              "displayName": "Admin_Notes2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "File_Link",
+              "displayName": "File_Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        4032,
+        80
+      ],
+      "id": "1865e44f-10a4-413c-b6a1-2de0fa7fa8dc",
+      "name": "Simpan ke Sheet - Jalur Pass (Jalur Lama)",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T9P5nKCYYhnlYxnZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A",
+          "mode": "list",
+          "cachedResultName": "AI TEST",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 163080752,
+          "mode": "list",
+          "cachedResultName": "DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit#gid=163080752"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Spesifikasi_Check": "=1. Latar Belakang: {{ $json.detail_8_elemen.Latar_Belakang }}\n|\n2. Maksud & Tujuan: {{ $json.detail_8_elemen.Maksud_Tujuan }}\n|\n3. Target Sasaran: {{ $json.detail_8_elemen.Target_Sasaran }}\n|\n4. Organisasi Pengadaan: {{ $json.detail_8_elemen.Organisasi_Pengadaan }}\n|\n5. Sumber Dana & Biaya: {{ $json.detail_8_elemen.Sumber_Dana_Biaya }}\n|\n6. Jangka Waktu: {{ $json.detail_8_elemen.Jangka_Waktu }}\n|\n7. Spesifikasi Teknis: {{ $json.detail_8_elemen.Spesifikasi_Teknis }}\n|\n8. Spesifikasi Jumlah: {{ $json.detail_8_elemen.Spesifikasi_Jumlah }}\n",
+            "TOR_Completeness": "={{ $json.tor_completeness_summary }}",
+            "AI_Notes": "={{ $json.ai_notes }}",
+            "File_ID": "={{ $json.file_id }}",
+            "File_Name": "={{ $json.file_name }}",
+            "File_Type": "={{ $json.file_type }}",
+            "Task_ID": "=TASK-{{ $now.toFormat('yyMMdd-HHmm') }}-{{ $json.file_id.substring(0,4).toUpperCase() }}",
+            "Pengesahan": "={{ $json.status_pengesahan }}",
+            "Status": "Pending",
+            "File_Link": "=https://drive.google.com/file/d/{{ $json.file_id }}/view",
+            "Timestamp": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}"
+          },
+          "matchingColumns": [
+            "File_ID"
+          ],
+          "schema": [
+            {
+              "id": "Task_ID",
+              "displayName": "Task_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "File_ID",
+              "displayName": "File_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "File_Name",
+              "displayName": "File_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "File_Type",
+              "displayName": "File_Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Spesifikasi_Check",
+              "displayName": "Spesifikasi_Check",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "TOR_Completeness",
+              "displayName": "TOR_Completeness",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI_Notes",
+              "displayName": "AI_Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Pengesahan",
+              "displayName": "Pengesahan",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Is_Reapplication",
+              "displayName": "Is_Reapplication",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Refer_Task_ID",
+              "displayName": "Refer_Task_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Admin_Notes",
+              "displayName": "Admin_Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Admin_Notes2",
+              "displayName": "Admin_Notes2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "File_Link",
+              "displayName": "File_Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        4032,
+        224
+      ],
+      "id": "722c123a-468a-412c-b827-517475052a6c",
+      "name": "Simpan ke Sheet - Jalur Review (Jalur Lama)",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T9P5nKCYYhnlYxnZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A",
+          "mode": "list",
+          "cachedResultName": "AI TEST",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 163080752,
+          "mode": "list",
+          "cachedResultName": "DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit#gid=163080752"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Spesifikasi_Check": "=1. Latar Belakang: {{ $json.detail_8_elemen.Latar_Belakang }}\n|\n2. Maksud & Tujuan: {{ $json.detail_8_elemen.Maksud_Tujuan }}\n|\n3. Target Sasaran: {{ $json.detail_8_elemen.Target_Sasaran }}\n|\n4. Organisasi Pengadaan: {{ $json.detail_8_elemen.Organisasi_Pengadaan }}\n|\n5. Sumber Dana & Biaya: {{ $json.detail_8_elemen.Sumber_Dana_Biaya }}\n|\n6. Jangka Waktu: {{ $json.detail_8_elemen.Jangka_Waktu }}\n|\n7. Spesifikasi Teknis: {{ $json.detail_8_elemen.Spesifikasi_Teknis }}\n|\n8. Spesifikasi Jumlah: {{ $json.detail_8_elemen.Spesifikasi_Jumlah }}\n",
+            "TOR_Completeness": "={{ $json.tor_completeness_summary }}",
+            "AI_Notes": "={{ $json.ai_notes }}",
+            "File_ID": "={{ $json.file_id }}",
+            "File_Name": "={{ $json.file_name }}",
+            "File_Type": "={{ $json.file_type }}",
+            "Task_ID": "=TASK-{{ $now.toFormat('yyMMdd-HHmm') }}-{{ $json.file_id.substring(0,4).toUpperCase() }}",
+            "Pengesahan": "={{ $json.status_pengesahan }}",
+            "Status": "Pending",
+            "File_Link": "=https://drive.google.com/file/d/{{ $json.file_id }}/view",
+            "Timestamp": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}"
+          },
+          "matchingColumns": [
+            "File_ID"
+          ],
+          "schema": [
+            {
+              "id": "Task_ID",
+              "displayName": "Task_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "File_ID",
+              "displayName": "File_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "File_Name",
+              "displayName": "File_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "File_Type",
+              "displayName": "File_Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Spesifikasi_Check",
+              "displayName": "Spesifikasi_Check",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "TOR_Completeness",
+              "displayName": "TOR_Completeness",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI_Notes",
+              "displayName": "AI_Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Pengesahan",
+              "displayName": "Pengesahan",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Is_Reapplication",
+              "displayName": "Is_Reapplication",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Refer_Task_ID",
+              "displayName": "Refer_Task_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Admin_Notes",
+              "displayName": "Admin_Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Admin_Notes2",
+              "displayName": "Admin_Notes2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "File_Link",
+              "displayName": "File_Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        4032,
+        368
+      ],
+      "id": "a92f357b-e6dd-4b02-8428-3dbcb4e5bedc",
+      "name": "Simpan ke Sheet - Jalur Escalate (Jalur Lama)",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T9P5nKCYYhnlYxnZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.File_ID }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "value": "1ls6ugpxb3xncULb1FDUxHhcCfXjmnB9_",
+          "mode": "id"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1ls6ugpxb3xncULb1FDUxHhcCfXjmnB9_",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4256,
+        80
+      ],
+      "id": "311be3ba-5e2b-4538-8bd9-35ae9549ff4d",
+      "name": "Pindahkan File Selesai - Pass (Drive) (Jalur Lama)",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "ip4pSWKhkscoVKEs",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.File_ID }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "value": "1ls6ugpxb3xncULb1FDUxHhcCfXjmnB9_",
+          "mode": "id"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1ls6ugpxb3xncULb1FDUxHhcCfXjmnB9_",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4256,
+        224
+      ],
+      "id": "40f2336d-a605-4881-b567-4de75ca752a7",
+      "name": "Pindahkan File Selesai - Review (Drive) (Jalur Lama)",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "ip4pSWKhkscoVKEs",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.File_ID }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "value": "1ls6ugpxb3xncULb1FDUxHhcCfXjmnB9_",
+          "mode": "id"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1ls6ugpxb3xncULb1FDUxHhcCfXjmnB9_",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4256,
+        368
+      ],
+      "id": "22b3adea-41ca-4380-9cdf-0790a033f1a5",
+      "name": "Pindahkan File Selesai - Escalate (Drive) (Jalur Lama)",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "ip4pSWKhkscoVKEs",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "get-pending-docs",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        64,
+        720
+      ],
+      "id": "d7f49ad2-53ba-4f48-a4a9-2e1472cf1bb9",
+      "name": "Webhook - Ambil Dokumen Pending",
+      "webhookId": "ddcac279-d273-407d-adde-9482f50518cd"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 163080752,
+          "mode": "list",
+          "cachedResultName": "DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit#gid=163080752"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "File_Type",
+              "lookupValue": "Kerangka Acuan Kerja (KAK)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        320,
+        720
+      ],
+      "id": "c13590b7-6bb6-45df-b1b1-7f60d02d9a33",
+      "name": "Ambil Data Dokumen Pending",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T9P5nKCYYhnlYxnZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        592,
+        720
+      ],
+      "id": "cb26c854-b100-412c-a66f-9230266b0f9c",
+      "name": "Respons - Daftar Dokumen Pending"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "update-doc-status",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type, Authorization"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "POST, GET, OPTIONS"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        64,
+        1264
+      ],
+      "id": "f124ec16-cc9f-47d2-b232-54a97da4ad9a",
+      "name": "Webhook - Update Status Dokumen",
+      "webhookId": "31d9534f-e1d5-40e7-b788-2f64dbd2034a"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f9131fc9-1cc0-400c-b04f-10f2fa0008b2",
+              "leftValue": "={{ $json.body.refer_task_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "3c4af6f4-9c9f-4fc3-97ff-b5ece96d21cd",
+              "leftValue": "={{ $json.body.refer_task_id }}",
+              "rightValue": "-",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        320,
+        1088
+      ],
+      "id": "4903fa87-9129-4087-a21e-3994516aad70",
+      "name": "If - Ada Refer Task ID"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A",
+          "mode": "list",
+          "cachedResultName": "AI TEST",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 163080752,
+          "mode": "list",
+          "cachedResultName": "DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit#gid=163080752"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Task_ID": "={{ $('Webhook - Update Status Dokumen').item.json.body.refer_task_id }}",
+            "Admin_Notes": "={{ $('Webhook - Update Status Dokumen').item.json.body.admin_notes }}",
+            "row_number": 0,
+            "Refer_Task_ID": "={{ $('Webhook - Update Status Dokumen').item.json.body.task_id }}",
+            "Admin_Notes2": "=Telah direvisi & digantikan oleh {{ $('Webhook - Update Status Dokumen').item.json.body.task_id }}"
+          },
+          "matchingColumns": [
+            "Task_ID"
+          ],
+          "schema": [
+            {
+              "id": "Task_ID",
+              "displayName": "Task_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        592,
+        1088
+      ],
+      "id": "5678393d-2bc0-48a9-b5a6-e7cde26f4421",
+      "name": "Update Status - Refer Task",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T9P5nKCYYhnlYxnZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"message\": \"Dokumen berhasil diperbarui!\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        832,
+        1088
+      ],
+      "id": "619aea30-1539-4f26-bb65-d00f526d245d",
+      "name": "Respons - Refer Task"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "approve",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "9cc19fbb-6764-4eea-ac46-5b9693b1fd6b"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "5f7cbf20-bbf0-4fd3-9eb7-577e89f01d8b",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "revise",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "4cb519fd-6086-4713-9305-9440ed62d141",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "reject",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c16b2dc3-a5a9-4713-b0bb-9541f9a1ce65",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "compare-revision",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        1392
+      ],
+      "id": "ced24ff1-a943-4d7b-b943-8ff1b070aca5",
+      "name": "Switch - Aksi Approve-Revise-Reject"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A",
+          "mode": "list",
+          "cachedResultName": "AI TEST",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 163080752,
+          "mode": "list",
+          "cachedResultName": "DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit#gid=163080752"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Task_ID": "={{ $('Webhook - Update Status Dokumen').item.json.body.task_id }}",
+            "Status": "Approved"
+          },
+          "matchingColumns": [
+            "Task_ID"
+          ],
+          "schema": [
+            {
+              "id": "Task_ID",
+              "displayName": "Task_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        592,
+        1232
+      ],
+      "id": "0aa12296-cc6c-485e-9fdb-da39d63d493b",
+      "name": "Update Status - Approve",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T9P5nKCYYhnlYxnZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"message\": \"Dokumen berhasil diperbarui!\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        832,
+        1232
+      ],
+      "id": "2a0655d6-412d-4230-ab49-91170d4c5a6e",
+      "name": "Respons - Approve"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A",
+          "mode": "list",
+          "cachedResultName": "AI TEST",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 163080752,
+          "mode": "list",
+          "cachedResultName": "DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit#gid=163080752"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Task_ID": "={{ $('Webhook - Update Status Dokumen').item.json.body.task_id }}",
+            "Status": "Needs Revision",
+            "Admin_Notes": "={{ $('Webhook - Update Status Dokumen').item.json.body.admin_notes }}",
+            "row_number": 0
+          },
+          "matchingColumns": [
+            "Task_ID"
+          ],
+          "schema": [
+            {
+              "id": "Task_ID",
+              "displayName": "Task_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        592,
+        1360
+      ],
+      "id": "9d09661b-5904-44bc-befc-b8c72a931425",
+      "name": "Update Status - Revise",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T9P5nKCYYhnlYxnZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"message\": \"Dokumen berhasil diperbarui!\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        832,
+        1360
+      ],
+      "id": "c6e8ff52-9c1f-4e0a-8bb8-42083f3c52c2",
+      "name": "Respons - Revise"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A",
+          "mode": "list",
+          "cachedResultName": "AI TEST",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 163080752,
+          "mode": "list",
+          "cachedResultName": "DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit#gid=163080752"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Task_ID": "={{ $('Webhook - Update Status Dokumen').item.json.body.task_id }}",
+            "Status": "Rejected",
+            "Admin_Notes": "={{ $('Webhook - Update Status Dokumen').item.json.body.admin_notes }}",
+            "row_number": 0
+          },
+          "matchingColumns": [
+            "Task_ID"
+          ],
+          "schema": [
+            {
+              "id": "Task_ID",
+              "displayName": "Task_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        592,
+        1504
+      ],
+      "id": "d3ea1801-b76b-4b85-bfc6-1038cb5901dc",
+      "name": "Update Status - Reject",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T9P5nKCYYhnlYxnZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"message\": \"Dokumen berhasil diperbarui!\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        832,
+        1504
+      ],
+      "id": "df9e67a7-85f7-44f4-b9bb-1f7216df10b7",
+      "name": "Respons - Reject"
+    },
+    {
+      "parameters": {
+        "collection": "audit_trail_kak",
+        "options": {},
+        "query": "={\n  \"task_id\": {\n    \"$in\": [\n      \"={{ $('Webhook - Update Status Dokumen').item.json.body.refer_task_id }}\",\n      \"={{ $('Webhook - Update Status Dokumen').item.json.body.task_id }}\"\n    ]\n  }\n}"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.4,
+      "position": [
+        592,
+        1664
+      ],
+      "id": "3e6e657a-31ed-4bf4-84c8-8ffb23e94f8e",
+      "name": "Find documents",
+      "credentials": {
+        "mongoDb": {
+          "id": "fvbGrfIu732tFRSN",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 163080752,
+          "mode": "list",
+          "cachedResultName": "DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit#gid=163080752"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Task_ID",
+              "lookupValue": "={{ $('Webhook - Update Status Dokumen').item.json.body.refer_task_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        592,
+        1808
+      ],
+      "id": "60ad91ca-6517-4695-b193-f2cce25fee80",
+      "name": "Ambil Data Dokumen Pending1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T9P5nKCYYhnlYxnZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        832,
+        1728
+      ],
+      "id": "0fc9e6e2-15b9-4e7d-be39-ac0f0847a276",
+      "name": "Merge Komparasi"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Ambil ID dari Webhook POST Update Status\nconst webhookBody = $('Webhook - Update Status Dokumen').first().json.body || {};\nconst oldTaskId = webhookBody.refer_task_id || \"\";\nconst newTaskId = webhookBody.task_id || \"\";\n\n// 2. Ambil catatan Admin Lama dari Google Sheet\nlet adminNotesLama = \"Tidak ada catatan admin\";\nlet aiNotesD_Lama = \"Tidak ada catatan AI lama\";\ntry {\n  const sheetOldRow = $('Ambil Data Dokumen Pending1').first().json;\n  adminNotesLama = sheetOldRow.Admin_Notes || adminNotesLama;\n  aiNotesD_Lama = sheetOldRow.AI_Notes || aiNotesD_Lama;\n} catch (e) {\n  // Fallback jika baris tidak ditemukan\n}\n\n// 3. Ambil log mentah dari MongoDB\nconst mongoResults = $('Find documents').all();\nlet oldLog = null;\nlet newLog = null;\n\nfor (const item of mongoResults) {\n  if (item.json.task_id === oldTaskId) {\n    oldLog = item.json;\n  } else if (item.json.task_id === newTaskId) {\n    newLog = item.json;\n  }\n}\n\n// 4. Kirim data gabungan ke AI Pembanding\nreturn [{\n  json: {\n    old_task_id: oldTaskId,\n    new_task_id: newTaskId,\n    catatan_admin_lama: adminNotesLama,\n    catatan_d_lama: aiNotesD_Lama,\n    old_audit_trail: oldLog,\n    new_audit_trail: newLog\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        1728
+      ],
+      "id": "63acb68c-537c-40a0-8a44-f2acf0112cb4",
+      "name": "Format Data Komparasi (Code)"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "models/gemini-3-flash-preview"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "===Role: Auditor Komparasi Dokumen Revisi Pengadaan==\n\nTugas Anda membandingkan hasil evaluasi KAK LAMA dengan KAK BARU.\n\n[KONTEKS CATATAN SEBELUMNYA DARI ADMIN & AI SI D LAMA]\n- Catatan Perbaikan Admin di Sheet: {{ $json.catatan_admin_lama }}\n- Catatan AI Si D Lama di Sheet: {{ $json.catatan_d_lama }}\n\n[DETAIL AUDIT TRAIL LAMA (DARI MONGODB)]\n{{ JSON.stringify($json.old_audit_trail) }}\n\n[DETAIL AUDIT TRAIL BARU (DARI MONGODB)]\n{{ JSON.stringify($json.new_audit_trail) }}\n\n[ATURAN EVALUASI REVISI]\n1. FOKUS UTAMA: Periksa apakah poin-poin yang diminta di 'Catatan Perbaikan Admin' dan 'Catatan AI Si D Lama' sudah diperbaiki pada data KAK Baru.\n2. Dilarang menolak dokumen hanya karena temuan minor internal lama yang tidak pernah disampaikan di catatan admin.\n3. OUTPUT WAJIB JSON MURNI (tanpa markdown ```json):\n\n{\n  \"status_revisi\": \"REVISI_DITERIMA / PERLU_REVISI_LAGI\",\n  \"perbaikan_terverifikasi\": \"[Sebutkan poin apa saja yang sukses diperbaiki]\",\n  \"kekurangan_tersisa\": \"[Sebutkan jika ada yang belum beres, atau tulis 'Nihil']\",\n  \"ringkasan_analisis\": \"[Penjelasan singkat 2-3 kalimat untuk Admin]\"\n}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        1312,
+        1728
+      ],
+      "id": "10c5e199-a357-4b77-9c39-4366dfb03582",
+      "name": "AI Pembanding Revisi (Gemini Flash)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "gkZpMzhdozGEPOGI",
+          "name": "Analisis Lanjutan"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawText = $input.first().json.content?.parts?.[0]?.text || $input.first().json.text || \"\";\nconst cleanText = rawText.replace(/```json|```/g, '').trim();\n\nlet result = {};\ntry {\n  result = JSON.parse(cleanText);\n} catch(e) {\n  result = {\n    status_revisi: \"PERLU_REVISI_LAGI\",\n    ringkasan_analisis: \"Gagal memproses JSON dari AI.\",\n    raw: rawText\n  };\n}\n\n// Ambil data ID dari node Code sebelumnya\nconst prevData = $('Format Data Komparasi (Code)').first().json;\n\nreturn [{\n  json: {\n    ...result,\n    task_id: prevData.new_task_id,\n    refer_task_id: prevData.old_task_id\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        1728
+      ],
+      "id": "adf40784-7e8d-4852-9f82-930c296ff897",
+      "name": "Parse Hasil Komparasi (Code)"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"task_id\": \"={{ $json.task_id }}\",\n  \"refer_task_id\": \"={{ $json.refer_task_id }}\",\n  \"status_revisi\": \"={{ $json.status_revisi }}\",\n  \"perbaikan_terverifikasi\": \"={{ $json.perbaikan_terverifikasi }}\",\n  \"kekurangan_tersisa\": \"={{ $json.kekurangan_tersisa }}\",\n  \"ringkasan_analisis\": \"={{ $json.ringkasan_analisis }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1760,
+        1648
+      ],
+      "id": "3ebe3a26-d4bb-458c-913f-d1c0275f1c9e",
+      "name": "Respons - Hasil Komparasi"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A",
+          "mode": "list",
+          "cachedResultName": "AI TEST",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 163080752,
+          "mode": "list",
+          "cachedResultName": "DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit#gid=163080752"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Task_ID": "={{ $json.refer_task_id }}",
+            "row_number": 0,
+            "CATATAN PEMBANDING": "=[Hasil Cek Revisi]: {{ $json.ringkasan_analisis }}"
+          },
+          "matchingColumns": [
+            "Task_ID"
+          ],
+          "schema": [
+            {
+              "id": "Task_ID",
+              "displayName": "Task_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1760,
+        1808
+      ],
+      "id": "bcc92ee8-7f5a-4c79-a22d-e1057cb5a9a4",
+      "name": "Update Sheet - Catatan Pembanding",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T9P5nKCYYhnlYxnZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "upload-dokumen",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type, Authorization"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "POST, GET, OPTIONS"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        64,
+        2144
+      ],
+      "id": "d1b59fb6-deff-4fd2-9d64-31b5e948ad69",
+      "name": "Webhook - Upload Dokumen",
+      "webhookId": "31d9534f-e1d5-40e7-b788-2f64dbd2034a"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "TOR",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "9cc19fbb-6764-4eea-ac46-5b9693b1fd6b"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "={\n  \"success\": false,\n  \"message\": \"Aksi upload '{{ $json.body.action || 'KOSONG' }}' tidak dikenali! Sistem saat ini hanya menerima action 'TOR'.\"\n}"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        2144
+      ],
+      "id": "4a68a282-b132-4601-be32-2cb3ee65560c",
+      "name": "Switch - Aksi Upload KAK"
+    },
+    {
+      "parameters": {
+        "name": "={{ $binary.data.fileName }}",
+        "driveId": {
+          "__rl": true,
+          "value": "1S_-9xyUPCNHNqM0dVkVGFxQ1LLFU8IHL",
+          "mode": "id"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1S_-9xyUPCNHNqM0dVkVGFxQ1LLFU8IHL",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        592,
+        2144
+      ],
+      "id": "b4cbabe0-2ef3-452c-b393-e86e1f595636",
+      "name": "Upload File ke Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "ip4pSWKhkscoVKEs",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"message\": \"Dokumen berhasil diupload ke Google Drive!\",\n  \"file_id\": \"={{ $json.id }}\",\n  \"file_name\": \"={{ $json.name }}\",\n  \"drive_link\": \"={{ $json.webViewLink }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        832,
+        2144
+      ],
+      "id": "2a4d65b3-1f00-4877-bf8b-b9a2387ecefa",
+      "name": "Respons - Upload Sukses"
+    },
+    {
+      "parameters": {
+        "maxItems": 2
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        64,
+        2512
+      ],
+      "id": "6d81a75d-df63-4603-87ec-60a736cca370",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "resource": "document",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-flash-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-flash-latest"
+        },
+        "text": "Bertindaklah sebagai Ahli Pengadaan Barang/Jasa Pemerintah dan Analis TOR (Term of Reference) profesional. Berdasarkan dokumen PDF yang terlampir, tugas utamamu adalah memverifikasi jenis dokumen dan mengevaluasi kelengkapan spesifikasinya.\n\nPENTING: Kamu WAJIB mengembalikan output HANYA dalam format JSON murni yang valid. DILARANG menambahkan teks pendahuluan, penutup, atau membungkusnya dengan markdown code block (seperti ```json). Output harus langsung diawali dengan { dan diakhiri dengan }.\n\nLAKUKAN DUA TAHAP EVALUASI BERIKUT:\n\nTahap 1 - Verifikasi Dokumen:\nPastikan apakah dokumen ini adalah TOR, KAK (Kerangka Acuan Kerja), atau Spesifikasi Teknis (SPEKTEK). Ciri-cirinya: terdapat judul/kata TOR/KAK/SPEKTEK, dan isinya merencanakan atau mendukung pelaksanan sebuah kegiatan/proyek pengadaan barang/jasa tertentu.\n\nTahap 2 - Pengecekan 8 Poin Wajib & Status Tanda Tangan (Hanya jika lolos Tahap 1):\nJika dokumen tersebut adalah TOR/KAK/SPEKTEK, periksa keberadaan dan kejelasan 8 elemen wajib berikut (1. Latar Belakang, 2. Maksud dan Tujuan, 3. Target / Sasaran, 4. Nama Organisasi Pengadaan Barang, 5. Sumber Dana dan Perkiraan Biaya, 6. Jangka Waktu Pelaksanaan Pekerjaan, 7. Spesifikasi Teknis, 8. Spesifikasi Jumlah) serta periksa ketersediaan tanda tangan pengesahan di dalam dokumen.\n\nGunakan struktur JSON persis seperti di bawah ini untuk merangkum hasil evaluasimu (perhatikan instruksi di dalam tanda kurung siku):\n\n{\n  \"Status_Dokumen\": \"[Isi HANYA dengan kata 'TOR' jika dokumen ini valid sebagai TOR/KAK/SPEKTEK, atau 'BUKAN TOR' jika jenis dokumen lainnya]\",\n  \"Spesifikasi_Check\": \"[Jika di Tahap 1 dokumen BUKAN TOR/KAK/SPEKTEK, tuliskan persis: 'Dokumen tidak dievaluasi karena BUKAN TOR'. Jika dokumen INI ADALAH TOR, kamu WAJIB menjabarkan hasil evaluasi ke-8 poin wajib tersebut satu per satu secara berurutan dari nomor 1 sampai 8. Gunakan karakter garis tegak lurus ( | ) sebagai pemisah antar nomor atau antar kalimat, tanpa menggunakan enter/baris baru.]\",\n  \"TOR_Completeness\": \"[Isi HANYA dengan salah satu dari pilihan status mutlak berikut: 'BUKAN TOR', 'SANGAT LENGKAP', 'CUKUP LENGKAP', atau 'TIDAK LENGKAP'. Jika gagal di Tahap 1, isi dengan 'BUKAN TOR'.]\",\n  \"Status_TTD\": \"[Periksa bagian pengesahan dokumen. Isi HANYA dengan salah satu dari 3 pilihan berikut: 'Menggunakan TTE' (jika ada barcode/QR code/keterangan Tanda Tangan Elektronik seperti BSrE), 'Terdapat TTD' (jika ada tanda tangan basah/scan manual), atau 'Belum ada TTD' (jika kolom tanda tangan kosong). Jika gagal di Tahap 1, isi dengan 'BUKAN TOR'.]\",\n  \"AI_Notes\": \"[Tuliskan verifikasi jenis dokumen di awal, ringkasan singkat isi dokumen, 3 poin krusial (Key Takeaways), dan rekomendasi profesional dari analis pengadaan.]\"\n}\n\nGunakan bahasa Indonesia yang profesional, tegas, objektif, layaknya seorang auditor pengadaan negara.",
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        2512
+      ],
+      "id": "149cbf77-3a98-40fd-9198-e6a077bc909d",
+      "name": "[TIDAK TERPAKAI] Analyze Document (Lama)",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "maxTries": 2,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "k4QU9daaOVYQ4rQA",
+          "name": "Gatekeeper - Cek Jenis Dokumen (Lite)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6c6abc30-c053-4373-8669-c98ea93197ed",
+              "name": "Spesifikasi_Check",
+              "value": "={{ JSON.parse($json.content.parts[0].text).Spesifikasi_Check }}",
+              "type": "string"
+            },
+            {
+              "id": "e6bb42e5-c21a-451c-91ab-de74e556d6f1",
+              "name": "TOR_Completeness",
+              "value": "={{ JSON.parse($json.content.parts[0].text).TOR_Completeness }}",
+              "type": "string"
+            },
+            {
+              "id": "c155226c-f283-4d29-8513-a802083165c3",
+              "name": "AI_Notes",
+              "value": "={{ JSON.parse($json.content.parts[0].text).AI_Notes }}",
+              "type": "string"
+            },
+            {
+              "id": "9928948f-229c-447b-8b66-23cbeae7115e",
+              "name": "File_Type",
+              "value": "={{ JSON.parse($json.content.parts[0].text).Status_Dokumen }}",
+              "type": "string"
+            },
+            {
+              "id": "95bfb995-89af-48ab-acbe-b0dc20ac090c",
+              "name": "Pengesahan",
+              "value": "={{ JSON.parse($json.content.parts[0].text).Status_TTD }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        592,
+        2512
+      ],
+      "id": "92042eb3-d142-4550-88b7-f52812bbd56b",
+      "name": "[TIDAK TERPAKAI] Edit Fields (Jalur Lama)"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A",
+          "mode": "list",
+          "cachedResultName": "AI TEST",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 163080752,
+          "mode": "list",
+          "cachedResultName": "DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13bVOkFZXLvlND-3UQLizIj__6HM0P6TytEWG8Yk702A/edit#gid=163080752"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Spesifikasi_Check": "={{ $json.Spesifikasi_Check }}",
+            "TOR_Completeness": "={{ $json.TOR_Completeness }}",
+            "AI_Notes": "={{ $json.AI_Notes }}",
+            "File_ID": "={{ $('Compare Datasets').item.json.id }}",
+            "File_Name": "={{ $('Compare Datasets').item.json.name }}",
+            "File_Type": "={{ $json.File_Type }}",
+            "Task_ID": "=TASK-{{ $now.toFormat('yyMMdd-HHmm') }}-{{ $('Download File').item.json.id.substring(0,4).toUpperCase() }}",
+            "Pengesahan": "={{ $json.Pengesahan }}",
+            "Status": "Pending"
+          },
+          "matchingColumns": [
+            "File_ID"
+          ],
+          "schema": [
+            {
+              "id": "Task_ID",
+              "displayName": "Task_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        832,
+        2512
+      ],
+      "id": "9532c2dc-fd5b-41e2-a978-512db00da1f0",
+      "name": "[TIDAK TERPAKAI] Simpan ke Sheet (Jalur Lama)",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T9P5nKCYYhnlYxnZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "document",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-flash-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-flash-latest"
+        },
+        "text": "Bertindaklah sebagai Ahli Pengadaan Barang/Jasa Pemerintah dan Analis TOR (Term of Reference) profesional. Berdasarkan dokumen PDF yang terlampir, tugas utamamu adalah memverifikasi jenis dokumen dan mengevaluasi kelengkapan spesifikasinya.\n\n\n\nPENTING: Kamu WAJIB mengembalikan output HANYA dalam format JSON murni yang valid. DILARANG menambahkan teks pendahuluan, penutup, atau membungkusnya dengan markdown code block (seperti ```json). Output harus langsung diawali dengan { dan diakhiri dengan }.\n\n\n\nLAKUKAN DUA TAHAP EVALUASI BERIKUT:\n\n\n\nTahap 1 - Verifikasi Dokumen:\n\nPastikan apakah dokumen ini adalah TOR, KAK (Kerangka Acuan Kerja), atau Spesifikasi Teknis (SPEKTEK). Ciri-cirinya: terdapat judul/kata TOR/KAK/SPEKTEK, dan isinya merencanakan atau mendukung pelaksanan sebuah kegiatan/proyek pengadaan barang/jasa tertentu.\n\n\n\nTahap 2 - Pengecekan 8 Poin Wajib & Status Tanda Tangan (Hanya jika lolos Tahap 1):\n\nJika dokumen tersebut adalah TOR/KAK/SPEKTEK, periksa keberadaan dan kejelasan 8 elemen wajib berikut (1. Latar Belakang, 2. Maksud dan Tujuan, 3. Target / Sasaran, 4. Nama Organisasi Pengadaan Barang, 5. Sumber Dana dan Perkiraan Biaya, 6. Jangka Waktu Pelaksanaan Pekerjaan, 7. Spesifikasi Teknis, 8. Spesifikasi Jumlah) serta periksa ketersediaan tanda tangan pengesahan di dalam dokumen.\n\n\n\nGunakan struktur JSON persis seperti di bawah ini untuk merangkum hasil evaluasimu (perhatikan instruksi di dalam tanda kurung siku):\n\n\n\n{\n\n  \"Status_Dokumen\": \"[Isi HANYA dengan kata 'TOR' jika dokumen ini valid sebagai TOR/KAK/SPEKTEK, atau 'BUKAN TOR' jika jenis dokumen lainnya]\",\n\n  \"Spesifikasi_Check\": \"[Jika di Tahap 1 dokumen BUKAN TOR/KAK/SPEKTEK, tuliskan persis: 'Dokumen tidak dievaluasi karena BUKAN TOR'. Jika dokumen INI ADALAH TOR, kamu WAJIB menjabarkan hasil evaluasi ke-8 poin wajib tersebut satu per satu secara berurutan dari nomor 1 sampai 8. Gunakan karakter garis tegak lurus ( | ) sebagai pemisah antar nomor atau antar kalimat, tanpa menggunakan enter/baris baru.]\",\n\n  \"TOR_Completeness\": \"[Isi HANYA dengan salah satu dari pilihan status mutlak berikut: 'BUKAN TOR', 'SANGAT LENGKAP', 'CUKUP LENGKAP', atau 'TIDAK LENGKAP'. Jika gagal di Tahap 1, isi dengan 'BUKAN TOR'.]\",\n\n  \"Status_TTD\": \"[Periksa bagian pengesahan dokumen. Isi HANYA dengan salah satu dari 3 pilihan berikut: 'Menggunakan TTE' (jika ada barcode/QR code/keterangan Tanda Tangan Elektronik seperti BSrE), 'Terdapat TTD' (jika ada tanda tangan basah/scan manual), atau 'Belum ada TTD' (jika kolom tanda tangan kosong). Jika gagal di Tahap 1, isi dengan 'BUKAN TOR'.]\",\n\n  \"AI_Notes\": \"[Tuliskan verifikasi jenis dokumen di awal, ringkasan singkat isi dokumen, 3 poin krusial (Key Takeaways), dan rekomendasi profesional dari analis pengadaan.]\"\n\n}\n\n\n\nGunakan bahasa Indonesia yang profesional, tegas, objektif, layaknya seorang auditor pengadaan negara.",
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        1072,
+        2512
+      ],
+      "id": "5c2eeb2f-f8cd-4694-a7ed-014016a76f89",
+      "name": "[TIDAK TERPAKAI] Analyze Document (Duplikat Lama)",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "maxTries": 5,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "k4QU9daaOVYQ4rQA",
+          "name": "Gatekeeper - Cek Jenis Dokumen (Lite)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "=======================================\n   DAFTAR API & MODEL - SISTEM KAK\n=======================================\n\n1. Gatekeeper - Cek Jenis Dokumen\n   • Model   : Lite\n   • Akun    : almaudin\n\n2. Reviewer A - Compliance Check\n   • Model   : Lite\n   • Akun    : almaudinwork\n\n3. Reviewer B - Substantive Rating\n   • Model   : Lite\n   • Akun    : almaudinwork.2026\n\n4. Reviewer C - Risk Audit\n   • Model   : Lite\n   • Akun    : almaudinwork.2026.ip\n\n5. Adjudicator - Sintesis Keputusan (Chief)\n   • Model   : lite\n   • Akun    : almaudinnurcholifatulloh \n\n6. Analisis Lanjutan (Review Path)\n   • Model   : Flash\n   • Akun    : IP\n\n7. Analisis Lanjutan (Escalate Path - Pro Full)\n   • Model   : Flash\n   • Akun    : ip",
+        "height": 592,
+        "width": 624
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        0
+      ],
+      "id": "d8a8ecab-59dd-4d50-b199-17f68a6b02c2",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ Boolean($json.name && /\\.(pdf|doc|docx)$/i.test($json.name)) }}",
+                    "rightValue": "=1",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "id": "0698605a-43b0-4a88-997c-1e7e7989de58"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "bcf63956-eba4-4ddb-8550-0306906f1df0",
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "e1b46b44-c52a-47ba-8647-abcce35edf7a",
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "empty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        512,
+        256
+      ],
+      "id": "3b4f5d3a-6e7f-49eb-808a-f3d869922560",
+      "name": "Switch - Validasi Jenis File"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7ec5dff5-8ab0-4e57-b7e9-52981fa2b320",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": ".pdf",
+              "operator": {
+                "type": "string",
+                "operation": "endsWith"
+              }
+            },
+            {
+              "id": "e8002dc1-7ad1-41eb-abef-e6e82ccf955c",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": ".doc",
+              "operator": {
+                "type": "string",
+                "operation": "endsWith"
+              }
+            },
+            {
+              "id": "ffa7210a-287b-4e89-aa5b-13b62b99e0d2",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": ".docx",
+              "operator": {
+                "type": "string",
+                "operation": "endsWith"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1296,
+        2512
+      ],
+      "id": "38ad8438-76d6-405e-bb66-af51628fff2b",
+      "name": "[TIDAK TERPAKAI] Filter - Hanya File PDF-DOC-DOCX"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4256,
+        672
+      ],
+      "id": "0ac1b284-1ae8-403f-a52d-84087f5258df",
+      "name": "Loop 1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3376,
+        672
+      ],
+      "id": "5c67f715-2862-4c09-8a03-93e678dd83f4",
+      "name": "Loop 2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1776,
+        672
+      ],
+      "id": "cdd61305-9c33-4314-9e44-7f85c56159e6",
+      "name": "Loop 3"
+    },
+    {
+      "parameters": {
+        "content": "## Loop 1 by 1\n",
+        "height": 320,
+        "width": 3072,
+        "color": "#261C1C"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1344,
+        608
+      ],
+      "id": "3b2984d8-2b61-49c1-a3bb-b3768f78e0ad",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Search Files and Folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Files and Folders": {
+      "main": [
+        [
+          {
+            "node": "Switch - Validasi Jenis File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ambil Data Existing (Cek Duplikat)": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Compare Datasets": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items (Jalur Lama)": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Gatekeeper - Cek Jenis Dokumen (Lite) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gatekeeper - Cek Jenis Dokumen (Lite) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Parse Hasil Gatekeeper (Code) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Hasil Gatekeeper (Code) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "If - Lolos Gatekeeper (Is TOR) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If - Lolos Gatekeeper (Is TOR) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Reviewer A - Compliance Check (Lite) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Reviewer B - Substantive Rating (Lite) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Reviewer C - Risk Audit (Lite) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Simpan Hasil - Ditolak Gatekeeper (Not TOR) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simpan Hasil - Ditolak Gatekeeper (Not TOR) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Pindahkan File Bukan KAK (Drive) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pindahkan File Bukan KAK (Drive) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Loop 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reviewer A - Compliance Check (Lite) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Merge Reviewer A-B-C (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reviewer B - Substantive Rating (Lite) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Merge Reviewer A-B-C (Jalur Lama)",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Reviewer C - Risk Audit (Lite) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Merge Reviewer A-B-C (Jalur Lama)",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge Reviewer A-B-C (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Group Hasil Reviewer per File (Code) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Group Hasil Reviewer per File (Code) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Insert documents",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Adjudicator - Sintesis Keputusan (Chief) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Adjudicator - Sintesis Keputusan (Chief) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Parse Hasil Adjudicator (Code) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Hasil Adjudicator (Code) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Switch - Gate Status (Pass-Review-Escalate-Rejected) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch - Gate Status (Pass-Review-Escalate-Rejected) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Set Flag Selesai (Pass) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Analisis Lanjutan - Lite (Review Path) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Analisis Lanjutan - Pro Full (Escalate Path) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Flag Selesai (Pass) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Simpan ke Sheet - Jalur Pass (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analisis Lanjutan - Lite (Review Path) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Parse Hasil Pro Lite (Review) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analisis Lanjutan - Pro Full (Escalate Path) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Parse Hasil Pro Full (Escalate) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Hasil Pro Lite (Review) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Simpan ke Sheet - Jalur Review (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Hasil Pro Full (Escalate) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Simpan ke Sheet - Jalur Escalate (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simpan ke Sheet - Jalur Pass (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Pindahkan File Selesai - Pass (Drive) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simpan ke Sheet - Jalur Review (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Pindahkan File Selesai - Review (Drive) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simpan ke Sheet - Jalur Escalate (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Pindahkan File Selesai - Escalate (Drive) (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pindahkan File Selesai - Pass (Drive) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Loop 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pindahkan File Selesai - Review (Drive) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Loop 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pindahkan File Selesai - Escalate (Drive) (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "Loop 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook - Ambil Dokumen Pending": {
+      "main": [
+        [
+          {
+            "node": "Ambil Data Dokumen Pending",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ambil Data Dokumen Pending": {
+      "main": [
+        [
+          {
+            "node": "Respons - Daftar Dokumen Pending",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook - Update Status Dokumen": {
+      "main": [
+        [
+          {
+            "node": "If - Ada Refer Task ID",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Switch - Aksi Approve-Revise-Reject",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If - Ada Refer Task ID": {
+      "main": [
+        [
+          {
+            "node": "Update Status - Refer Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Status - Refer Task": {
+      "main": [
+        [
+          {
+            "node": "Respons - Refer Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch - Aksi Approve-Revise-Reject": {
+      "main": [
+        [
+          {
+            "node": "Update Status - Approve",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Status - Revise",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Status - Reject",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Find documents",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Ambil Data Dokumen Pending1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Status - Approve": {
+      "main": [
+        [
+          {
+            "node": "Respons - Approve",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Status - Revise": {
+      "main": [
+        [
+          {
+            "node": "Respons - Revise",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Status - Reject": {
+      "main": [
+        [
+          {
+            "node": "Respons - Reject",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find documents": {
+      "main": [
+        [
+          {
+            "node": "Merge Komparasi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ambil Data Dokumen Pending1": {
+      "main": [
+        [
+          {
+            "node": "Merge Komparasi",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Komparasi": {
+      "main": [
+        [
+          {
+            "node": "Format Data Komparasi (Code)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Data Komparasi (Code)": {
+      "main": [
+        [
+          {
+            "node": "AI Pembanding Revisi (Gemini Flash)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Pembanding Revisi (Gemini Flash)": {
+      "main": [
+        [
+          {
+            "node": "Parse Hasil Komparasi (Code)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Hasil Komparasi (Code)": {
+      "main": [
+        [
+          {
+            "node": "Respons - Hasil Komparasi",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Sheet - Catatan Pembanding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook - Upload Dokumen": {
+      "main": [
+        [
+          {
+            "node": "Switch - Aksi Upload KAK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch - Aksi Upload KAK": {
+      "main": [
+        [
+          {
+            "node": "Upload File ke Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload File ke Drive": {
+      "main": [
+        [
+          {
+            "node": "Respons - Upload Sukses",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "[TIDAK TERPAKAI] Edit Fields (Jalur Lama)": {
+      "main": [
+        [
+          {
+            "node": "[TIDAK TERPAKAI] Simpan ke Sheet (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch - Validasi Jenis File": {
+      "main": [
+        [
+          {
+            "node": "Download File",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Ambil Data Existing (Cek Duplikat)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pindahkan File Non-Dokumen (Drive)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "[TIDAK TERPAKAI] Filter - Hanya File PDF-DOC-DOCX": {
+      "main": [
+        [],
+        []
+      ]
+    },
+    "Loop 1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop 2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop 3": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items (Jalur Lama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "f52bf9b8-3ff2-46cb-89b3-cd34d65e511d",
+  "meta": {
+    "instanceId": "11860c96b9e85f7418d0905fe2c6a51761c8f8e80faefa59767fac54ffe8253e"
+  },
+  "nodeGroups": [],
+  "id": "JBEHqrRFmWPwmeJY",
+  "tags": []
+}

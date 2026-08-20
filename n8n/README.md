@@ -65,6 +65,29 @@ Dashboard tidak memfilter berdasarkan format berkas. Kolom `File_Type` tidak dip
 
 Auto-sync frontend nonaktif secara default. Sinkronisasi berjalan ketika pengguna menekan tombol manual atau mengaktifkan checkbox auto-sync.
 
+### POST Endpoint: `/upload-dokumen`
+
+Frontend mengirim `multipart/form-data` dengan field berikut:
+
+- `data`: file KAK/TOR dengan ekstensi `.pdf`, `.doc`, atau `.docx`.
+- `action`: nilai tetap `TOR`.
+
+Validasi ukuran maksimal 5 MB dilakukan di frontend sebelum request dikirim.
+
+### POST Action: `compare-revision`
+
+Request dikirim ke endpoint `/update-doc-status`:
+
+```json
+{
+  "action": "compare-revision",
+  "task_id": "TASK-xxxx",
+  "refer_task_id": "TASK-yyyy"
+}
+```
+
+Response berisi `status_revisi`, `perbaikan_terverifikasi`, `kekurangan_tersisa`, dan `ringkasan_analisis` untuk ditampilkan pada modal hasil AI.
+
 ### POST Endpoint: `/update-doc-status`
 Memproses perubahan status berdasarkan aksi Admin.
 
