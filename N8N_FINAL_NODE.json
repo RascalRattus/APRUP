@@ -1988,6 +1988,36 @@
     },
     {
       "parameters": {
+        "jsCode": "const body = $json.body || {};\nconst username = String(body.username || '');\nconst password = String(body.password || '');\nconst adminValid = username === $env.ADMIN_USERNAME && password === $env.ADMIN_PASSWORD;\nconst userValid = username === $env.USER_USERNAME && password === $env.USER_PASSWORD;\n\nif (adminValid) {\n  return [{ json: { success: true, role: 'admin', token: $env.APRUP_AUTH_TOKEN, user: { name: 'Administrator' }, statusCode: 200 } }];\n}\n\nif (userValid) {\n  return [{ json: { success: true, role: 'user', token: $env.APRUP_AUTH_TOKEN, user: { name: 'Standard User' }, statusCode: 200 } }];\n}\n\nreturn [{ json: { success: false, message: 'Username atau password salah.', statusCode: 401 } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        3200
+      ],
+      "id": "4f18fc35-3f83-4fa0-8b1d-7d94d57df2a1",
+      "name": "Code - Validasi Login Environment"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}"
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        592,
+        3200
+      ],
+      "id": "2f725a7d-9a7d-4f4c-a7fb-7bb3d9d3b927",
+      "name": "Respond - Login JSON"
+    },
+    {
+      "parameters": {
         "respondWith": "json",
         "responseBody": "{\n  \"success\": true,\n  \"message\": \"Dokumen berhasil diperbarui!\"\n}",
         "options": {}
@@ -2568,7 +2598,7 @@
       ],
       "id": "d1b59fb6-deff-4fd2-9d64-31b5e948ad69",
       "name": "Webhook - Upload Dokumen",
-      "webhookId": "31d9534f-e1d5-40e7-b788-2f64dbd2034a"
+      "webhookId": "7dca8c3a-89f9-46f5-97f0-f1f6b0e0b6cb"
     },
     {
       "parameters": {
@@ -3050,6 +3080,173 @@
       ],
       "id": "3b2984d8-2b61-49c1-a3bb-b3768f78e0ad",
       "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "auth/login",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type, Authorization"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "POST, GET, OPTIONS"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        64,
+        2832
+      ],
+      "id": "f470522c-1763-43e9-87b5-ad5b842291ab",
+      "name": "Webhook - Login",
+      "webhookId": "c9f9e5f8-50ca-4e0c-9d70-4cfa8c918a8d"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.username === $env.ADMIN_USERNAME && $json.body.password === $env.ADMIN_PASSWORD }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "id": "6259c799-1b14-4bd1-ad78-e349b567c1fc"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "3b001163-a89a-491e-bc9a-d0585780b53f",
+                    "leftValue": "={{ $json.body.username === $env.USER_USERNAME && $json.body.password === $env.USER_PASSWORD }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "112d082e-d11c-4022-bb08-d0574b7a666c",
+                    "leftValue": "={{$json.body.username}}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        2816
+      ],
+      "id": "bc63ce00-a5a7-40a1-9824-d3e257428e5b",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, role: 'admin', token: $env.APRUP_AUTH_TOKEN, user: { name: 'Administrator' } } }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        592,
+        2768
+      ],
+      "id": "098590bb-ffe2-4e4d-ad27-bdba02ce7baa",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, role: 'user', token: $env.APRUP_AUTH_TOKEN, user: { name: 'Standard User' } } }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        592,
+        2928
+      ],
+      "id": "01bff343-5e49-44e4-9d20-341d58bb47cd",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, message: 'Username atau password salah.' } }}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        592,
+        3088
+      ],
+      "id": "9f4d09e4-5c4a-4b5e-98d0-7c75c12ec2f8",
+      "name": "Respond to Webhook - Login Gagal"
     }
   ],
   "pinData": {},
@@ -3734,6 +3931,53 @@
           }
         ]
       ]
+    },
+    "Webhook - Login": {
+      "main": [
+        [
+          {
+            "node": "Code - Validasi Login Environment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Validasi Login Environment": {
+      "main": [
+        [
+          {
+            "node": "Respond - Login JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook - Login Gagal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -3742,7 +3986,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "f52bf9b8-3ff2-46cb-89b3-cd34d65e511d",
+  "versionId": "96ca8d8d-ca4a-4183-be76-4603990f8481",
   "meta": {
     "instanceId": "11860c96b9e85f7418d0905fe2c6a51761c8f8e80faefa59767fac54ffe8253e"
   },

@@ -144,12 +144,11 @@ async function testViewport(browser, vp) {
       const modalVisible = await page.locator('#login-modal').evaluate(el => !el.classList.contains('hidden')).catch(() => false);
       await screenshot(page, `${vpLabel}_03_login`);
       if (modalVisible) {
-        await page.locator('#login-username').fill('admin').catch(() => {});
-        await page.locator('#login-password').fill('admin').catch(() => {});
-        await safeClick(page, '#btn-login-submit');
-        await page.waitForTimeout(800);
+        await safeClick(page, '#btn-login-demo-mode');
+        await page.waitForTimeout(1000);
         const roleText = await page.locator('#user-role-text').textContent().catch(() => '');
-        log(vpLabel, 'Login Modal', 'PASS', `Modal opened. Role after login: "${roleText.trim()}"`);
+        const modalClosed = await page.locator('#login-modal').evaluate(el => el.classList.contains('hidden')).catch(() => false);
+        log(vpLabel, 'Login Modal', modalClosed && roleText.includes('User') ? 'PASS' : 'FAIL', `Demo login: ${modalClosed ? 'opened dashboard' : 'modal still open'} | Role: "${roleText.trim()}"`);
       } else {
         log(vpLabel, 'Login Modal', 'WARN', 'Modal did not open');
       }

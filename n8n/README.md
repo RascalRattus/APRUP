@@ -65,6 +65,44 @@ Dashboard tidak memfilter berdasarkan format berkas. Kolom `File_Type` tidak dip
 
 Auto-sync frontend nonaktif secara default. Sinkronisasi berjalan ketika pengguna menekan tombol manual atau mengaktifkan checkbox auto-sync.
 
+### POST Endpoint: `/auth/login`
+
+Live Mode membutuhkan endpoint login yang memvalidasi username/password terhadap secret environment n8n. Response minimal harus memiliki `success`, `role`, dan opsional `token` serta `user.name`. Jangan mengirim atau menyimpan password di frontend.
+
+Konfigurasi minimal di n8n:
+
+1. Buat node **Webhook** dengan method `POST` dan path `auth/login` pada workflow yang sama atau workflow terpisah.
+2. Baca payload `{{$json.body.username}}` dan `{{$json.body.password}}`.
+3. Set environment variable server n8n berikut, tanpa memasukkan nilainya ke workflow atau Git:
+
+```env
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=<secret-admin>
+USER_USERNAME=user
+USER_PASSWORD=<secret-user>
+APRUP_AUTH_TOKEN=<long-random-token>
+```
+
+4. Gunakan alur node: `Webhook - Login` → `Code - Validasi Login Environment` → `Respond - Login JSON`.
+5. Node Code membandingkan username/password terhadap `$env.ADMIN_USERNAME`, `$env.ADMIN_PASSWORD`, `$env.USER_USERNAME`, dan `$env.USER_PASSWORD`. Jangan menaruh password plaintext pada node Code, frontend, atau repository.
+6. Jika valid, kembalikan `200 JSON` seperti berikut:
+
+```json
+{
+  "success": true,
+  "role": "admin",
+  "token": "<signed-session-token>",
+  "user": { "name": "Administrator" }
+}
+```
+
+7. Jika tidak valid, kembalikan HTTP `401` dengan `{ "success": false }`.
+8. Aktifkan CORS untuk origin frontend dan izinkan header `Content-Type, Authorization`.
+
+Setelah mengubah environment variable, restart/reload workflow n8n agar `$env` terbaca oleh execution baru.
+
+> Penting: perubahan pada file `N8N_FINAL_NODE.json` di repository tidak otomatis mengubah workflow yang sudah aktif di server n8n. Import ulang workflow terbaru, aktifkan workflow, lalu gunakan Production URL webhook `/auth/login`.
+
 ### POST Endpoint: `/upload-dokumen`
 
 Frontend mengirim `multipart/form-data` dengan field berikut:

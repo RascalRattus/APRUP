@@ -1,10 +1,16 @@
 // APRUP v2.0 — State Management Engine (Multi-File Architecture)
+const DEFAULT_N8N_WEBHOOK_URL = 'https://n8n.almaudin.my.id/webhook';
+const savedWebhookUrl = localStorage.getItem('n8n_webhook_url');
+const configuredWebhookUrl = savedWebhookUrl && !savedWebhookUrl.includes('your-n8n-domain')
+  ? savedWebhookUrl
+  : DEFAULT_N8N_WEBHOOK_URL;
+
 let appState = {
   theme: localStorage.getItem('dashboard_theme') || 'dark', // 'dark' (Malam) or 'light' (Siang)
   mode: localStorage.getItem('dashboard_mode') || 'demo', // 'live' or 'demo'
-  webhookUrl: localStorage.getItem('n8n_webhook_url') || 'https://your-n8n-domain/webhook',
+  webhookUrl: configuredWebhookUrl,
   isOnline: false,
-  currentUser: JSON.parse(sessionStorage.getItem('aprup_user')) || { username: 'admin', role: 'admin', name: 'Administrator' },
+  currentUser: null,
   activeTab: 'pending', // 'pending' | 'approved' | 'needs revision' | 'rejected'
   documents: [],
   filters: {
@@ -105,6 +111,7 @@ const elements = {
   loginForm: document.getElementById('login-form'),
   loginUsername: document.getElementById('login-username'),
   loginPassword: document.getElementById('login-password'),
+  btnLoginDemoMode: document.getElementById('btn-login-demo-mode'),
   
   // Tabs
   tabPending: document.getElementById('tab-pending'),
@@ -336,6 +343,7 @@ function init() {
   if (elements.webhookUrlInput) elements.webhookUrlInput.addEventListener('input', (e) => updateEndpointLabels(e.target.value));
 
   if (elements.btnSubmitAction) elements.btnSubmitAction.addEventListener('click', submitActionModal);
+  if (elements.btnLoginDemoMode) elements.btnLoginDemoMode.addEventListener('click', enableDemoLogin);
   if (elements.btnOpenUpload) elements.btnOpenUpload.addEventListener('click', openUploadModal);
   if (elements.btnCloseUpload) elements.btnCloseUpload.addEventListener('click', closeUploadModal);
   if (elements.btnCancelUpload) elements.btnCancelUpload.addEventListener('click', closeUploadModal);
@@ -353,7 +361,12 @@ function init() {
 
   startHealthCheckLoop();
   toggleAutoRefresh();
-  syncData(true);
+  if (appState.currentUser) {
+    syncData(true);
+  } else {
+    openLoginModal();
+    showToast('Login diperlukan sebelum mengakses dashboard.', 'warning');
+  }
 }
 
 // Status Navigation Tabs Switcher
@@ -390,6 +403,7 @@ function openLoginModal() {
 }
 
 function closeLoginModal() {
+  if (!appState.currentUser) return;
   if (elements.loginModal) {
     elements.loginModal.classList.add('opacity-0');
     setTimeout(() => elements.loginModal.classList.add('hidden'), 300);
@@ -407,38 +421,96 @@ async function handleLoginSubmit(e) {
     btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Verifikasi...</span>`;
   }
 
-  // Verification simulation
-  setTimeout(() => {
-    if (user === 'admin' && pass === 'admin') {
-      appState.currentUser = { username: 'admin', role: 'admin', name: 'Administrator' };
-      sessionStorage.setItem('aprup_user', JSON.stringify(appState.currentUser));
-      updateRoleUI();
-      closeLoginModal();
-      showToast("Autentikasi Berhasil! Login sebagai Admin (Akses Penuh)", "success");
-      renderDocs();
-    } else if (user === 'user' && pass === 'user') {
-      appState.currentUser = { username: 'user', role: 'user', name: 'Standard User' };
-      sessionStorage.setItem('aprup_user', JSON.stringify(appState.currentUser));
-      updateRoleUI();
-      closeLoginModal();
-      showToast("Autentikasi Berhasil! Login sebagai User (Read-Only)", "warning");
-      renderDocs();
-    } else {
-      showToast("Kredensial Salah! Gunakan admin/admin atau user/user.", "error");
-    }
+  try {
+    const authenticatedUser = await authenticateWithN8n(user, pass);
 
+    if (!authenticatedUser) throw new Error('Kredensial tidak valid.');
+    appState.currentUser = { ...authenticatedUser, authSource: 'live' };
+    appState.mode = 'live';
+    localStorage.setItem('dashboard_mode', 'live');
+    setModeUI('live');
+    updateRoleUI();
+    closeLoginModal();
+    showToast(`Autentikasi berhasil. Login sebagai ${authenticatedUser.role === 'admin' ? 'Admin' : 'User'}.`, authenticatedUser.role === 'admin' ? 'success' : 'warning');
+    renderDocs();
+    syncData(true);
+  } catch (error) {
+    console.error('Gagal autentikasi:', error);
+    if (error.message === 'AUTH_ENDPOINT_MISSING') {
+      showToast('Webhook /auth/login belum dibuat di n8n. Gunakan Masuk Demo atau buat endpoint Live.', 'error');
+    } else if (error.message === 'AUTH_INVALID') {
+      showToast('Username atau password salah.', 'error');
+    } else if (error.message.startsWith('AUTH_HTTP_')) {
+      showToast(`Webhook login n8n error (${error.message.replace('AUTH_HTTP_', 'HTTP ')}). Cek execution n8n dan environment variable.`, 'error');
+    } else if (error.message === 'AUTH_EMPTY_RESPONSE' || error.message === 'AUTH_INVALID_RESPONSE') {
+      showToast('Webhook login merespons tanpa kontrak JSON success/role. Import ulang workflow auth dan aktifkan Production URL.', 'error');
+    } else if (error.message === 'AUTH_NETWORK') {
+      showToast(`Tidak dapat menghubungi ${appState.webhookUrl}/auth/login. Cek URL webhook, workflow aktif, dan CORS.`, 'error');
+    } else {
+      showToast('Server autentikasi n8n tidak tersedia atau koneksi gagal.', 'error');
+    }
+  } finally {
     if (btn) {
       btn.removeAttribute('disabled');
-      btn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> <span>Masuk System</span>`;
+      btn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> <span>Masuk</span>`;
     }
-  }, 600);
+  }
+}
+
+function enableDemoLogin() {
+  appState.currentUser = { username: 'demo', role: 'user', name: 'Demo User', authSource: 'demo' };
+  appState.mode = 'demo';
+  sessionStorage.removeItem('aprup_token');
+  localStorage.setItem('dashboard_mode', 'demo');
+  setModeUI('demo');
+  updateRoleUI();
+  closeLoginModal();
+  renderDocs();
+  syncData(true);
+  showToast('Demo Mode aktif. Tidak ada koneksi ke webhook n8n.', 'info');
+}
+
+async function authenticateWithN8n(username, password) {
+  let response;
+  try {
+    response = await fetch(`${appState.webhookUrl}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+  } catch (error) {
+    console.error('Auth network/CORS error:', error);
+    throw new Error('AUTH_NETWORK');
+  }
+  if (response.status === 404) throw new Error('AUTH_ENDPOINT_MISSING');
+  if (response.status === 401 || response.status === 403) throw new Error('AUTH_INVALID');
+  if (!response.ok) throw new Error(`AUTH_HTTP_${response.status}`);
+  const responseText = await response.text();
+  if (!responseText.trim()) throw new Error('AUTH_EMPTY_RESPONSE');
+  let result;
+  try {
+    result = JSON.parse(responseText);
+  } catch (error) {
+    throw new Error('AUTH_INVALID_RESPONSE');
+  }
+  if (!result.success || !result.role) throw new Error('AUTH_INVALID_RESPONSE');
+  if (result.token) sessionStorage.setItem('aprup_token', result.token);
+  return { username, role: result.role, name: result.user?.name || username };
+}
+
+function authHeaders() {
+  const token = sessionStorage.getItem('aprup_token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
 function updateRoleUI() {
-  const isAdmin = appState.currentUser.role === 'admin';
-  if (elements.userRoleText) elements.userRoleText.innerText = isAdmin ? "Role: Admin" : "Role: User (Read-Only)";
+  const isAuthenticated = Boolean(appState.currentUser);
+  const isAdmin = isAuthenticated && appState.currentUser.role === 'admin';
+  if (elements.userRoleText) elements.userRoleText.innerText = isAdmin ? "Role: Admin" : isAuthenticated ? "Role: User (Read-Only)" : "Belum Login";
   if (elements.userRoleBadge) {
-    if (isAdmin) {
+    if (!isAuthenticated) {
+      elements.userRoleBadge.className = "flex items-center gap-1.5 px-3 py-1 rounded-full border border-brandwine-500/30 bg-brandwine-500/15 text-brandwine-300 text-xs font-semibold select-none cursor-pointer";
+    } else if (isAdmin) {
       elements.userRoleBadge.className = "flex items-center gap-1.5 px-3 py-1 rounded-full border border-brandgold-500/30 bg-brandgold-500/15 text-brandgold-300 text-xs font-semibold select-none cursor-pointer";
     } else {
       elements.userRoleBadge.className = "flex items-center gap-1.5 px-3 py-1 rounded-full border border-stone-500/30 bg-stone-500/15 text-stone-300 text-xs font-semibold select-none cursor-pointer";
@@ -473,6 +545,10 @@ function applyTheme(theme) {
 // Mode Selection Handler
 function changeMode(newMode) {
   if (appState.mode === newMode) return;
+  if (newMode === 'live' && appState.currentUser?.authSource === 'demo') {
+    showToast('Session Demo tetap berada di Demo Mode. Login Live diperlukan untuk mengakses n8n.', 'warning');
+    return;
+  }
   
   appState.mode = newMode;
   localStorage.setItem('dashboard_mode', newMode);
@@ -486,11 +562,11 @@ function changeMode(newMode) {
     appState.documents = [];
   }
   
-  syncData(true);
+  if (appState.currentUser) syncData(true);
 }
 
 function setModeUI(mode) {
-  if (elements.btnLiveMode && elements.btnDemoMode && elements.statMode) {
+  if (elements.btnLiveMode && elements.btnDemoMode) {
     if (mode === 'live') {
       elements.btnLiveMode.className = "px-3 py-1 rounded-full bg-brandpurple-600 text-white font-semibold shadow-md shadow-brandpurple-500/20 transition-all duration-200";
       elements.btnDemoMode.className = "px-3 py-1 rounded-full text-[var(--text-muted)] font-semibold hover:text-[var(--text)] transition-all duration-200";
@@ -543,6 +619,7 @@ async function checkHealth() {
 
     const response = await fetch(endpoint, {
       method: 'GET',
+      headers: authHeaders(),
       signal: controller.signal
     });
     
@@ -571,7 +648,7 @@ function updateHealthUI(online, text) {
       if (dot) dot.className = "w-2.5 h-2.5 rounded-full pulse-dot-green";
       if (elements.offlineAlert) elements.offlineAlert.classList.add('hidden');
       document.querySelectorAll('.btn-action-trigger').forEach(btn => {
-        if (appState.currentUser.role === 'admin') {
+        if (appState.currentUser && appState.currentUser.role === 'admin') {
           btn.removeAttribute('disabled');
           btn.classList.remove('opacity-50', 'cursor-not-allowed');
         }
@@ -635,7 +712,7 @@ async function syncData(manualTrigger = false) {
 
   const endpoint = `${appState.webhookUrl}/get-pending-docs`;
   try {
-    const response = await fetch(endpoint);
+    const response = await fetch(endpoint, { headers: authHeaders() });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const data = await response.json();
     
@@ -956,7 +1033,7 @@ function renderDocs() {
 
 // Action Trigger: Approve (Direct Single POST Webhook Engine)
 async function approveDocument(taskId) {
-  if (appState.currentUser.role !== 'admin') {
+  if (!appState.currentUser || appState.currentUser.role !== 'admin') {
     showToast("Akses Ditolak: Hanya Admin yang dapat menyetujui dokumen!", "error");
     return;
   }
@@ -976,7 +1053,7 @@ async function approveDocument(taskId) {
   try {
     const response = await fetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...authHeaders(), 'Content-Type': 'application/json' },
       body: JSON.stringify({
         task_id: taskId,
         action: 'approve',
@@ -1002,7 +1079,7 @@ async function approveDocument(taskId) {
 
 // Dynamic Action Modal Handling (Approve / Revisi / Tolak with searchable Refer Task ID)
 function openActionModal(taskId, actionType) {
-  if (appState.currentUser.role !== 'admin') {
+  if (!appState.currentUser || appState.currentUser.role !== 'admin') {
     showToast("Akses Ditolak: Hanya Admin yang dapat memproses aksi ini!", "error");
     return;
   }
@@ -1112,7 +1189,7 @@ async function submitActionModal() {
   try {
     const response = await fetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...authHeaders(), 'Content-Type': 'application/json' },
       body: JSON.stringify({
         task_id: taskId,
         action: actionType,
@@ -1225,6 +1302,7 @@ async function submitUpload(event) {
   try {
     const response = await fetch(`${appState.webhookUrl}/upload-dokumen`, {
       method: 'POST',
+      headers: authHeaders(),
       body: formData
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -1297,7 +1375,7 @@ async function compareRevision(taskId, referTaskId) {
   try {
     const response = await fetch(`${appState.webhookUrl}/update-doc-status`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...authHeaders(), 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'compare-revision', task_id: taskId, refer_task_id: normalizedReferTaskId })
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -1413,6 +1491,7 @@ async function testSettingsConnection() {
 
     const response = await fetch(testEndpoint, {
       method: 'GET',
+      headers: authHeaders(),
       signal: controller.signal
     });
 

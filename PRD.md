@@ -111,6 +111,8 @@ Tidak muncul:
 5. **Single Grouped Stats Ribbon:** Dashboard hanya memiliki satu ribbon dengan bagian Antrean Aktif (Pending), Keputusan Terproses (Approved, Needs Revision, Rejected), Arsip (Archived/Selesai), dan Dokumen Baru (Upload KAK/TOR). Semua counter dihitung ulang dari response API.
 6. **Upload KAK/TOR:** Admin dapat mengunggah `.pdf`, `.doc`, atau `.docx` maksimal 5 MB melalui `POST /upload-dokumen` menggunakan multipart field `data` dan `action=TOR`.
 7. **Komparasi Catatan Revisi AI:** Aksi komparasi hanya tersedia bila `Refer_Task_ID` valid. Frontend mengirim `action=compare-revision` ke `/update-doc-status` dan menampilkan status, poin terverifikasi, kekurangan tersisa, serta ringkasan AI.
+8. **Mandatory Authentication:** Halaman tidak memberikan role Admin/User secara otomatis. Modal login wajib dipilih: `Masuk Demo (tanpa n8n)` untuk mock data, atau credential untuk login Live melalui n8n.
+9. **Mode Boundary:** Session Demo tidak boleh mengakses webhook Live. Session Live boleh berpindah ke Demo dan kembali ke Live.
 
 ---
 

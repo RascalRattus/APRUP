@@ -18,3 +18,5 @@
 2. Uji endpoint `POST /update-doc-status` dengan `action=compare-revision` pada dua Task ID nyata.
 3. Jalankan simulasi UI dan periksa grouped stats pada desktop dan mobile.
 4. Aktifkan auto-sync hanya pada deployment yang memang membutuhkan polling berkala.
+5. Pastikan credential Admin/User disimpan sebagai secret environment n8n, bukan di frontend atau repository.
+6. Uji endpoint `/auth/login` n8n dengan credential Admin dan User; login credential harus masuk Live, sedangkan `Masuk Demo (tanpa n8n)` tidak boleh melakukan request webhook.

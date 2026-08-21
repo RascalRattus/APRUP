@@ -66,6 +66,21 @@ APRUP/
 - `Upload KAK` menerima hanya `.pdf`, `.doc`, dan `.docx` dengan batas client-side 5 MB. Payload dikirim sebagai multipart ke `/upload-dokumen` dengan `data` dan `action=TOR`.
 - `Bandingkan Catatan Revisi (AI)` hanya muncul untuk dokumen yang memiliki `Refer_Task_ID`, atau setelah admin mengisi referensi pada modal aksi. Request dikirim ke `/update-doc-status` dengan `action=compare-revision`.
 
+## 🔐 Autentikasi dan Credential
+
+- Tidak ada role default saat halaman pertama dibuka. Pengguna wajib login sebelum dashboard dan data diaktifkan.
+- Live Mode memvalidasi login melalui `POST /auth/login` di n8n dan menyimpan token hanya di `sessionStorage`.
+- `Masuk Demo (tanpa n8n)` langsung membuka dashboard mock tanpa request webhook.
+- Username/password selalu diproses sebagai login Live melalui `/auth/login`. Setelah login Live, pengguna boleh toggle ke Demo atau kembali ke Live.
+- Session Demo tetap berada di Demo Mode dan tidak dapat mengaktifkan koneksi n8n tanpa login Live.
+- Password tidak disimpan plaintext di frontend, README, atau Git. Simpan credential Admin/User di environment/server n8n dan rotasi credential jika pernah terlanjur dipush.
+- Setelah workflow n8n diperbarui di Git, import ulang dan aktifkan workflow di server n8n; file JSON repository tidak mengubah deployment secara otomatis.
+- Untuk menjalankan test UI lokal dengan credential tanpa menulisnya ke file:
+
+```bash
+ADMIN_TEST_PASSWORD='isi-password-admin-di-terminal' node test_simulation.js
+```
+
 ## 🔗 Aturan Referensi Dokumen Lama (Versi Final)
 
 Saat admin membuka modal `Approve`, `Revisi`, atau `Tolak`, field `Refer Task ID / Dokumen Acuan (Opsional)` harus mengikuti aturan berikut:
