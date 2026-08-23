@@ -489,10 +489,10 @@
         <button id="btn-close-upload" type="button" class="text-[var(--text-muted)] hover:text-[var(--text)]"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
       <form id="upload-form" class="space-y-4">
-        <label for="upload-file" class="upload-dropzone">
+        <label id="upload-dropzone" for="upload-file" class="upload-dropzone">
           <i class="fa-solid fa-file-arrow-up text-2xl text-brandpurple-300"></i>
           <span id="upload-file-label" class="text-xs font-semibold">Pilih file KAK / TOR</span>
-          <span class="text-[10px] text-[var(--text-muted)]">Format: .pdf, .doc, .docx</span>
+          <span class="text-[10px] text-[var(--text-muted)]">Klik atau seret file ke sini · .pdf, .doc, .docx</span>
         </label>
         <input id="upload-file" type="file" name="data" accept=".pdf,.doc,.docx" class="sr-only" required>
         <div id="upload-file-error" class="hidden text-xs text-brandwine-300"></div>

@@ -268,6 +268,7 @@ html, body {
   transition: background 0.2s, border-color 0.2s;
 }
 .upload-dropzone:hover { background: var(--purple-soft); border-color: var(--purple-strong); }
+.upload-dropzone.is-dragging { background: var(--purple-soft); border-color: var(--purple-strong); box-shadow: 0 0 0 3px rgba(125, 91, 184, 0.16); transform: translateY(-1px); }
 .compare-status-badge { padding: 0.45rem 0.7rem; border-radius: 999px; font-family: var(--font-mono); font-size: 0.65rem; font-weight: 800; }
 .compare-status-accepted { color: #72dda8; background: rgba(52, 168, 119, 0.14); border: 1px solid rgba(52, 168, 119, 0.3); }
 .compare-status-revision { color: #f09aa9; background: rgba(190, 75, 102, 0.14); border: 1px solid rgba(190, 75, 102, 0.3); }

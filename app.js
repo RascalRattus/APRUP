@@ -167,6 +167,7 @@ const elements = {
   btnOpenUpload: document.getElementById('btn-open-upload'),
   uploadModal: document.getElementById('upload-modal'),
   uploadForm: document.getElementById('upload-form'),
+  uploadDropzone: document.getElementById('upload-dropzone'),
   uploadFile: document.getElementById('upload-file'),
   uploadFileLabel: document.getElementById('upload-file-label'),
   uploadFileError: document.getElementById('upload-file-error'),
@@ -349,6 +350,11 @@ function init() {
   if (elements.btnCancelUpload) elements.btnCancelUpload.addEventListener('click', closeUploadModal);
   if (elements.uploadForm) elements.uploadForm.addEventListener('submit', submitUpload);
   if (elements.uploadFile) elements.uploadFile.addEventListener('change', handleUploadFileChange);
+  if (elements.uploadDropzone) {
+    elements.uploadDropzone.addEventListener('dragover', handleUploadDragOver);
+    elements.uploadDropzone.addEventListener('dragleave', handleUploadDragLeave);
+    elements.uploadDropzone.addEventListener('drop', handleUploadDrop);
+  }
   if (elements.btnCloseCompare) elements.btnCloseCompare.addEventListener('click', closeCompareModal);
   if (elements.btnDismissCompare) elements.btnDismissCompare.addEventListener('click', closeCompareModal);
 
@@ -1262,6 +1268,32 @@ function handleUploadFileChange() {
   if (elements.uploadFileLabel) {
     elements.uploadFileLabel.innerText = file && !error ? `${file.name} (${formatBytes(file.size)})` : 'Pilih file KAK / TOR';
   }
+}
+
+function handleUploadDragOver(event) {
+  event.preventDefault();
+  if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy';
+  if (elements.uploadDropzone) elements.uploadDropzone.classList.add('is-dragging');
+}
+
+function handleUploadDragLeave(event) {
+  event.preventDefault();
+  if (elements.uploadDropzone && !elements.uploadDropzone.contains(event.relatedTarget)) {
+    elements.uploadDropzone.classList.remove('is-dragging');
+  }
+}
+
+function handleUploadDrop(event) {
+  event.preventDefault();
+  if (elements.uploadDropzone) elements.uploadDropzone.classList.remove('is-dragging');
+
+  const file = event.dataTransfer && event.dataTransfer.files[0];
+  if (!file || !elements.uploadFile) return;
+
+  const fileTransfer = new DataTransfer();
+  fileTransfer.items.add(file);
+  elements.uploadFile.files = fileTransfer.files;
+  handleUploadFileChange();
 }
 
 function formatBytes(bytes) {

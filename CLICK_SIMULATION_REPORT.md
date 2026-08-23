@@ -1,9 +1,9 @@
 # 📊 APRUP v2.0 — UI Click Simulation Report
 
-**Generated:** 20/8/2026, 13.19.21
+**Generated:** 21/8/2026, 18.46.55
 **Target URL:** http://localhost:8888/index.html
 **Engine:** Chromium via Playwright
-**Health Score:** 56/56 PASS
+**Health Score:** 44/56 PASS
 
 ---
 
@@ -11,16 +11,16 @@
 
 | Viewport | DOM Loaded | DOM Interactive | Load Event | JS Heap |
 |---|---:|---:|---:|---:|
-| 1920x1080 | 1384ms | 1222ms | 1700ms | 9.54 MB |
-| 1440x900 | 12408ms | 12394ms | 12747ms | 9.54 MB |
-| 768x1024 | 6338ms | 6126ms | 6462ms | 9.54 MB |
-| 375x812 | 805ms | 691ms | 1003ms | 9.54 MB |
+| 1920x1080 | 1860ms | 1751ms | 1908ms | 9.54 MB |
+| 1440x900 | 811ms | 673ms | 813ms | 9.54 MB |
+| 768x1024 | 810ms | 690ms | 851ms | 9.54 MB |
+| 375x812 | 909ms | 908ms | 1047ms | 9.54 MB |
 ## 📋 Summary Table
 
 | Component | 1920x1080 | 1440x900 | 768x1024 | 375x812 |
 |---|---|---|---|---|
 | **Page Load** | ✅ | ✅ | ✅ | ✅ |
-| **Theme Toggle** | ✅ | ✅ | ✅ | ✅ |
+| **Theme Toggle** | ⚠️ | ⚠️ | ⚠️ | ⚠️ |
 | **Mode Switcher** | ✅ | ✅ | ✅ | ✅ |
 | **Login Modal** | ✅ | ✅ | ✅ | ✅ |
 | **Single Grouped Ribbon** | ✅ | ✅ | ✅ | ✅ |
@@ -28,26 +28,26 @@
 | **Format Filters Removed** | ✅ | ✅ | ✅ | ✅ |
 | **Upload & AI Compare** | ✅ | ✅ | ✅ | ✅ |
 | **Search Input** | ✅ | ✅ | ✅ | ✅ |
-| **Document Modal** | ✅ | ✅ | ✅ | ✅ |
+| **Document Modal** | ❌ | ❌ | ❌ | ❌ |
 | **Settings Modal** | ✅ | ✅ | ✅ | ✅ |
 | **Refresh Button** | ✅ | ✅ | ✅ | ✅ |
-| **Auto-refresh Toggle** | ✅ | ✅ | ✅ | ✅ |
+| **Auto-refresh Toggle** | ❌ | ❌ | ❌ | ❌ |
 | **Layout Assessment** | ✅ | ✅ | ✅ | ✅ |
 
 ---
 
 ## 📐 1920x1080
 
-**Overall: ✅ PASS** (14 pass, 0 warn, 0 fail)
+**Overall: ❌ FAIL** (11 pass, 1 warn, 2 fail)
 
 - ✅ **Page Load** `PASS`  
   Loaded http://localhost:8888/index.html
-- ✅ **Theme Toggle** `PASS`  
-  dark → light → restored
+- ⚠️ **Theme Toggle** `WARN`  
+  dark → dark → restored
 - ✅ **Mode Switcher** `PASS`  
   Live clicked → Demo restored
 - ✅ **Login Modal** `PASS`  
-  Modal opened. Role after login: "Role: Admin"
+  Demo login: opened dashboard | Role: "Role: User (Read-Only)"
 - ✅ **Single Grouped Ribbon** `PASS`  
   legacy_ribbon:0 | grouped_sections:4
 - ✅ **Grouped Stats Ribbon** `PASS`  
@@ -58,29 +58,72 @@
   oversize_error:Ukuran file terlalu besar! Maksimal 5 MB. | compare_button:true | compare_modal:true | status:REVISI_DITERIMA
 - ✅ **Search Input** `PASS`  
   "Kemenkeu" → 1 cards. After clear → 4 cards
-- ✅ **Document Modal** `PASS`  
-  Opened: YES. Notes filled: true. Closed: ESC
+- ❌ **Document Modal** `FAIL`  
+  locator.click: Timeout 3000ms exceeded.
+Call log:
+[2m  - waiting for locator('#document-grid button').first()[22m
+[2m    - locator resolved to <button disabled title="Read-Only Mode" onclick="openActionModal('TASK-2026-0801', 'approve')" class="btn-action-trigger opacity-50 cursor-not-allowed flex-1 min-h-[40px] px-3 py-2 bg-brandpurple-600 hover:bg-brandpurple-500 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95">…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    5 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 500ms[22m
+
 - ✅ **Settings Modal** `PASS`  
   Overlay elements visible: 6. Closed with Escape.
 - ✅ **Refresh Button** `PASS`  
   Clicked, data reload triggered
-- ✅ **Auto-refresh Toggle** `PASS`  
-  false → true → restored
+- ❌ **Auto-refresh Toggle** `FAIL`  
+  locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#auto-refresh-check')[22m
+[2m    - locator resolved to <input type="checkbox" id="auto-refresh-check" class="rounded border-white/10 bg-white/5 text-brandgold-500 focus:ring-0"/>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    55 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
 - ✅ **Layout Assessment** `PASS`  
   Header=77px | Cols="580px 580px" | Cards=4 | HorzOverflow=false
 
 ## 📐 1440x900
 
-**Overall: ✅ PASS** (14 pass, 0 warn, 0 fail)
+**Overall: ❌ FAIL** (11 pass, 1 warn, 2 fail)
 
 - ✅ **Page Load** `PASS`  
   Loaded http://localhost:8888/index.html
-- ✅ **Theme Toggle** `PASS`  
-  dark → light → restored
+- ⚠️ **Theme Toggle** `WARN`  
+  dark → dark → restored
 - ✅ **Mode Switcher** `PASS`  
   Live clicked → Demo restored
 - ✅ **Login Modal** `PASS`  
-  Modal opened. Role after login: "Role: Admin"
+  Demo login: opened dashboard | Role: "Role: User (Read-Only)"
 - ✅ **Single Grouped Ribbon** `PASS`  
   legacy_ribbon:0 | grouped_sections:4
 - ✅ **Grouped Stats Ribbon** `PASS`  
@@ -91,29 +134,72 @@
   oversize_error:Ukuran file terlalu besar! Maksimal 5 MB. | compare_button:true | compare_modal:true | status:REVISI_DITERIMA
 - ✅ **Search Input** `PASS`  
   "Kemenkeu" → 1 cards. After clear → 4 cards
-- ✅ **Document Modal** `PASS`  
-  Opened: YES. Notes filled: true. Closed: ESC
+- ❌ **Document Modal** `FAIL`  
+  locator.click: Timeout 3000ms exceeded.
+Call log:
+[2m  - waiting for locator('#document-grid button').first()[22m
+[2m    - locator resolved to <button disabled title="Read-Only Mode" onclick="openActionModal('TASK-2026-0801', 'approve')" class="btn-action-trigger opacity-50 cursor-not-allowed flex-1 min-h-[40px] px-3 py-2 bg-brandpurple-600 hover:bg-brandpurple-500 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95">…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    5 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 500ms[22m
+
 - ✅ **Settings Modal** `PASS`  
   Overlay elements visible: 6. Closed with Escape.
 - ✅ **Refresh Button** `PASS`  
   Clicked, data reload triggered
-- ✅ **Auto-refresh Toggle** `PASS`  
-  false → true → restored
+- ❌ **Auto-refresh Toggle** `FAIL`  
+  locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#auto-refresh-check')[22m
+[2m    - locator resolved to <input type="checkbox" id="auto-refresh-check" class="rounded border-white/10 bg-white/5 text-brandgold-500 focus:ring-0"/>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    54 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
 - ✅ **Layout Assessment** `PASS`  
   Header=77px | Cols="580px 580px" | Cards=4 | HorzOverflow=false
 
 ## 📐 768x1024
 
-**Overall: ✅ PASS** (14 pass, 0 warn, 0 fail)
+**Overall: ❌ FAIL** (11 pass, 1 warn, 2 fail)
 
 - ✅ **Page Load** `PASS`  
   Loaded http://localhost:8888/index.html
-- ✅ **Theme Toggle** `PASS`  
-  dark → light → restored
+- ⚠️ **Theme Toggle** `WARN`  
+  dark → dark → restored
 - ✅ **Mode Switcher** `PASS`  
   Live clicked → Demo restored
 - ✅ **Login Modal** `PASS`  
-  Modal opened. Role after login: "Role: Admin"
+  Demo login: opened dashboard | Role: "Role: User (Read-Only)"
 - ✅ **Single Grouped Ribbon** `PASS`  
   legacy_ribbon:0 | grouped_sections:4
 - ✅ **Grouped Stats Ribbon** `PASS`  
@@ -124,29 +210,113 @@
   oversize_error:Ukuran file terlalu besar! Maksimal 5 MB. | compare_button:true | compare_modal:true | status:REVISI_DITERIMA
 - ✅ **Search Input** `PASS`  
   "Kemenkeu" → 1 cards. After clear → 4 cards
-- ✅ **Document Modal** `PASS`  
-  Opened: YES. Notes filled: true. Closed: ESC
+- ❌ **Document Modal** `FAIL`  
+  locator.click: Timeout 3000ms exceeded.
+Call log:
+[2m  - waiting for locator('#document-grid button').first()[22m
+[2m    - locator resolved to <button disabled title="Read-Only Mode" onclick="openActionModal('TASK-2026-0801', 'approve')" class="btn-action-trigger opacity-50 cursor-not-allowed flex-1 min-h-[40px] px-3 py-2 bg-brandpurple-600 hover:bg-brandpurple-500 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95">…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    5 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 500ms[22m
+
 - ✅ **Settings Modal** `PASS`  
   Overlay elements visible: 6. Closed with Escape.
 - ✅ **Refresh Button** `PASS`  
   Clicked, data reload triggered
-- ✅ **Auto-refresh Toggle** `PASS`  
-  false → true → restored
+- ❌ **Auto-refresh Toggle** `FAIL`  
+  locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#auto-refresh-check')[22m
+[2m    - locator resolved to <input type="checkbox" id="auto-refresh-check" class="rounded border-white/10 bg-white/5 text-brandgold-500 focus:ring-0"/>[22m
+[2m  - attempting click action[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m  - retrying click action[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - <div class="space-y-4">…</div> from <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> subtree intercepts pointer events[22m
+[2m  - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - <div class="space-y-4">…</div> from <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> subtree intercepts pointer events[22m
+[2m  2 × retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m      - waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m  13 × retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div class="space-y-4">…</div> from <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> subtree intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div class="space-y-4">…</div> from <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> subtree intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m  2 × retrying click action[22m
+[2m      - waiting 500ms[22m
+[2m      - waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div class="space-y-4">…</div> from <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> subtree intercepts pointer events[22m
+[2m  - retrying click action[22m
+[2m    - waiting 500ms[22m
+
 - ✅ **Layout Assessment** `PASS`  
   Header=135px | Cols="672px" | Cards=4 | HorzOverflow=false
 
 ## 📐 375x812
 
-**Overall: ✅ PASS** (14 pass, 0 warn, 0 fail)
+**Overall: ❌ FAIL** (11 pass, 1 warn, 2 fail)
 
 - ✅ **Page Load** `PASS`  
   Loaded http://localhost:8888/index.html
-- ✅ **Theme Toggle** `PASS`  
-  dark → light → restored
+- ⚠️ **Theme Toggle** `WARN`  
+  dark → dark → restored
 - ✅ **Mode Switcher** `PASS`  
   Live clicked → Demo restored
 - ✅ **Login Modal** `PASS`  
-  Modal opened. Role after login: "Role: Admin"
+  Demo login: opened dashboard | Role: "Role: User (Read-Only)"
 - ✅ **Single Grouped Ribbon** `PASS`  
   legacy_ribbon:0 | grouped_sections:4
 - ✅ **Grouped Stats Ribbon** `PASS`  
@@ -157,14 +327,106 @@
   oversize_error:Ukuran file terlalu besar! Maksimal 5 MB. | compare_button:true | compare_modal:true | status:REVISI_DITERIMA
 - ✅ **Search Input** `PASS`  
   "Kemenkeu" → 1 cards. After clear → 4 cards
-- ✅ **Document Modal** `PASS`  
-  Opened: YES. Notes filled: true. Closed: ESC
+- ❌ **Document Modal** `FAIL`  
+  locator.click: Timeout 3000ms exceeded.
+Call log:
+[2m  - waiting for locator('#document-grid button').first()[22m
+[2m    - locator resolved to <button disabled title="Read-Only Mode" onclick="openActionModal('TASK-2026-0801', 'approve')" class="btn-action-trigger opacity-50 cursor-not-allowed flex-1 min-h-[40px] px-3 py-2 bg-brandpurple-600 hover:bg-brandpurple-500 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95">…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    5 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 500ms[22m
+
 - ✅ **Settings Modal** `PASS`  
   Overlay elements visible: 6. Closed with Escape.
 - ✅ **Refresh Button** `PASS`  
   Clicked, data reload triggered
-- ✅ **Auto-refresh Toggle** `PASS`  
-  false → true → restored
+- ❌ **Auto-refresh Toggle** `FAIL`  
+  locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#auto-refresh-check')[22m
+[2m    - locator resolved to <input type="checkbox" id="auto-refresh-check" class="rounded border-white/10 bg-white/5 text-brandgold-500 focus:ring-0"/>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - <div class="glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up">…</div> from <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> subtree intercepts pointer events[22m
+[2m  2 × retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m      - waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m  13 × retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div class="glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up">…</div> from <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> subtree intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m  - retrying click action[22m
+[2m    - waiting 500ms[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m  - retrying click action[22m
+[2m    - waiting 500ms[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - <div class="glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up">…</div> from <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> subtree intercepts pointer events[22m
+[2m  - retrying click action[22m
+[2m    - waiting 500ms[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m  - retrying click action[22m
+[2m    - waiting 500ms[22m
+
 - ✅ **Layout Assessment** `PASS`  
   Header=248px | Cols="343px" | Cards=4 | HorzOverflow=false
 
@@ -172,7 +434,280 @@
 
 ## 🐛 Issues & Warnings
 
-_No issues found._
+- **[1920x1080] Theme Toggle** (WARN): dark → dark → restored
+- **[1920x1080] Document Modal** (FAIL): locator.click: Timeout 3000ms exceeded.
+Call log:
+[2m  - waiting for locator('#document-grid button').first()[22m
+[2m    - locator resolved to <button disabled title="Read-Only Mode" onclick="openActionModal('TASK-2026-0801', 'approve')" class="btn-action-trigger opacity-50 cursor-not-allowed flex-1 min-h-[40px] px-3 py-2 bg-brandpurple-600 hover:bg-brandpurple-500 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95">…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    5 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 500ms[22m
+
+- **[1920x1080] Auto-refresh Toggle** (FAIL): locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#auto-refresh-check')[22m
+[2m    - locator resolved to <input type="checkbox" id="auto-refresh-check" class="rounded border-white/10 bg-white/5 text-brandgold-500 focus:ring-0"/>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    55 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+- **[1440x900] Theme Toggle** (WARN): dark → dark → restored
+- **[1440x900] Document Modal** (FAIL): locator.click: Timeout 3000ms exceeded.
+Call log:
+[2m  - waiting for locator('#document-grid button').first()[22m
+[2m    - locator resolved to <button disabled title="Read-Only Mode" onclick="openActionModal('TASK-2026-0801', 'approve')" class="btn-action-trigger opacity-50 cursor-not-allowed flex-1 min-h-[40px] px-3 py-2 bg-brandpurple-600 hover:bg-brandpurple-500 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95">…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    5 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 500ms[22m
+
+- **[1440x900] Auto-refresh Toggle** (FAIL): locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#auto-refresh-check')[22m
+[2m    - locator resolved to <input type="checkbox" id="auto-refresh-check" class="rounded border-white/10 bg-white/5 text-brandgold-500 focus:ring-0"/>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    54 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+- **[768x1024] Theme Toggle** (WARN): dark → dark → restored
+- **[768x1024] Document Modal** (FAIL): locator.click: Timeout 3000ms exceeded.
+Call log:
+[2m  - waiting for locator('#document-grid button').first()[22m
+[2m    - locator resolved to <button disabled title="Read-Only Mode" onclick="openActionModal('TASK-2026-0801', 'approve')" class="btn-action-trigger opacity-50 cursor-not-allowed flex-1 min-h-[40px] px-3 py-2 bg-brandpurple-600 hover:bg-brandpurple-500 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95">…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    5 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 500ms[22m
+
+- **[768x1024] Auto-refresh Toggle** (FAIL): locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#auto-refresh-check')[22m
+[2m    - locator resolved to <input type="checkbox" id="auto-refresh-check" class="rounded border-white/10 bg-white/5 text-brandgold-500 focus:ring-0"/>[22m
+[2m  - attempting click action[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m  - retrying click action[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - <div class="space-y-4">…</div> from <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> subtree intercepts pointer events[22m
+[2m  - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - <div class="space-y-4">…</div> from <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> subtree intercepts pointer events[22m
+[2m  2 × retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m      - waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m  13 × retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div class="space-y-4">…</div> from <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> subtree intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div class="space-y-4">…</div> from <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> subtree intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m  2 × retrying click action[22m
+[2m      - waiting 500ms[22m
+[2m      - waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div class="space-y-4">…</div> from <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> subtree intercepts pointer events[22m
+[2m  - retrying click action[22m
+[2m    - waiting 500ms[22m
+
+- **[375x812] Theme Toggle** (WARN): dark → dark → restored
+- **[375x812] Document Modal** (FAIL): locator.click: Timeout 3000ms exceeded.
+Call log:
+[2m  - waiting for locator('#document-grid button').first()[22m
+[2m    - locator resolved to <button disabled title="Read-Only Mode" onclick="openActionModal('TASK-2026-0801', 'approve')" class="btn-action-trigger opacity-50 cursor-not-allowed flex-1 min-h-[40px] px-3 py-2 bg-brandpurple-600 hover:bg-brandpurple-500 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95">…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    5 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 500ms[22m
+
+- **[375x812] Auto-refresh Toggle** (FAIL): locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#auto-refresh-check')[22m
+[2m    - locator resolved to <input type="checkbox" id="auto-refresh-check" class="rounded border-white/10 bg-white/5 text-brandgold-500 focus:ring-0"/>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - <div class="glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up">…</div> from <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> subtree intercepts pointer events[22m
+[2m  2 × retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m      - waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m  13 × retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div class="glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up">…</div> from <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> subtree intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m  - retrying click action[22m
+[2m    - waiting 500ms[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m  - retrying click action[22m
+[2m    - waiting 500ms[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - <div class="glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 animate-fade-in-up">…</div> from <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> subtree intercepts pointer events[22m
+[2m  - retrying click action[22m
+[2m    - waiting 500ms[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">…</div> intercepts pointer events[22m
+[2m  - retrying click action[22m
+[2m    - waiting 500ms[22m
+
 
 ---
 
